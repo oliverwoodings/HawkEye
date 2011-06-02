@@ -7,15 +7,20 @@ import java.util.logging.Logger;
 import javax.persistence.PersistenceException;
 
 import org.bukkit.Location;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import uk.co.oliwali.DataLog.commands.BaseCommand;
 import uk.co.oliwali.DataLog.listeners.DLBlockListener;
 import uk.co.oliwali.DataLog.listeners.DLEntityListener;
 import uk.co.oliwali.DataLog.listeners.DLPlayerListener;
+import uk.co.oliwali.DataLog.util.Config;
+import uk.co.oliwali.DataLog.util.Util;
 
 public class DataLog extends JavaPlugin {
 	
@@ -26,6 +31,7 @@ public class DataLog extends JavaPlugin {
 	public DLBlockListener blockListener = new DLBlockListener(this);
 	public DLEntityListener entityListener = new DLEntityListener(this);
 	public DLPlayerListener playerListener = new DLPlayerListener(this);
+	public static List<BaseCommand> commands = new ArrayList<BaseCommand>();
 	
 	public void onDisable() {
 		Util.info("Version " + version + " disabled!");
@@ -56,6 +62,18 @@ public class DataLog extends JavaPlugin {
         
         Util.info("Version " + version + " enabled!");
         
+	}
+	
+	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String args[]) {
+		if (cmd.getName().equalsIgnoreCase("datalog")) {
+			if (args.length == 0)
+				args = new String[]{"help"};
+			for (BaseCommand command : commands.toArray(new BaseCommand[0])) {
+				if (command.name.equalsIgnoreCase(args[0]))
+					return command.run(sender, args, commandLabel);
+			}
+		}
+		return false;
 	}
 	
 	public void addDataEntry(Player player, DataType dataType, Location loc, String data) {

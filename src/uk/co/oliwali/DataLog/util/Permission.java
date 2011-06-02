@@ -1,6 +1,8 @@
-package uk.co.oliwali.DataLog;
+package uk.co.oliwali.DataLog.util;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+
+import uk.co.oliwali.DataLog.DataLog;
 
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;

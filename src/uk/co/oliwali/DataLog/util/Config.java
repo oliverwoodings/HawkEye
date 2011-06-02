@@ -1,9 +1,12 @@
-package uk.co.oliwali.DataLog;
+package uk.co.oliwali.DataLog.util;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.util.config.Configuration;
+
+import uk.co.oliwali.DataLog.DataLog;
+import uk.co.oliwali.DataLog.DataType;
 
 public class Config {
 	

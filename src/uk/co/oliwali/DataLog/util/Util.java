@@ -1,4 +1,4 @@
-package uk.co.oliwali.DataLog;
+package uk.co.oliwali.DataLog.util;
 
 import java.util.logging.Logger;
 
