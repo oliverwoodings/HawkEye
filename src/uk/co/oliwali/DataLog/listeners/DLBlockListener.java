@@ -1,4 +1,4 @@
-package uk.co.oliwali.DataLog;
+package uk.co.oliwali.DataLog.listeners;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -7,6 +7,9 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
+
+import uk.co.oliwali.DataLog.DataLog;
+import uk.co.oliwali.DataLog.DataType;
 
 public class DLBlockListener extends BlockListener {
 	

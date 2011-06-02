@@ -13,6 +13,10 @@ import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import uk.co.oliwali.DataLog.listeners.DLBlockListener;
+import uk.co.oliwali.DataLog.listeners.DLEntityListener;
+import uk.co.oliwali.DataLog.listeners.DLPlayerListener;
+
 public class DataLog extends JavaPlugin {
 	
 	public String name;

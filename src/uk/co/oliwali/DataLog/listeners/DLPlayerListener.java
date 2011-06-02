@@ -1,4 +1,4 @@
-package uk.co.oliwali.DataLog;
+package uk.co.oliwali.DataLog.listeners;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -11,6 +11,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+
+import uk.co.oliwali.DataLog.DataLog;
+import uk.co.oliwali.DataLog.DataType;
 
 public class DLPlayerListener extends PlayerListener {
 	

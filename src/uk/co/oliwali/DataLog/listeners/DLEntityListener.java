@@ -1,4 +1,4 @@
-package uk.co.oliwali.DataLog;
+package uk.co.oliwali.DataLog.listeners;
 
 import java.util.HashMap;
 
@@ -9,6 +9,9 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityListener;
+
+import uk.co.oliwali.DataLog.DataLog;
+import uk.co.oliwali.DataLog.DataType;
 
 public class DLEntityListener extends EntityListener {
 	
