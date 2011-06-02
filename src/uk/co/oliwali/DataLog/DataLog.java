@@ -21,6 +21,7 @@ import uk.co.oliwali.DataLog.commands.BaseCommand;
 import uk.co.oliwali.DataLog.listeners.DLBlockListener;
 import uk.co.oliwali.DataLog.listeners.DLEntityListener;
 import uk.co.oliwali.DataLog.listeners.DLPlayerListener;
+import uk.co.oliwali.DataLog.util.API;
 import uk.co.oliwali.DataLog.util.Config;
 import uk.co.oliwali.DataLog.util.Util;
 
@@ -45,6 +46,7 @@ public class DataLog extends JavaPlugin {
 		name = this.getDescription().getName();
         version = this.getDescription().getVersion();
         config = new Config(this);
+        new API(this);
         
         // Register events
         PluginManager pm = getServer().getPluginManager();
@@ -79,10 +81,13 @@ public class DataLog extends JavaPlugin {
 	}
 	
 	public void addDataEntry(Player player, DataType dataType, Location loc, String data) {
+		addDataEntry(player, this, dataType, loc, data);
+	}
+	public void addDataEntry(Player player, JavaPlugin plugin, DataType dataType, Location loc, String data) {
 		if (config.isLogged(dataType)) {
 			DataEntry dataEntry = new DataEntry();
 			loc = Util.getSimpleLocation(loc);
-			dataEntry.setInfo(player, dataType.getId(), loc, data);
+			dataEntry.setInfo(player, plugin, dataType.getId(), loc, data);
 			getDatabase().save(dataEntry);
 		}
 	}

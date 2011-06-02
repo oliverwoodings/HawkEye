@@ -17,7 +17,8 @@ public enum DataType {
     PVP_DEATH(12, "pvp-death"),
 	FLINT_AND_STEEL(13, "flint-steel"),
 	LEVER(14, "lever"),
-	STONE_BUTTON(15, "button");
+	STONE_BUTTON(15, "button"),
+	OTHER(16, "other");
 	
 	private int id;
 	private String configName;

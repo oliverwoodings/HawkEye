@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 @Entity()
 @Table(name="datalog")
@@ -16,6 +17,9 @@ public class DataEntry {
 
     @Id
     private int dataid;
+    
+    @NotNull
+    private String plugin;
 
     @NotNull
     private String date;
@@ -48,7 +52,15 @@ public class DataEntry {
 		return dataid;
 	}
 
-    public void setDate(String date) {
+	public void setPlugin(String plugin) {
+		this.plugin = plugin;
+	}
+
+    public String getPlugin() {
+		return plugin;
+	}
+
+	public void setDate(String date) {
         this.date = date;
     }
 
@@ -112,9 +124,10 @@ public class DataEntry {
     	return data;
     }
     
-	public void setInfo(Player player, int action, Location loc, String data) {
+	public void setInfo(Player player, JavaPlugin instance, int action, Location loc, String data) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	    setDate(sdf.format(Calendar.getInstance().getTime()));
+	    setPlugin(instance.getDescription().getName());
 		setPlayer(player.getName());
 		setAction(action);
 		setWorld(loc.getWorld().getName());
