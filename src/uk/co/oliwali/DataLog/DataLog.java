@@ -108,6 +108,15 @@ public class DataLog extends JavaPlugin {
             Util.info("Installing database due to first time usage");
             installDDL();
         }
+        
+        //Update for legacy v0.2 databases
+        if (getDatabase().createSqlQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'datalog' AND COLUMN_NAME = 'plugin'").findUnique() == null) {
+        	Util.info("v0.2 database detected - updating to v0.3...");
+        	getDatabase().createSqlUpdate("ALTER TABLE datalog ADD plugin varchar(255)").execute();
+        	getDatabase().createSqlUpdate("UPDATE datalog SET plugin='" + getDescription().getName() + "' WHERE plugin IS NULL").execute();
+        	getDatabase().createSqlUpdate("UPDATE datalog SET x=round(x,1), y=round(y,1), z=round(z,1)").execute();
+        	Util.info("Database updated to v0.3");
+        }
 	}
 	
     @Override
