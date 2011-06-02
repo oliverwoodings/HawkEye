@@ -87,6 +87,7 @@ public class Util {
     	GOLD("6", 0x6),
     	GREEN("a", 0xA),
     	DARK_GREEN("2", 0x2),
+    	TURQOISE("3", 0x3),
     	AQUA("b", 0xB),
     	DARK_AQUA("8", 0x8),
     	BLUE("9", 0x9),

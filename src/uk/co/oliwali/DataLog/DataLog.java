@@ -1,5 +1,7 @@
 package uk.co.oliwali.DataLog;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -79,12 +81,22 @@ public class DataLog extends JavaPlugin {
 	public void addDataEntry(Player player, DataType dataType, Location loc, String data) {
 		if (config.isLogged(dataType)) {
 			DataEntry dataEntry = new DataEntry();
+			loc = Util.getSimpleLocation(loc);
 			dataEntry.setInfo(player, dataType.getId(), loc, data);
 			getDatabase().save(dataEntry);
 		}
 	}
 	
 	private void setupDatabase() {
+		//Check if ebean.properties exists, if not create empty file to hide severe error
+		try {
+			File props = new File("ebean.properties");
+			if (!props.exists())
+				props.createNewFile();
+		} catch (IOException e) {
+			Util.info("Unable to create ebean.properties file");
+		}
+		
         try {
             getDatabase().find(DataEntry.class).findRowCount();
         } catch (PersistenceException ex) {
