@@ -1,0 +1,5 @@
+name: DataLog
+main: uk.co.oliwali.DataLog.DataLog
+author: oliverw92
+version: 0.2
+database: true
