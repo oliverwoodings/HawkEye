@@ -44,6 +44,15 @@ public class Util {
 		return location;
 	}
 	
+	public static boolean isInteger(String str) {
+		try {
+			Integer.parseInt(str);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		return true;
+	}
+	
 	public static String join(Collection<?> s, String delimiter) {
 	    StringBuffer buffer = new StringBuffer();
 	    Iterator<?> iter = s.iterator();

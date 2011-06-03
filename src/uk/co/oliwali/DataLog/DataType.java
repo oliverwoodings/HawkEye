@@ -1,5 +1,9 @@
 package uk.co.oliwali.DataLog;
 
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
+
 public enum DataType {
 	
 	BLOCK_BREAK(0, "block-break"),
@@ -23,6 +27,18 @@ public enum DataType {
 	private int id;
 	private String configName;
 	
+	private static final Map<String, DataType> nameMapping = new HashMap<String, DataType>();
+	private static final Map<Integer, DataType> idMapping = new HashMap<Integer, DataType>();
+	
+	static {
+		for (DataType type : EnumSet.allOf(DataType.class)) {
+			nameMapping.put(type.configName, type);
+		}
+		for (DataType type : EnumSet.allOf(DataType.class)) {
+			idMapping.put(type.id, type);
+		}
+	}
+	
 	private DataType(int id, String configName) {
 		this.id = id;
 		this.configName = configName;
@@ -34,6 +50,14 @@ public enum DataType {
 	
 	public String getConfigName() {
 		return configName;
+	}
+	
+	public static DataType fromName(String name) {
+		return nameMapping.get(name);
+	}
+	
+	public static DataType fromId(int id) {
+		return idMapping.get(id);
 	}
 
 }
