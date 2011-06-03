@@ -103,7 +103,7 @@ public class DataManager {
 			SqlRow row = results.get(i);
 			String data = row.getString("data");
 			if (row.getInteger("action") == 0 || row.getInteger("action") == 1)
-				data = Material.getMaterial(row.getInteger("action")).name();
+				data = Material.getMaterial(row.getInteger("data")).name();
 			Util.sendMessage(sender, "&8| &7" + row.getString("date").substring(5) + " &c" + row.getString("player") + " &7" + DataType.fromId(row.getInteger("action")).getConfigName() + " &c" + row.getString("world") + ":" + row.getInteger("x") + "," + row.getInteger("y")+ "," + row.getInteger("z"));
 			Util.sendMessage(sender, "&8|      &7Data: &c" + data);
 		}

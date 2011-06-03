@@ -1,5 +1,8 @@
 package uk.co.oliwali.DataLog.commands;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import org.bukkit.util.Vector;
 
 import uk.co.oliwali.DataLog.DataManager;
@@ -52,7 +55,54 @@ public class SearchCommand extends BaseCommand {
 				if (param.equals("r"))
 					radius = Integer.parseInt(values[0]);
 				if (param.equals("t")) {
+					int type = 2;
+					for (int i = 0; i < arg.length(); i++) {
+						String c = arg.substring(i, i+1);
+						if (!Util.isInteger(c)) {
+							if (c.equals("m") || c .equals("s") || c.equals("h"))
+								type = 0;
+							if (c.equals("-"))
+								type = 1;
+						}
+					}
+					if (type == 2)
+						throw new Exception();
 					
+					if (type == 0) {
+						
+						int weeks = 0;
+						int days = 0;
+						int hours = 0;
+						int mins = 0;
+						int secs = 0;
+						
+						String nums = "";
+						for (int i = 0; i < values[0].length(); i++) {
+							String c = values[0].substring(i, i+1);
+							if (Util.isInteger(c)) {
+								nums += c;
+								continue;
+							}
+							int num = Integer.parseInt(nums);
+							if (c.equals("w")) weeks = num;
+							else if (c.equals("d")) days = num;
+							else if (c.equals("h")) hours = num;
+							else if (c.equals("m")) mins = num;
+							else if (c.equals("s")) secs = num;
+							else throw new Exception();
+							nums = "";
+						}
+						
+						Calendar cal = Calendar.getInstance();
+						cal.add(Calendar.WEEK_OF_YEAR, -1 * weeks);
+						cal.add(Calendar.DAY_OF_MONTH, -1 * days);
+						cal.add(Calendar.HOUR, -1 * hours);
+						cal.add(Calendar.MINUTE, -1 * mins);
+						cal.add(Calendar.SECOND, -1 * secs);
+						SimpleDateFormat form = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						dateFrom = form.format(cal.getTime());
+						
+					}
 				}
 				
 			}
