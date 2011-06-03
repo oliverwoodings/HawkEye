@@ -9,6 +9,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 
 import uk.co.oliwali.DataLog.DataLog;
+import uk.co.oliwali.DataLog.DataManager;
 import uk.co.oliwali.DataLog.DataType;
 
 public class DLBlockListener extends BlockListener {
@@ -25,7 +26,7 @@ public class DLBlockListener extends BlockListener {
 		Player player = event.getPlayer();
 		Block block   = event.getBlock();
 		Location loc  = block.getLocation();
-		plugin.addDataEntry(player, DataType.BLOCK_BREAK, loc, Integer.toString(block.getTypeId()));
+		DataManager.addEntry(player, DataType.BLOCK_BREAK, loc, Integer.toString(block.getTypeId()));
 	}
 	
 	public void onBlockPlace(BlockPlaceEvent event) {
@@ -34,7 +35,7 @@ public class DLBlockListener extends BlockListener {
 		Player player = event.getPlayer();
 		Block block   = event.getBlock();
 		Location loc  = block.getLocation();
-		plugin.addDataEntry(player, DataType.BLOCK_PLACE, loc, Integer.toString(block.getTypeId()));
+		DataManager.addEntry(player, DataType.BLOCK_PLACE, loc, Integer.toString(block.getTypeId()));
 	}
 	
 	public void onSignChange(SignChangeEvent event) {
@@ -46,7 +47,7 @@ public class DLBlockListener extends BlockListener {
         for (String line : event.getLines()) {
             text = text + "|" + line;
         }
-        plugin.addDataEntry(player, DataType.SIGN_PLACE, loc, text);
+        DataManager.addEntry(player, DataType.SIGN_PLACE, loc, text);
 	}
 
 }

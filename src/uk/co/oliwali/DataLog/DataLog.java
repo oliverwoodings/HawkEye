@@ -8,20 +8,19 @@ import java.util.logging.Logger;
 
 import javax.persistence.PersistenceException;
 
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import uk.co.oliwali.DataLog.commands.BaseCommand;
+import uk.co.oliwali.DataLog.commands.HelpCommand;
+import uk.co.oliwali.DataLog.commands.SearchCommand;
 import uk.co.oliwali.DataLog.listeners.DLBlockListener;
 import uk.co.oliwali.DataLog.listeners.DLEntityListener;
 import uk.co.oliwali.DataLog.listeners.DLPlayerListener;
-import uk.co.oliwali.DataLog.util.API;
 import uk.co.oliwali.DataLog.util.Config;
 import uk.co.oliwali.DataLog.util.Util;
 
@@ -46,7 +45,7 @@ public class DataLog extends JavaPlugin {
 		name = this.getDescription().getName();
         version = this.getDescription().getVersion();
         config = new Config(this);
-        new API(this);
+        new DataManager(this);
         
         // Register events
         PluginManager pm = getServer().getPluginManager();
@@ -64,6 +63,10 @@ public class DataLog extends JavaPlugin {
         
         setupDatabase();
         
+        //Add commands
+        commands.add(new HelpCommand());
+        commands.add(new SearchCommand());
+        
         Util.info("Version " + version + " enabled!");
         
 	}
@@ -72,24 +75,16 @@ public class DataLog extends JavaPlugin {
 		if (cmd.getName().equalsIgnoreCase("datalog")) {
 			if (args.length == 0)
 				args = new String[]{"help"};
+			BaseCommand help = null;
 			for (BaseCommand command : commands.toArray(new BaseCommand[0])) {
+				if (command.name.equalsIgnoreCase("help"))
+					help = command;
 				if (command.name.equalsIgnoreCase(args[0]))
 					return command.run(sender, args, commandLabel);
 			}
+			return help.run(sender, args, commandLabel);
 		}
 		return false;
-	}
-	
-	public void addDataEntry(Player player, DataType dataType, Location loc, String data) {
-		addDataEntry(player, this, dataType, loc, data);
-	}
-	public void addDataEntry(Player player, JavaPlugin plugin, DataType dataType, Location loc, String data) {
-		if (config.isLogged(dataType)) {
-			DataEntry dataEntry = new DataEntry();
-			loc = Util.getSimpleLocation(loc);
-			dataEntry.setInfo(player, plugin, dataType.getId(), loc, data);
-			getDatabase().save(dataEntry);
-		}
 	}
 	
 	private void setupDatabase() {

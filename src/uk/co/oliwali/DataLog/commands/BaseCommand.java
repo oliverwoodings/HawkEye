@@ -15,32 +15,33 @@ public abstract class BaseCommand {
 	public String name;
 	public int argLength;
 	public String usage;
-	public boolean bePlayer = true;
+	public boolean bePlayer = false;
 	public Player player;
 	public String usedCommand;
 	
-	public boolean run(CommandSender sender, String[] preArgs, String cmd) {
-		this.sender = sender;
+	public boolean run(CommandSender csender, String[] preArgs, String cmd) {
+		sender = csender;
 		args.clear();
 		for (String arg : preArgs)
 			args.add(arg);
 		args.remove(0);
+		usedCommand = cmd;
 		
-		if (argLength != args.size()) {
+		if (argLength != args.size() && (argLength * -1 > args.size())) {
 			sendUsage();
 			return true;
 		}
 		if (bePlayer && !(sender instanceof Player))
 			return false;
-		player = (Player)sender;
-		usedCommand = cmd;
-		if (!permission(player))
+		if (sender instanceof Player)
+			player = (Player)sender;
+		if (!permission())
 			return false;
 		return execute();
 	}
 	
 	public abstract boolean execute();
-	public abstract boolean permission(Player player);
+	public abstract boolean permission();
 	
 	public void sendUsage() {
 		Util.sendMessage(sender, "&c/"+usedCommand+" " + name + " " + usage);

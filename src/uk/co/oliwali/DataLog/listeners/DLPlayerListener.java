@@ -13,6 +13,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import uk.co.oliwali.DataLog.DataLog;
+import uk.co.oliwali.DataLog.DataManager;
 import uk.co.oliwali.DataLog.DataType;
 
 public class DLPlayerListener extends PlayerListener {
@@ -26,7 +27,7 @@ public class DLPlayerListener extends PlayerListener {
 	public void onPlayerChat(PlayerChatEvent event) {
 		Player player = event.getPlayer();
 		Location loc  = player.getLocation();
-		plugin.addDataEntry(player, DataType.CHAT, loc, event.getMessage());
+		DataManager.addEntry(player, DataType.CHAT, loc, event.getMessage());
 	}
 	
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
@@ -38,19 +39,19 @@ public class DLPlayerListener extends PlayerListener {
 		String command = message.split(" ")[0];
 		//Check if command is in filter list or not
 		if (!plugin.config.commandFilter.contains(command))
-			plugin.addDataEntry(player, DataType.COMMAND, loc, message);
+			DataManager.addEntry(player, DataType.COMMAND, loc, message);
 	}
 	
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		Location loc  = player.getLocation();
-		plugin.addDataEntry(player, DataType.JOIN, loc, player.getAddress().getAddress().getHostAddress().toString());
+		DataManager.addEntry(player, DataType.JOIN, loc, player.getAddress().getAddress().getHostAddress().toString());
 	}
 	
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
 		Location loc  = player.getLocation();
-		plugin.addDataEntry(player, DataType.QUIT, loc, player.getAddress().getAddress().getHostAddress().toString());
+		DataManager.addEntry(player, DataType.QUIT, loc, player.getAddress().getAddress().getHostAddress().toString());
 	}
 	
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
@@ -60,7 +61,7 @@ public class DLPlayerListener extends PlayerListener {
 		Location from = event.getFrom();
 		Location to   = event.getTo();
 		if (distance(from, to) > 5)
-			plugin.addDataEntry(player, DataType.TELEPORT, from, to.getWorld().getName() + ": " + to.getX() + ", " + to.getY() + ", " + to.getZ());
+			DataManager.addEntry(player, DataType.TELEPORT, from, to.getWorld().getName() + ": " + to.getX() + ", " + to.getY() + ", " + to.getZ());
 	}
 	
 	public void onPlayerInteract(PlayerInteractEvent event) {
@@ -74,29 +75,29 @@ public class DLPlayerListener extends PlayerListener {
 		switch (block.getType()) {
 			case CHEST:
 				if (event.getAction() == Action.RIGHT_CLICK_BLOCK)
-					plugin.addDataEntry(player, DataType.OPEN_CHEST, loc, "");
+					DataManager.addEntry(player, DataType.OPEN_CHEST, loc, "");
 				break;
 			case WOODEN_DOOR:
-				plugin.addDataEntry(player, DataType.DOOR_INTERACT, loc, "");
+				DataManager.addEntry(player, DataType.DOOR_INTERACT, loc, "");
 				break;
 			case LEVER:
-				plugin.addDataEntry(player, DataType.LEVER, loc, "");
+				DataManager.addEntry(player, DataType.LEVER, loc, "");
 				break;
 			case STONE_BUTTON:
-				plugin.addDataEntry(player, DataType.STONE_BUTTON, loc, "");
+				DataManager.addEntry(player, DataType.STONE_BUTTON, loc, "");
 				break;
 		}
 		
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			switch (player.getItemInHand().getType()) {
 				case FLINT_AND_STEEL:
-					plugin.addDataEntry(player, DataType.FLINT_AND_STEEL, loc, "");
+					DataManager.addEntry(player, DataType.FLINT_AND_STEEL, loc, "");
 					break;
 				case LAVA_BUCKET:
-					plugin.addDataEntry(player, DataType.LAVA_BUCKET, loc, "");
+					DataManager.addEntry(player, DataType.LAVA_BUCKET, loc, "");
 					break;
 				case WATER_BUCKET:
-					plugin.addDataEntry(player, DataType.WATER_BUCKET, loc, "");
+					DataManager.addEntry(player, DataType.WATER_BUCKET, loc, "");
 					break;
 			}
 		}

@@ -11,6 +11,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityListener;
 
 import uk.co.oliwali.DataLog.DataLog;
+import uk.co.oliwali.DataLog.DataManager;
 import uk.co.oliwali.DataLog.DataType;
 
 public class DLEntityListener extends EntityListener {
@@ -56,7 +57,7 @@ public class DLEntityListener extends EntityListener {
 			Location loc    = victim.getLocation();
 			String attacker = damageList.get(victim.getName());
 			if (attacker != "default")
-				plugin.addDataEntry(victim, DataType.PVP_DEATH, loc, attacker);
+				DataManager.addEntry(victim, DataType.PVP_DEATH, loc, attacker);
 		}
 	}
 

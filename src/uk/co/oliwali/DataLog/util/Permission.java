@@ -1,4 +1,5 @@
 package uk.co.oliwali.DataLog.util;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -10,8 +11,8 @@ import com.nijikokun.bukkit.Permissions.Permissions;
 public class Permission {
 	
 	private DataLog plugin;
-	private PermissionPlugin handler = PermissionPlugin.OP;
-	private PermissionHandler permissionPlugin;
+	private static PermissionPlugin handler = PermissionPlugin.OP;
+	private static PermissionHandler permissionPlugin;
 	
 	public Permission(DataLog instance) {
 		plugin = instance;
@@ -27,7 +28,10 @@ public class Permission {
         }
 	}
 	
-	private boolean hasPermission(Player player, String node) {
+	private static boolean hasPermission(CommandSender sender, String node) {
+		if (!(sender instanceof Player))
+			return true;
+		Player player = (Player)sender;
 		switch (handler) {
 			case PERMISSIONS:
 				return permissionPlugin.has(player, node);
@@ -37,15 +41,15 @@ public class Permission {
 		return false;
 	}
 	
-	public boolean browse(Player player) {
-		return hasPermission(player, "datalog.browse");
+	public static boolean search(CommandSender player) {
+		return hasPermission(player, "datalog.search");
 	}
 	
-	public boolean browseItem(Player player, String item) {
-		return hasPermission(player, "datalog.browse." + item.toLowerCase());
+	public static boolean searchType(CommandSender player, String type) {
+		return hasPermission(player, "datalog.search." + type.toLowerCase());
 	}
 	
-	public String getPrefix(Player player) {
+	public static String getPrefix(Player player) {
 		String prefix = "&f";
 		switch (handler) {
 			case PERMISSIONS:
@@ -63,7 +67,7 @@ public class Permission {
 		return prefix;
 	}
 	
-	public String getSuffix(Player player) {
+	public static String getSuffix(Player player) {
 		String prefix = "";
 		switch (handler) {
 			case PERMISSIONS:
@@ -73,7 +77,7 @@ public class Permission {
 		return prefix;
 	}
 	
-	public String getGroup(Player player) {
+	public static String getGroup(Player player) {
 		switch (handler) {
 			case PERMISSIONS:
 				return permissionPlugin.getGroup(player.getWorld().getName(), player.getName());

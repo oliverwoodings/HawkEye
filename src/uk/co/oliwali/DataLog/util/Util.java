@@ -1,5 +1,7 @@
 package uk.co.oliwali.DataLog.util;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.logging.Logger;
 
 import org.bukkit.Location;
@@ -40,6 +42,17 @@ public class Util {
 		location.setY((double)Math.round(location.getY() * 10) / 10);
 		location.setZ((double)Math.round(location.getZ() * 10) / 10);
 		return location;
+	}
+	
+	public static String join(Collection<?> s, String delimiter) {
+	    StringBuffer buffer = new StringBuffer();
+	    Iterator<?> iter = s.iterator();
+	    while (iter.hasNext()) {
+	        buffer.append(iter.next());
+	        if (iter.hasNext())
+	            buffer.append(delimiter);
+	    }
+	    return buffer.toString();
 	}
 	
 	public static String stripColors(String str) {
