@@ -15,7 +15,7 @@ public class SearchCommand extends BaseCommand {
 	public SearchCommand() {
 		name = "search";
 		argLength = -1;
-		usage = "p:player1,player2 l:x,y,z r:50 a:chat,break w:world1,world2 t:yy-mm-dd,hh:mm:ss,yy-mm-dd,hh:mm:ss f:hack <- search the DataLog database";
+		usage = "<parameters> <- search the DataLog database. Type &c/dl searchhelp&7 for more info";
 	}
 	
 	public boolean execute() {
@@ -61,12 +61,10 @@ public class SearchCommand extends BaseCommand {
 						if (!Util.isInteger(c)) {
 							if (c.equals("m") || c .equals("s") || c.equals("h"))
 								type = 0;
-							if (c.equals("-"))
+							if (c.equals("-") || c.equals(":"))
 								type = 1;
 						}
 					}
-					if (type == 2)
-						throw new Exception();
 					
 					if (type == 0) {
 						
@@ -103,6 +101,19 @@ public class SearchCommand extends BaseCommand {
 						dateFrom = form.format(cal.getTime());
 						
 					}
+					else if (type == 1) {
+						if (values.length == 1) {
+							SimpleDateFormat form = new SimpleDateFormat("yyyy-MM-dd");
+							dateFrom = form.format(Calendar.getInstance().getTime()) + " " + values[0];
+						}
+						if (values.length >= 2)
+							dateFrom = values[0] + " " + values[1];
+						if (values.length == 4)
+							dateTo = values[2] + " " + values[3];
+					}
+					else if (type == 2)
+						throw new Exception();
+					
 				}
 				
 			}

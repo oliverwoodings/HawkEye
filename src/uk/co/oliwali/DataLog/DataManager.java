@@ -76,7 +76,6 @@ public class DataManager {
 		if (args.size() == 0)
 			return false;
 		sql += Util.join(args, " AND ");
-		Util.info("QUERY: " + sql);
 		List<SqlRow> results = db.createSqlQuery(sql).findList();
 		if (results == null || results.size() == 0)
 			return false;
@@ -92,10 +91,10 @@ public class DataManager {
 			return false;
 		int maxLines = 6;
 		int maxPages = (int)Math.ceil((double)results.size() / 6);
-		if (page > maxPages)
+		if (page > maxPages || page < 1)
 			return false;
 		
-		Util.sendMessage(sender, "&8--------------------- &7Page (&c" + page + "&7/&c" + maxPages + "&7) &8--------------------");
+		Util.sendMessage(sender, "&8--------------------- &7Page (&c" + page + "&7/&c" + maxPages + "&7) &8--------------------" + (maxPages < 9?"-":""));
 
 		for (int i = (page-1) * maxLines; i < ((page-1) * maxLines) + maxLines; i++) {
 			if (i == results.size())
@@ -104,11 +103,20 @@ public class DataManager {
 			String data = row.getString("data");
 			if (row.getInteger("action") == 0 || row.getInteger("action") == 1)
 				data = Material.getMaterial(row.getInteger("data")).name();
-			Util.sendMessage(sender, "&8| &7" + row.getString("date").substring(5) + " &c" + row.getString("player") + " &7" + DataType.fromId(row.getInteger("action")).getConfigName() + " &c" + row.getString("world") + ":" + row.getInteger("x") + "," + row.getInteger("y")+ "," + row.getInteger("z"));
-			Util.sendMessage(sender, "&8|      &7Data: &c" + data);
+			sendLine(sender, "&7" + row.getString("date").substring(5) + " &c" + row.getString("player") + " &7" + DataType.fromId(row.getInteger("action")).getConfigName() + " &c" + row.getString("world") + ":" + row.getInteger("x") + "," + row.getInteger("y")+ "," + row.getInteger("z"));
+			sendLine(sender, "   &7Data: &c" + data);
 		}
 		Util.sendMessage(sender, "&8-----------------------------------------------------");
 		return true;
+	}
+	
+	public static void sendLine(CommandSender sender, String line) {
+		int len = 65;
+		if (line.length() < len)
+			Util.sendMessage(sender, "&8| " + line);
+		else
+			for (int i = 0; i < line.length(); i+=len)
+				Util.sendMessage(sender, "&8| &c" + (i+len>line.length()?line.substring(i):line.substring(i, i+len)));
 	}
 
 }
