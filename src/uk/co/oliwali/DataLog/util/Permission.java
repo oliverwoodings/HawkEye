@@ -49,6 +49,10 @@ public class Permission {
 		return hasPermission(player, "datalog.search." + type.toLowerCase());
 	}
 	
+	public static boolean tpTo(CommandSender player) {
+		return hasPermission(player, "datalog.tpto");
+	}
+	
 	public static String getPrefix(Player player) {
 		String prefix = "&f";
 		switch (handler) {

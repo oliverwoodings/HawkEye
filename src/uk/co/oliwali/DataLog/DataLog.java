@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import javax.persistence.PersistenceException;
 
+import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Event;
@@ -19,6 +20,7 @@ import uk.co.oliwali.DataLog.commands.BaseCommand;
 import uk.co.oliwali.DataLog.commands.HelpCommand;
 import uk.co.oliwali.DataLog.commands.PageCommand;
 import uk.co.oliwali.DataLog.commands.SearchCommand;
+import uk.co.oliwali.DataLog.commands.TptoCommand;
 import uk.co.oliwali.DataLog.listeners.DLBlockListener;
 import uk.co.oliwali.DataLog.listeners.DLEntityListener;
 import uk.co.oliwali.DataLog.listeners.DLPlayerListener;
@@ -30,6 +32,7 @@ public class DataLog extends JavaPlugin {
 	public String name;
 	public String version;
 	public Config config;
+	public static Server server;
 	public static final Logger log = Logger.getLogger("Minecraft");
 	public DLBlockListener blockListener = new DLBlockListener(this);
 	public DLEntityListener entityListener = new DLEntityListener(this);
@@ -43,6 +46,7 @@ public class DataLog extends JavaPlugin {
 	public void onEnable() {
 
 		//Set up config and database
+		server = getServer();
 		name = this.getDescription().getName();
         version = this.getDescription().getVersion();
         config = new Config(this);
@@ -68,6 +72,7 @@ public class DataLog extends JavaPlugin {
         commands.add(new HelpCommand());
         commands.add(new SearchCommand());
         commands.add(new PageCommand());
+        commands.add(new TptoCommand());
         
         Util.info("Version " + version + " enabled!");
         
