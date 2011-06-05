@@ -7,9 +7,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import uk.co.oliwali.DataLog.DataManager;
 import uk.co.oliwali.DataLog.DataType;
 
-public class API {
+public class DataLogAPI {
 
-	public boolean addEntry(JavaPlugin plugin, String action, Player player, Location loc, String data) {
+	public static boolean addEntry(JavaPlugin plugin, String action, Player player, Location loc, String data) {
 		if (action.contains(" "))
 			return false;
 		DataManager.addEntry(player, plugin, DataType.OTHER, loc, action + "-" + data);
