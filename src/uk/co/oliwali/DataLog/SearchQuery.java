@@ -9,6 +9,7 @@ import org.bukkit.util.Vector;
 
 import com.avaje.ebean.SqlRow;
 
+import uk.co.oliwali.DataLog.util.Config;
 import uk.co.oliwali.DataLog.util.Permission;
 import uk.co.oliwali.DataLog.util.Util;
 
@@ -46,7 +47,7 @@ public class SearchQuery implements Runnable {
 		if (players != null) {
 			for (int i = 0; i < players.length; i++)
 				players[i] = "'" + players[i].toLowerCase() + "'";
-			args.add("LOWER(`player`) LIKE (" + Util.join(Arrays.asList(players), " OR ") + ")");
+			args.add("LOWER(`player`) LIKE " + Util.join(Arrays.asList(players), " OR `player` LIKE "));
 		}
 		
 		if (actions.size() == 0) {
@@ -58,7 +59,7 @@ public class SearchQuery implements Runnable {
 		for (int act : actions.toArray(new Integer[actions.size()]))
 			if (Permission.searchType(sender, DataType.fromId(act).getConfigName()))
 				acs.add(act);
-		args.add("`action` IN (" + Util.join(acs, " OR ") + ")");
+		args.add("`action` IN (" + Util.join(acs, ",") + ")");
 		
 		if (loc != null) {
 			int range = 5;
@@ -76,12 +77,15 @@ public class SearchQuery implements Runnable {
 		if (filters != null) {
 			for (int i = 0; i < filters.length; i++)
 				filters[i] = "'%" + filters[i] + "%'";
-			args.add("`data` LIKE (" + Util.join(Arrays.asList(filters), " OR ") + ")");
+			args.add("`data` LIKE " + Util.join(Arrays.asList(filters), " OR `data` LIKE "));
 		}
 		
 		if (args.size() == 0)
 			Util.sendMessage(sender, "&cInvalid search format!");
 		sql += Util.join(args, " AND ");
+		if (Config.maxLines > 0)
+			sql += " LIMIT " + Config.maxLines;
+		Util.sendMessage(sender, "&cSearching database...");
 		List<SqlRow> results = DataManager.db.createSqlQuery(sql).findList();
 		if (results == null || results.size() == 0)
 			Util.sendMessage(sender, "&cNo results found matching those criteria");

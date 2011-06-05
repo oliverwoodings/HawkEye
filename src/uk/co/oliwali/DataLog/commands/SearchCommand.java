@@ -17,7 +17,7 @@ public class SearchCommand extends BaseCommand {
 
 	public SearchCommand() {
 		name = "search";
-		argLength = -1;
+		argLength = 1;
 		usage = "<parameters> <- search the DataLog database. Type &c/dl searchhelp&7 for more info";
 	}
 	
@@ -41,21 +41,21 @@ public class SearchCommand extends BaseCommand {
 				String[] values = arg.substring(2).split(",");
 				
 				if (param.equals("p")) players = values;
-				if (param.equals("w")) worlds = values;
-				if (param.equals("f")) filters = values;
-				if (param.equals("a")) {
+				else if (param.equals("w")) worlds = values;
+				else if (param.equals("f")) filters = values;
+				else if (param.equals("a")) {
 					for (String value : values)
 						actions.add(DataType.fromName(value).getId());
 				}
-				if (param.equals("l")) {
+				else if (param.equals("l")) {
 					loc = new Vector();
 					loc.setX(Integer.parseInt(values[0]));
 					loc.setY(Integer.parseInt(values[1]));
 					loc.setZ(Integer.parseInt(values[2]));
 				}
-				if (param.equals("r"))
+				else if (param.equals("r"))
 					radius = Integer.parseInt(values[0]);
-				if (param.equals("t")) {
+				else if (param.equals("t")) {
 					int type = 2;
 					for (int i = 0; i < arg.length(); i++) {
 						String c = arg.substring(i, i+1);
@@ -116,6 +116,7 @@ public class SearchCommand extends BaseCommand {
 						throw new Exception();
 					
 				}
+				else throw new Exception();
 				
 			}
 		} catch (Throwable t) {
@@ -123,7 +124,6 @@ public class SearchCommand extends BaseCommand {
 			return true;
 		}
 		
-		Util.sendMessage(sender, "&cSearching database...");
 		SearchQuery search = new SearchQuery(sender, dateFrom, dateTo, players, actions, loc, radius, worlds, filters);
 		DataLog.server.getScheduler().scheduleAsyncDelayedTask(DataLog.server.getPluginManager().getPlugin("DataLog"), search);
 		return true;

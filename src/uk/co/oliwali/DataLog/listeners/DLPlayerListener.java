@@ -15,6 +15,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import uk.co.oliwali.DataLog.DataLog;
 import uk.co.oliwali.DataLog.DataManager;
 import uk.co.oliwali.DataLog.DataType;
+import uk.co.oliwali.DataLog.util.Config;
 
 public class DLPlayerListener extends PlayerListener {
 	
@@ -38,7 +39,7 @@ public class DLPlayerListener extends PlayerListener {
 		String message = event.getMessage();
 		String command = message.split(" ")[0];
 		//Check if command is in filter list or not
-		if (!plugin.config.commandFilter.contains(command))
+		if (!Config.commandFilter.contains(command))
 			DataManager.addEntry(player, DataType.COMMAND, loc, message);
 	}
 	

@@ -10,7 +10,8 @@ import uk.co.oliwali.DataLog.DataType;
 
 public class Config {
 	
-	public List<String> commandFilter = new ArrayList<String>();
+	public static List<String> commandFilter = new ArrayList<String>();
+	public static int maxLines = 0;
 	private Configuration config;
 	
 	public Config (DataLog plugin) {
@@ -23,7 +24,9 @@ public class Config {
 		if (keys.size() == 0)
 			Util.info("No config.yml detected, creating default file. Please make sure bukkit.yml is configured with your MySQL details");
 
-		//If we are on the old config, remove everything and 
+
+		//Version checks
+		//v0.1 - remove everything
 		if (keys.contains("driver")) {
 			Util.info("DataLog v0.1 config detected, deleting unused config. MySQL details are now configured in bukkit.yml");
 			for (String key : keys.toArray(new String[0])) {
@@ -32,8 +35,8 @@ public class Config {
 		}
 		
 		//Check if any keys are missing
-		if (!keys.contains("version"))
-			config.setProperty("version", plugin.version);
+		if (!keys.contains("max-lines"))
+			config.setProperty("max-lines", 0);
 		if (!keys.contains("command-filter")) {
 			List<String> cmds = new ArrayList<String>();
 			cmds.add("/login");
@@ -46,12 +49,16 @@ public class Config {
 				config.setProperty(getNode(type), true);
 		}
 		
+		//Update version
+		config.setProperty("version", plugin.version);
+		
 		//Attempt a save
 		if (!config.save())
 			Util.severe("Error while writing to config.yml");
 
-		//Load command-filter
+		//Load values
 		commandFilter = config.getStringList("command-filter", null);
+		maxLines = config.getInt("max-lines", 0);
 
 	}
 	

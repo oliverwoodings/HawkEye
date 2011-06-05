@@ -11,10 +11,10 @@
 	$config = array(
 					//Enter your MySQL database information
 					//Do not change 'dbTable'
-					"dbHost"  => "play.minecraftcc.com",
+					"dbHost"  => "localhost",
 					"dbDbase" => "minecraft",
 					"dbUser"  => "root",
-					"dbPass"  => "epicmc89",
+					"dbPass"  => "",
 					"dbTable" => "datalog",
 					
 					//Set this to the password you want people to have to use to access the interface

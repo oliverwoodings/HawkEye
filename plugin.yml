@@ -1,7 +1,7 @@
 name: DataLog
 main: uk.co.oliwali.DataLog.DataLog
 author: oliverw92
-version: 0.3
+version: 1.0.0
 database: true
 commands:
   datalog:

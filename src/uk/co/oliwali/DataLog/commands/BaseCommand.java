@@ -27,7 +27,7 @@ public abstract class BaseCommand {
 		args.remove(0);
 		usedCommand = cmd;
 		
-		if (argLength != args.size() && (argLength * -1 > args.size())) {
+		if (argLength > args.size()) {
 			sendUsage();
 			return true;
 		}
