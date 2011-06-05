@@ -1,7 +1,9 @@
 package uk.co.oliwali.DataLog.commands;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import org.bukkit.util.Vector;
 
@@ -24,7 +26,7 @@ public class SearchCommand extends BaseCommand {
 		String[] players = null;
 		Vector loc = null;
 		Integer radius = null;
-		Integer[] actions = null;
+		List<Integer> actions = new ArrayList<Integer>();
 		String[] worlds = null;
 		String dateFrom = null;
 		String dateTo = null;
@@ -42,10 +44,8 @@ public class SearchCommand extends BaseCommand {
 				if (param.equals("w")) worlds = values;
 				if (param.equals("f")) filters = values;
 				if (param.equals("a")) {
-					Integer[] ints = new Integer[values.length];
-					for (int i = 0; i < values.length; i++)
-						ints[i] = DataType.fromName(values[i]).getId();
-					actions = ints;
+					for (String value : values)
+						actions.add(DataType.fromName(value).getId());
 				}
 				if (param.equals("l")) {
 					loc = new Vector();

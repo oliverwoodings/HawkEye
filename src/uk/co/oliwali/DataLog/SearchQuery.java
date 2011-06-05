@@ -9,6 +9,7 @@ import org.bukkit.util.Vector;
 
 import com.avaje.ebean.SqlRow;
 
+import uk.co.oliwali.DataLog.util.Permission;
 import uk.co.oliwali.DataLog.util.Util;
 
 public class SearchQuery implements Runnable {
@@ -16,14 +17,14 @@ public class SearchQuery implements Runnable {
 	private String[] players;
 	private Vector loc;
 	private Integer radius;
-	private Integer[] actions;
+	private List<Integer> actions;
 	private String[] worlds;
 	private String dateFrom;
 	private String dateTo;
 	private String[] filters;
 	private CommandSender sender;
 	
-	public SearchQuery(CommandSender sender, String dateFrom, String dateTo, String[] players, Integer[] actions, Vector loc, Integer radius, String[] worlds, String[] filters) {
+	public SearchQuery(CommandSender sender, String dateFrom, String dateTo, String[] players, List<Integer> actions, Vector loc, Integer radius, String[] worlds, String[] filters) {
 		this.sender = sender;
 		this.players = players;
 		this.dateFrom = dateFrom;
@@ -47,8 +48,18 @@ public class SearchQuery implements Runnable {
 				players[i] = "'" + players[i].toLowerCase() + "'";
 			args.add("LOWER(`player`) LIKE (" + Util.join(Arrays.asList(players), " OR ") + ")");
 		}
-		if (actions != null)
-			args.add("`action` = (" + Util.join(Arrays.asList(actions), " OR ") + ")");
+		
+		if (actions.size() == 0) {
+			actions = new ArrayList<Integer>();
+			for (DataType type : DataType.values())
+				actions.add(type.getId());
+		}
+		List<Integer> acs = new ArrayList<Integer>();
+		for (int act : actions.toArray(new Integer[actions.size()]))
+			if (Permission.searchType(sender, DataType.fromId(act).getConfigName()))
+				acs.add(act);
+		args.add("`action` IN (" + Util.join(acs, " OR ") + ")");
+		
 		if (loc != null) {
 			int range = 5;
 			if (radius != null)

@@ -107,7 +107,7 @@ public class DataLog extends JavaPlugin {
 		}
 		
         //Check if database needs creating
-		if (getDatabase().createSqlQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'datalog'").findUnique() == null) {
+		if (getDatabase().createSqlQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'datalog'").findList() == null) {
             Util.info("Installing database due to first time usage");
             installDDL();
         }
