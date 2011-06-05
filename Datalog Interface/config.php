@@ -11,15 +11,22 @@
 	$config = array(
 					//Enter your MySQL database information
 					//Do not change 'dbTable'
-					"dbHost"  => "localhost",
+					"dbHost"  => "play.minecraftcc.com",
 					"dbDbase" => "minecraft",
 					"dbUser"  => "root",
-					"dbPass"  => "",
+					"dbPass"  => "epicmc89",
 					"dbTable" => "datalog",
 					
 					//Set this to the password you want people to have to use to access the interface
 					//Leave blank for no password
-					"password" => ""
+					"password" => "",
+					
+					//Default radius to search for if user supplies a location
+					"radius" => 30,
+					
+					//Limit the maximum number of results that can be returned
+					//Set to 0 for no limit
+					"maxResults" => 0
 					);
 	
 	$con = mysql_connect($config["dbHost"], $config["dbUser"], $config["dbPass"]);

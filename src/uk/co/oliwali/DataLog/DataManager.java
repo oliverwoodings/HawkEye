@@ -85,10 +85,9 @@ public class DataManager {
 	}
 	
 	public static boolean displayPage(CommandSender sender, int page) {
-		List<SqlRow> results = searchResults.get(sender);
-		
-		if (results == null || results.size() == 0)
+		if (!hasResults(sender))
 			return false;
+		List<SqlRow> results = searchResults.get(sender);
 		int maxLines = 6;
 		int maxPages = (int)Math.ceil((double)results.size() / 6);
 		if (page > maxPages || page < 1)
@@ -103,7 +102,7 @@ public class DataManager {
 			String data = row.getString("data");
 			if (row.getInteger("action") == 0 || row.getInteger("action") == 1)
 				data = Material.getMaterial(row.getInteger("data")).name();
-			sendLine(sender, "&7" + row.getString("date").substring(5) + " &c" + row.getString("player") + " &7" + DataType.fromId(row.getInteger("action")).getConfigName() + " &c" + row.getString("world") + ":" + row.getInteger("x") + "," + row.getInteger("y")+ "," + row.getInteger("z"));
+			sendLine(sender, "&7" + row.getInteger("dataid") + " &c" + row.getString("date").substring(5) + " &7" + row.getString("player") + " &c" + DataType.fromId(row.getInteger("action")).getConfigName() + " &7" + row.getString("world") + ":" + row.getInteger("x") + "," + row.getInteger("y")+ "," + row.getInteger("z"));
 			sendLine(sender, "   &7Data: &c" + data);
 		}
 		Util.sendMessage(sender, "&8-----------------------------------------------------");
@@ -111,12 +110,23 @@ public class DataManager {
 	}
 	
 	public static void sendLine(CommandSender sender, String line) {
-		int len = 65;
+		int len = 70;
 		if (line.length() < len)
 			Util.sendMessage(sender, "&8| " + line);
 		else
 			for (int i = 0; i < line.length(); i+=len)
 				Util.sendMessage(sender, "&8| &c" + (i+len>line.length()?line.substring(i):line.substring(i, i+len)));
+	}
+	
+	public static boolean hasResults(CommandSender sender) {
+		List<SqlRow> results = searchResults.get(sender);
+		if (results == null || results.size() == 0)
+			return false;
+		return true;
+	}
+	
+	public static DataEntry getEntry(int id) {
+		return db.find(DataEntry.class).where().eq("dataid", id).findUnique();
 	}
 
 }

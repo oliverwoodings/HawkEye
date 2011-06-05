@@ -1,0 +1,93 @@
+00,None
+26,Bed
+07,Bedrock
+47,Bookshelf
+45,Brick Block
+39,Brown Mushroom
+62,Burning Furnace
+81,Cactus
+92,Cake Block
+54,Chest
+82,Clay Block
+16,Coal Ore
+04,Cobblestone
+67,Cobblestone Stairs
+30,Cobweb
+58,Crafting Table
+37,Dandelion
+32,Dead Shrubs
+28,Detector Rail
+57,Diamond Block
+56,Diamond Ore
+03,Dirt
+23,Dispenser
+43,Double Slabs
+60,Farmland
+85,Fence
+51,Fire
+61,Furnace
+20,Glass
+74,Glowing Redstone Ore
+89,Glowstone Block
+41,Gold Block
+14,Gold Ore
+02,Grass
+13,Gravel
+79,Ice
+42,Iron Block
+71,Iron Door
+15,Iron Ore
+91,Jack-O-Lantern
+84,Jukebox
+65,Ladders
+22,Lapis Lazuli Block
+21,Lapis Lazuli Ore
+10,Lava
+18,Leaves
+69,Lever
+95,Locked Chest
+52,Monster Spawner
+48,Moss Stone
+87,Netherrack
+25,Note Block
+49,Obsidian
+90,Portal
+27,Powered Rail
+86,Pumpkin
+66,Rails
+40,Red Mushroom
+73,Redstone Ore
+93,Redstone Repeater ("off" state)
+94,Redstone Repeater ("on" state)
+75,Redstone Torch ("off" state)
+76,Redstone Torch ("on" state)
+55,Redstone Wire
+38,Rose
+12,Sand
+24,Sandstone
+06,Sapling
+59,Seeds
+63,Sign Post
+44,Slabs
+78,Snow
+80,Snow Block
+88,Soul Sand
+19,Sponge
+11,Stationary lava
+09,Stationary water
+01,Stone
+77,Stone Button
+70,Stone Pressure Plate 
+83,Sugar Cane
+46,TNT
+31,Tall Grass
+50,Torch 
+96,Trapdoor 
+68,Wall Sign
+08,Water
+17,Wood
+64,Wooden Door
+05,Wooden Plank
+72,Wooden Pressure Plate
+53,Wooden Stairs
+35,Wool
