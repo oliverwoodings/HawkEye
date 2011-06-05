@@ -5,7 +5,8 @@ import java.util.Calendar;
 
 import org.bukkit.util.Vector;
 
-import uk.co.oliwali.DataLog.DataManager;
+import uk.co.oliwali.DataLog.DataLog;
+import uk.co.oliwali.DataLog.SearchQuery;
 import uk.co.oliwali.DataLog.DataType;
 import uk.co.oliwali.DataLog.util.Permission;
 import uk.co.oliwali.DataLog.util.Util;
@@ -122,9 +123,9 @@ public class SearchCommand extends BaseCommand {
 			return true;
 		}
 		
-		if (!DataManager.search(sender, dateFrom, dateTo, players, actions, loc, radius, worlds, filters))
-			Util.sendMessage(sender, "&cNo results found matching those criteria");
-		
+		Util.sendMessage(sender, "&cSearching database...");
+		SearchQuery search = new SearchQuery(sender, dateFrom, dateTo, players, actions, loc, radius, worlds, filters);
+		DataLog.server.getScheduler().scheduleAsyncDelayedTask(DataLog.server.getPluginManager().getPlugin("DataLog"), search);
 		return true;
 	}
 	
