@@ -45,7 +45,7 @@ public class SearchQuery implements Runnable {
 		if (players != null) {
 			for (int i = 0; i < players.length; i++)
 				players[i] = "'" + players[i].toLowerCase() + "'";
-			args.add("LOWER(`player`) = (" + Util.join(Arrays.asList(players), " OR ") + ")");
+			args.add("LOWER(`player`) LIKE (" + Util.join(Arrays.asList(players), " OR ") + ")");
 		}
 		if (actions != null)
 			args.add("`action` = (" + Util.join(Arrays.asList(actions), " OR ") + ")");
