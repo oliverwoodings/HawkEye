@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javax.persistence.PersistenceException;
-
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -20,11 +18,13 @@ import uk.co.oliwali.DataLog.commands.BaseCommand;
 import uk.co.oliwali.DataLog.commands.HelpCommand;
 import uk.co.oliwali.DataLog.commands.PageCommand;
 import uk.co.oliwali.DataLog.commands.SearchCommand;
+import uk.co.oliwali.DataLog.commands.SearchHelpCommand;
 import uk.co.oliwali.DataLog.commands.TptoCommand;
 import uk.co.oliwali.DataLog.listeners.DLBlockListener;
 import uk.co.oliwali.DataLog.listeners.DLEntityListener;
 import uk.co.oliwali.DataLog.listeners.DLPlayerListener;
 import uk.co.oliwali.DataLog.util.Config;
+import uk.co.oliwali.DataLog.util.Permission;
 import uk.co.oliwali.DataLog.util.Util;
 
 public class DataLog extends JavaPlugin {
@@ -51,6 +51,7 @@ public class DataLog extends JavaPlugin {
         version = this.getDescription().getVersion();
         config = new Config(this);
         new DataManager(this);
+        new Permission(this);
         
         // Register events
         PluginManager pm = getServer().getPluginManager();
@@ -73,6 +74,7 @@ public class DataLog extends JavaPlugin {
         commands.add(new SearchCommand());
         commands.add(new PageCommand());
         commands.add(new TptoCommand());
+        commands.add(new SearchHelpCommand());
         
         Util.info("Version " + version + " enabled!");
         
@@ -104,9 +106,8 @@ public class DataLog extends JavaPlugin {
 			Util.info("Unable to create ebean.properties file");
 		}
 		
-        try {
-            getDatabase().find(DataEntry.class).findRowCount();
-        } catch (PersistenceException ex) {
+        //Check if database needs creating
+		if (getDatabase().createSqlQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'datalog'").findUnique() == null) {
             Util.info("Installing database due to first time usage");
             installDDL();
         }
