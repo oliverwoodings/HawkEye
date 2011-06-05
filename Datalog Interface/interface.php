@@ -26,7 +26,7 @@
 	if ($data["players"][0] != "") {
 		foreach ($data["players"] as $key => $val)
 			$data["players"][$key] = "'" . $val . "'";
-		array_push($args, "LOWER(`player`) LIKE (" . join(" OR ", $data["players"]) . ")");
+		array_push($args, "LOWER(`player`) LIKE " . join(" OR LOWER(`player`) LIKE ", $data["players"]));
 	}
 	
 	if (count($data["actions"]) == 0)
@@ -57,7 +57,7 @@
 	if ($data["keywords"][0] != "") {
 		foreach ($data["keywords"] as $key => $val)
 			$data["keywords"][$key] = "'%" . $val . "%'";
-		array_push($args, "`data` LIKE (" . join(" OR ", $data["keywords"]) . ")");
+		array_push($args, "`data` LIKE " . join(" OR `data` LIKE ", $data["keywords"]));
 	}
 	
 	$sql .= join(" AND ", $args);
