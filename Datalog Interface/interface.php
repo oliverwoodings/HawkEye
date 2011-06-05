@@ -26,7 +26,7 @@
 	if ($data["players"][0] != "") {
 		foreach ($data["players"] as $key => $val)
 			$data["players"][$key] = "'" . $val . "'";
-		array_push($args, "LOWER(`player`) = (" . join(" OR ", $data["players"]) . ")");
+		array_push($args, "LOWER(`player`) LIKE (" . join(" OR ", $data["players"]) . ")");
 	}
 	
 	if (count($data["actions"]) == 0)
