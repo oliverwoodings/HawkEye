@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.persistence.PersistenceException;
+
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -107,7 +109,9 @@ public class DataLog extends JavaPlugin {
 		}
 		
         //Check if database needs creating
-		if (getDatabase().createSqlQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'datalog'").findList() == null) {
+		try {
+			getDatabase().createSqlQuery("SELECT * FROM `datalog` LIMIT 1").findList();
+		} catch (PersistenceException e) {
             Util.info("Installing database due to first time usage");
             installDDL();
         }
