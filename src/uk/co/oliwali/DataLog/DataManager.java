@@ -55,7 +55,12 @@ public class DataManager {
 			String data = row.getString("data");
 			if (row.getInteger("action") == 0 || row.getInteger("action") == 1)
 				data = Material.getMaterial(row.getInteger("data")).name();
-			sendLine(sender, "&7" + row.getInteger("dataid") + " &c" + row.getString("date").substring(5) + " &7" + row.getString("player") + " &c" + DataType.fromId(row.getInteger("action")).getConfigName() + " &7" + row.getString("world") + ":" + row.getInteger("x") + "," + row.getInteger("y")+ "," + row.getInteger("z"));
+			String action = DataType.fromId(row.getInteger("action")).getConfigName();
+			if (row.getInteger("action") == 16) {
+				action = data.substring(0, data.indexOf("-"));
+				data = data.substring(data.indexOf("-") + 1);
+			}
+			sendLine(sender, "&7" + row.getInteger("dataid") + " &c" + row.getString("date").substring(5) + " &7" + row.getString("player") + " &c" + action + " &7" + row.getString("world") + ":" + row.getInteger("x") + "," + row.getInteger("y")+ "," + row.getInteger("z"));
 			sendLine(sender, "   &7Data: &c" + data);
 		}
 		Util.sendMessage(sender, "&8-----------------------------------------------------");
