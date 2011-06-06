@@ -8,12 +8,13 @@ import java.util.List;
 import org.bukkit.util.Vector;
 
 import uk.co.oliwali.DataLog.DataLog;
+import uk.co.oliwali.DataLog.DataManager;
 import uk.co.oliwali.DataLog.SearchQuery;
 import uk.co.oliwali.DataLog.DataType;
 import uk.co.oliwali.DataLog.util.Permission;
 import uk.co.oliwali.DataLog.util.Util;
 
-public class SearchCommand extends BaseCommand {
+public class SearchCommand extends BaseCommand implements Runnable {
 
 	public SearchCommand() {
 		name = "search";
@@ -124,13 +125,17 @@ public class SearchCommand extends BaseCommand {
 			return true;
 		}
 		
-		SearchQuery search = new SearchQuery(sender, dateFrom, dateTo, players, actions, loc, radius, worlds, filters);
+		SearchQuery search = new SearchQuery(this, sender, dateFrom, dateTo, players, actions, loc, radius, worlds, filters);
 		DataLog.server.getScheduler().scheduleAsyncDelayedTask(DataLog.server.getPluginManager().getPlugin("DataLog"), search);
 		return true;
 	}
 	
 	public boolean permission() {
 		return Permission.search(sender);
+	}
+
+	public void run() {
+		DataManager.displayPage(sender, 1);
 	}
 
 }

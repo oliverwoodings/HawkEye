@@ -18,6 +18,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import uk.co.oliwali.DataLog.commands.BaseCommand;
 import uk.co.oliwali.DataLog.commands.HelpCommand;
+import uk.co.oliwali.DataLog.commands.HereCommand;
 import uk.co.oliwali.DataLog.commands.PageCommand;
 import uk.co.oliwali.DataLog.commands.SearchCommand;
 import uk.co.oliwali.DataLog.commands.SearchHelpCommand;
@@ -77,6 +78,7 @@ public class DataLog extends JavaPlugin {
         commands.add(new PageCommand());
         commands.add(new TptoCommand());
         commands.add(new SearchHelpCommand());
+        commands.add(new HereCommand());
         
         Util.info("Version " + version + " enabled!");
         
