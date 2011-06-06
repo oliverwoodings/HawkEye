@@ -13,7 +13,7 @@
 		
 	$data = json_decode(stripslashes($_GET["data"]), true);
 	
-	if (strtolower($data["password"]) != $config["password"] && $config["password"] != "")
+	if (strtolower($data["password"]) != strtolower($config["password"]) && $config["password"] != "")
 		return error("Invalid password!");
 	
 	$sql = "SELECT * FROM `datalog` WHERE ";
@@ -62,7 +62,7 @@
 	
 	$sql .= join(" AND ", $args);
 	if ($config["maxResults"] > 0)
-		$sql .= " LIMIT " + $config["maxResults"];
+		$sql .= " LIMIT " . $config["maxResults"];
 	$res = mysql_query($sql);
 	
 	if (!$res)
