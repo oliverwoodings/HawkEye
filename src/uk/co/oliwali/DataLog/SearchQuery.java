@@ -82,8 +82,6 @@ public class SearchQuery implements Runnable {
 			args.add("`data` LIKE " + Util.join(Arrays.asList(filters), " OR `data` LIKE "));
 		}
 		
-		if (args.size() == 0)
-			Util.sendMessage(sender, "&cInvalid search format!");
 		sql += Util.join(args, " AND ");
 		if (Config.maxLines > 0)
 			sql += " LIMIT " + Config.maxLines;

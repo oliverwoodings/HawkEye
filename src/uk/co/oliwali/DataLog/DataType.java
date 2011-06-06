@@ -6,16 +6,16 @@ import java.util.Map;
 
 public enum DataType {
 	
-	BLOCK_BREAK(0, "block-break"),
-	BLOCK_PLACE(1, "block-place"),
-	SIGN_PLACE(2, "sign-place"),
+	BLOCK_BREAK(0, "block-break", true),
+	BLOCK_PLACE(1, "block-place", true),
+	SIGN_PLACE(2, "sign-place", true),
 	CHAT(3, "chat"),
 	COMMAND(4, "command"),
 	JOIN(5, "join"),
     QUIT(6, "quit"),
     TELEPORT(7, "teleport"),
-    LAVA_BUCKET(8, "lava-bucket"),
-    WATER_BUCKET(9, "water-bucket"),
+    LAVA_BUCKET(8, "lava-bucket", true),
+    WATER_BUCKET(9, "water-bucket", true),
     OPEN_CHEST(10, "open-chest"),
     DOOR_INTERACT(11, "door-interact"),
     PVP_DEATH(12, "pvp-death"),
@@ -26,6 +26,7 @@ public enum DataType {
 	
 	private int id;
 	private String configName;
+	private boolean canRollback;
 	
 	private static final Map<String, DataType> nameMapping = new HashMap<String, DataType>();
 	private static final Map<Integer, DataType> idMapping = new HashMap<Integer, DataType>();
@@ -42,6 +43,12 @@ public enum DataType {
 	private DataType(int id, String configName) {
 		this.id = id;
 		this.configName = configName;
+		this.canRollback = false;
+	}
+	private DataType(int id, String configName, boolean canRollback) {
+		this.id = id;
+		this.configName = configName;
+		this.canRollback = canRollback;
 	}
 	
 	public int getId() {
@@ -58,6 +65,10 @@ public enum DataType {
 	
 	public static DataType fromId(int id) {
 		return idMapping.get(id);
+	}
+	
+	public boolean canRollback() {
+		return canRollback;
 	}
 
 }
