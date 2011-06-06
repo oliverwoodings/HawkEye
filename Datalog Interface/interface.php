@@ -84,8 +84,8 @@
 	//Loop through results
 	while ($entry = mysql_fetch_object($res)) {
 		$fdata = $entry->data;
-		if (strlen($entry->data) > 30)
-			$fdata = substr($fdata, 0, 30) . "...";
+		if (strlen($entry->data) > 40)
+			$fdata = substr($fdata, 0, 40) . "...";
 		$action = $entry->action;
 		if ($action == 0 || $action == 1) {
 			$items = explode("\n", file_get_contents("items.txt"));
@@ -94,6 +94,12 @@
 				if ((int)$item[0] == (int)$fdata)
 					$fdata = $item[1];
 			}
+		}
+		if ($action == 16) {
+			$arr = explode("-", $fdata);
+			if (count($arr) > 0)
+				$action = array_shift($arr);
+			$fdata = join("-", $arr);
 		}
 		$action = str_replace(array(16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0), array("Other", "Button", "Lever", "Flint Steel", "PVP Death", "Door Interact", "Open Chest", "Water Bucket", "Lava Bucket", "Teleport", "Quit", "Join", "Command", "Chat", "Sign Place", "Block Place", "Block Break"), $action);
 		echo '<tr><td width="155px">' . $entry->date . "</td><td>" . $entry->player . "</td><td>" . $action . "</td><td>" . $entry->world . "</td><td>" . round($entry->x, 1).",".round($entry->y, 1).",".round($entry->z, 1) . '</td><td id="dataEntry" title="' . $entry->data . '">' . $fdata . "</td></tr>";
