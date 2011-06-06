@@ -34,7 +34,7 @@ input, textarea {
     }
 
 .header, .filterContainer, .resultsContainer {
-    width: 850px;
+    width: 940px;
     margin-left: auto;
     margin-right: auto;
     -moz-border-radius: 40px;
@@ -120,9 +120,10 @@ input, textarea {
 	margin-top: 3px;
 }
 .searchButton {
-	margin-left: 40px;
 	height: 40px;
 	width: 130px;
+	margin-top: -3px;
+	margin-left: 3px;
 }
 
 .tooltip {
@@ -171,7 +172,7 @@ input, textarea {
     line-height: 1.4em;
     font-style: normal;
     border-collapse: separate;
-	width: 808px;
+	width: 898px;
 }
 	.resultsTable th {
 		padding: 5px;

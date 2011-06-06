@@ -10,8 +10,6 @@ import uk.co.oliwali.DataLog.DataType;
 public class DataLogAPI {
 
 	public static boolean addEntry(JavaPlugin plugin, String action, Player player, Location loc, String data) {
-		if (action.contains(" "))
-			return false;
 		DataManager.addEntry(player, plugin, DataType.OTHER, loc, action + "-" + data);
 		return true;
 	}

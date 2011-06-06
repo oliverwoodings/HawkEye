@@ -24,7 +24,7 @@
 					//Default radius to search for if user supplies a location
 					"radius" => 30,
 					
-					//Limit the maximum number of results that can be returned
+					//Limit the maximum number of results that can be returned. Do not use quotes
 					//Set to 0 for no limit
 					"maxResults" => 0
 					);

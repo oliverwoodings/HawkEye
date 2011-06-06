@@ -1,8 +1,9 @@
 name: DataLog
 main: uk.co.oliwali.DataLog.DataLog
 author: oliverw92
-version: 1.0.1
+version: 1.0.2
 database: true
+description: Advanced Data Logging
 commands:
   datalog:
     description: Advanced Data Logging

@@ -59,10 +59,12 @@ $(document).ready(function(){
 			if ($("#timeTo").val() != "")
 				filter.dateTo += ":00";
 				
-			for (i = 0; i < 17; i++) {
-				if (document.searchForm.action[i].checked)
-					filter.actions[filter.actions.length] = document.searchForm.action[i].value;
-			}
+			$(".filter").find("input:checked").each(function (index) { filter.actions[index] = $(this).val(); });
+			
+			//for (i = 0; i < 17; i++) {
+				//if (document.searchForm.action[i].checked)
+					//filter.actions[filter.actions.length] = document.searchForm.action[i].value;
+			//}
 			var dataString = JSON.stringify(filter);
 			$(".results").html('<div class="loading"></div>');
 			$.ajax({
