@@ -58,10 +58,10 @@ public class DataManager {
 			SqlRow row = results.get(i);
 			String data = row.getString("data");
 			if (row.getInteger("action") == 0)
-				data = Material.getMaterial(data).name();
+				data = Material.getMaterial(Integer.parseInt(data)).name();
 			if (row.getInteger("action") == 1) {
 				if (data.indexOf("-") == -1)
-					data = Material.getMaterial(data).name();
+					data = Material.getMaterial(Integer.parseInt(data)).name();
 				else
 					data = Material.getMaterial(Integer.parseInt(data.substring(0, data.indexOf("-")))).name() + " changed to " + Material.getMaterial(Integer.parseInt(data.substring(data.indexOf("-") + 1))).name();
 			}
@@ -109,24 +109,31 @@ public class DataManager {
 			if (world == null)
 				continue;
 			
-			undo.add(row);
 			Location loc = new Location(world, row.getInteger("x"), row.getInteger("y"), row.getInteger("z"));
 			Block block = world.getBlockAt(loc);
+			int id = block.getTypeId();
 			switch (type) {
 				case BLOCK_BREAK:
 					block.setTypeId(Integer.parseInt(row.getString("data")));
+					row.set("data", id);
 					break;
 				case BLOCK_PLACE:
-					if (row.getString("data").indexOf("-") == -1)
+					if (row.getString("data").indexOf("-") == -1) {
 						block.setType(Material.AIR);
-					else
+						row.set("data", id);
+					}
+					else {
 						block.setTypeId(Integer.parseInt(row.getString("data").substring(0, row.getString("data").indexOf("-"))));
+						row.set("data", block.getTypeId() + "-" + row.getString("data").substring(row.getString("data").indexOf("-") + 1));
+					}
 					break;
 				case LAVA_BUCKET:
 				case WATER_BUCKET:
 					block.setType(Material.AIR);
+					row.set("data", id);
 					break;
 			}
+			undo.add(row);
 			
 		}
 		return undo;

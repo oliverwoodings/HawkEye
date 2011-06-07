@@ -4,6 +4,7 @@ import uk.co.oliwali.DataLog.DataLog;
 import uk.co.oliwali.DataLog.SearchQuery;
 import uk.co.oliwali.DataLog.SearchQuery.SearchType;
 import uk.co.oliwali.DataLog.util.Config;
+import uk.co.oliwali.DataLog.util.Permission;
 import uk.co.oliwali.DataLog.util.Util;
 
 public class HereCommand extends BaseCommand {
@@ -29,7 +30,7 @@ public class HereCommand extends BaseCommand {
 	}
 
 	public boolean permission() {
-		return false;
+		return Permission.search(sender);
 	}
 	
 }

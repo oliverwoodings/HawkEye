@@ -82,17 +82,34 @@
 				<th>Data</th>
 			</tr>";
 	//Loop through results
+	$items = explode("\n", file_get_contents("items.txt"));
 	while ($entry = mysql_fetch_object($res)) {
 		$fdata = $entry->data;
 		if (strlen($entry->data) > 40)
 			$fdata = substr($fdata, 0, 40) . "...";
 		$action = $entry->action;
-		if ($action == 0 || $action == 1) {
-			$items = explode("\n", file_get_contents("items.txt"));
+		if ($action == 0) {
 			foreach ($items as $i) {
 				$item = explode(",", $i);
 				if ((int)$item[0] == (int)$fdata)
 					$fdata = $item[1];
+			}
+		}
+		if ($action == 1) {
+			$arr = explode("-", $fdata);
+			if (count($arr) == 1) {
+				foreach ($items as $i) {
+					$item = explode(",", $i);
+					if ((int)$item[0] == (int)$arr[0])
+						$fdata = $item[1] . " replaced by ";
+				}
+			}
+			else {
+				foreach ($items as $i) {
+					$item = explode(",", $i);
+					if ((int)$item[0] == (int)$arr[1])
+						$fdata .= $item[1];
+				}
 			}
 		}
 		if ($action == 16) {

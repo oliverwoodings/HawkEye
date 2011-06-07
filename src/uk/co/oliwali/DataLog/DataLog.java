@@ -20,9 +20,11 @@ import uk.co.oliwali.DataLog.commands.BaseCommand;
 import uk.co.oliwali.DataLog.commands.HelpCommand;
 import uk.co.oliwali.DataLog.commands.HereCommand;
 import uk.co.oliwali.DataLog.commands.PageCommand;
+import uk.co.oliwali.DataLog.commands.RollbackCommand;
 import uk.co.oliwali.DataLog.commands.SearchCommand;
 import uk.co.oliwali.DataLog.commands.SearchHelpCommand;
 import uk.co.oliwali.DataLog.commands.TptoCommand;
+import uk.co.oliwali.DataLog.commands.UndoCommand;
 import uk.co.oliwali.DataLog.listeners.DLBlockListener;
 import uk.co.oliwali.DataLog.listeners.DLEntityListener;
 import uk.co.oliwali.DataLog.listeners.DLPlayerListener;
@@ -79,6 +81,8 @@ public class DataLog extends JavaPlugin {
         commands.add(new TptoCommand());
         commands.add(new SearchHelpCommand());
         commands.add(new HereCommand());
+        commands.add(new RollbackCommand());
+        commands.add(new UndoCommand());
         
         Util.info("Version " + version + " enabled!");
         

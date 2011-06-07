@@ -135,7 +135,7 @@ public class RollbackCommand extends BaseCommand {
 	}
 	
 	public boolean permission() {
-		return Permission.search(sender);
+		return Permission.rollback(sender);
 	}
 
 }

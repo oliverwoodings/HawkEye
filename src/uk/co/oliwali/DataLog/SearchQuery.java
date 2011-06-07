@@ -52,7 +52,7 @@ public class SearchQuery implements Runnable {
 			args.add("LOWER(`player`) LIKE " + Util.join(Arrays.asList(players), " OR `player` LIKE "));
 		}
 		
-		if (actions.size() == 0) {
+		if (actions == null || actions.size() == 0) {
 			actions = new ArrayList<Integer>();
 			for (DataType type : DataType.values())
 				actions.add(type.getId());
@@ -90,8 +90,11 @@ public class SearchQuery implements Runnable {
 		if (results == null || results.size() == 0)
 			Util.sendMessage(sender, "&cNo results found matching those criteria");
 		DataManager.searchResults.put(sender, results);
-		if (searchType == SearchType.ROLLBACK)
+		if (searchType == SearchType.ROLLBACK) {
+			Util.sendMessage(sender, "&cRolling back &7" + results.size() + " edits&7...");
 			DataManager.undoResults.put(sender, DataManager.rollback(results));
+			Util.sendMessage(sender, "&cRollback complete");
+		}
 		if (searchType == SearchType.SEARCH)
 			DataManager.displayPage(sender, 1);
 	}
