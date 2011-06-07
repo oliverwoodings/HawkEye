@@ -23,7 +23,10 @@ public enum DataType {
 	LEVER(14, true, "lever"),
 	STONE_BUTTON(15, true, "button"),
 	OTHER(16, "other"),
-	EXPLOSION(17, true, "explosion", true);
+	EXPLOSION(17, "explosion", true),
+	BLOCK_BURN(18, "block-burn", true),
+	SNOW_FORM(19, "snow-form", true),
+	LEAF_DECAY(20, "leaf-decay", true);
 	
 	private int id;
 	private boolean canHere;

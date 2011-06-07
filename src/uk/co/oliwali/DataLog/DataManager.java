@@ -121,6 +121,9 @@ public class DataManager {
 			undo.add(block.getState());
 			switch (type) {
 				case BLOCK_BREAK:
+				case SNOW_FORM:
+				case BLOCK_BURN:
+				case LEAF_DECAY:
 				case EXPLOSION:
 					block.setTypeId(Integer.parseInt(row.getString("data")));
 					break;

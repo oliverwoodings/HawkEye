@@ -62,6 +62,9 @@ public class DataLog extends JavaPlugin {
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvent(Type.BLOCK_BREAK, blockListener, Event.Priority.Monitor, this);
         pm.registerEvent(Type.BLOCK_PLACE, blockListener, Event.Priority.Monitor, this);
+        pm.registerEvent(Type.BLOCK_BURN, blockListener, Event.Priority.Monitor, this);
+        pm.registerEvent(Type.BLOCK_PHYSICS, blockListener, Event.Priority.Monitor, this);
+        pm.registerEvent(Type.SNOW_FORM, blockListener, Event.Priority.Monitor, this);
         pm.registerEvent(Type.SIGN_CHANGE, blockListener, Event.Priority.Monitor, this);
         pm.registerEvent(Type.PLAYER_COMMAND_PREPROCESS, playerListener, Event.Priority.Monitor, this);
         pm.registerEvent(Type.PLAYER_CHAT, playerListener, Event.Priority.Monitor, this);
