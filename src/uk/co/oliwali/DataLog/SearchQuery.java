@@ -51,7 +51,7 @@ public class SearchQuery implements Runnable {
 		if (players != null) {
 			for (int i = 0; i < players.length; i++)
 				players[i] = "'" + players[i].toLowerCase() + "'";
-			args.add("LOWER(`player`) LIKE " + Util.join(Arrays.asList(players), " OR `player` LIKE "));
+			args.add("LOWER(`player`) IN (" + Util.join(Arrays.asList(players), ",") + ")");
 		}
 		
 		if (actions == null || actions.size() == 0) {
@@ -76,7 +76,7 @@ public class SearchQuery implements Runnable {
 		if (worlds != null) {
 			for (int i = 0; i < worlds.length; i++)
 				worlds[i] = "'" + worlds[i].toLowerCase() + "'";
-			args.add("LOWER(`world`) = (" + Util.join(Arrays.asList(worlds), " OR ") + ")");
+			args.add("LOWER(`world`) IN (" + Util.join(Arrays.asList(worlds), ",") + ")");
 		}
 		if (filters != null) {
 			for (int i = 0; i < filters.length; i++)
