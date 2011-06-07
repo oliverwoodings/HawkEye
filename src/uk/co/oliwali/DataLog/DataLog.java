@@ -71,6 +71,7 @@ public class DataLog extends JavaPlugin {
         pm.registerEvent(Type.PLAYER_INTERACT, playerListener, Event.Priority.Monitor, this);
         pm.registerEvent(Type.ENTITY_DAMAGE, entityListener, Event.Priority.Monitor, this);
         pm.registerEvent(Type.ENTITY_DEATH, entityListener, Event.Priority.Monitor, this);
+        pm.registerEvent(Type.ENTITY_EXPLODE, entityListener, Event.Priority.Monitor, this);
         
         setupDatabase();
         

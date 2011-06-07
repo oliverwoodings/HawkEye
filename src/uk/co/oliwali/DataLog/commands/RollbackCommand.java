@@ -128,8 +128,12 @@ public class RollbackCommand extends BaseCommand {
 			worlds[0] = player.getWorld().getName();
 		}
 		loc = player.getLocation().toVector();
+		if (actions.size() == 0) {
+			for (DataType type : DataType.values())
+				actions.add(type.getId());
+		}
 		
-		SearchQuery search = new SearchQuery(SearchType.ROLLBACK, sender, dateFrom, dateTo, players, actions, loc, radius, worlds, filters);
+		SearchQuery search = new SearchQuery(SearchType.ROLLBACK, sender, dateFrom, dateTo, players, actions, loc, radius, worlds, filters, "desc");
 		DataLog.server.getScheduler().scheduleAsyncDelayedTask(DataLog.server.getPluginManager().getPlugin("DataLog"), search);
 		return true;
 	}

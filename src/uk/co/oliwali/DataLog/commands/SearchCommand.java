@@ -125,7 +125,7 @@ public class SearchCommand extends BaseCommand {
 			return true;
 		}
 		
-		SearchQuery search = new SearchQuery(SearchType.SEARCH, sender, dateFrom, dateTo, players, actions, loc, radius, worlds, filters);
+		SearchQuery search = new SearchQuery(SearchType.SEARCH, sender, dateFrom, dateTo, players, actions, loc, radius, worlds, filters, "asc");
 		DataLog.server.getScheduler().scheduleAsyncDelayedTask(DataLog.server.getPluginManager().getPlugin("DataLog"), search);
 		return true;
 	}

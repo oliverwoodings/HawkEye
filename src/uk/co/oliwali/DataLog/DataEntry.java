@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 @Entity()
@@ -124,11 +123,11 @@ public class DataEntry {
     	return data;
     }
     
-	public void setInfo(Player player, JavaPlugin instance, int action, Location loc, String data) {
+	public void setInfo(String player, JavaPlugin instance, int action, Location loc, String data) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	    setDate(sdf.format(Calendar.getInstance().getTime()));
 	    setPlugin(instance.getDescription().getName());
-		setPlayer(player.getName());
+		setPlayer(player);
 		setAction(action);
 		setWorld(loc.getWorld().getName());
 		setX(loc.getX());

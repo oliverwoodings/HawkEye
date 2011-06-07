@@ -25,8 +25,9 @@ public class SearchQuery implements Runnable {
 	private String dateTo;
 	private String[] filters;
 	private CommandSender sender;
+	private String order;
 	
-	public SearchQuery(SearchType searchType, CommandSender sender, String dateFrom, String dateTo, String[] players, List<Integer> actions, Vector loc, Integer radius, String[] worlds, String[] filters) {
+	public SearchQuery(SearchType searchType, CommandSender sender, String dateFrom, String dateTo, String[] players, List<Integer> actions, Vector loc, Integer radius, String[] worlds, String[] filters, String order) {
 		this.searchType = searchType;
 		this.sender = sender;
 		this.players = players;
@@ -37,6 +38,7 @@ public class SearchQuery implements Runnable {
 		this.radius = radius;
 		this.worlds = worlds;
 		this.filters = filters;
+		this.order = order;
 	}
 	
 	public void run() {
@@ -83,6 +85,13 @@ public class SearchQuery implements Runnable {
 		}
 		
 		sql += Util.join(args, " AND ");
+		if (order != null) {
+			sql += " ORDER BY `dataid` ";
+			if (order.equalsIgnoreCase("desc"))
+				sql += "DESC";
+			if (order.equalsIgnoreCase("asc"))
+				sql += "DESC";
+		}
 		if (Config.maxLines > 0)
 			sql += " LIMIT " + Config.maxLines;
 		Util.sendMessage(sender, "&cSearching database...");

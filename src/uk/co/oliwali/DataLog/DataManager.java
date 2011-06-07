@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,7 +23,7 @@ public class DataManager {
 	public static EbeanServer db;
 	private static DataLog plugin;
 	public static HashMap<CommandSender, List<SqlRow>> searchResults = new HashMap<CommandSender, List<SqlRow>>();
-	public static HashMap<CommandSender, List<SqlRow>> undoResults = new HashMap<CommandSender, List<SqlRow>>();
+	public static HashMap<CommandSender, List<BlockState>> undoResults = new HashMap<CommandSender, List<BlockState>>();
 	
 	public DataManager(DataLog instance) {
 		plugin = instance;
@@ -32,7 +33,13 @@ public class DataManager {
 	public static void addEntry(Player player, DataType dataType, Location loc, String data) {
 		addEntry(player, plugin, dataType, loc, data);
 	}
+	public static void addEntry(String player, DataType dataType, Location loc, String data) {
+		addEntry(player, plugin, dataType, loc, data);
+	}
 	public static void addEntry(Player player, JavaPlugin cplugin, DataType dataType, Location loc, String data) {
+		addEntry(player.getName(), cplugin, dataType, loc, data);
+	}
+	public static void addEntry(String player, JavaPlugin cplugin, DataType dataType, Location loc, String data) {
 		if (plugin.config.isLogged(dataType)) {
 			DataEntry dataEntry = new DataEntry();
 			loc = Util.getSimpleLocation(loc);
@@ -97,8 +104,8 @@ public class DataManager {
 		return db.find(DataEntry.class).where().eq("dataid", id).findUnique();
 	}
 	
-	public static List<SqlRow> rollback(List<SqlRow> results) {
-		List<SqlRow> undo = new ArrayList<SqlRow>();
+	public static List<BlockState> rollback(List<SqlRow> results) {
+		List<BlockState> undo = new ArrayList<BlockState>();
 		for (SqlRow row : results.toArray(new SqlRow[0])) {
 			
 			DataType type = DataType.fromId(row.getInteger("action"));
@@ -111,29 +118,23 @@ public class DataManager {
 			
 			Location loc = new Location(world, row.getInteger("x"), row.getInteger("y"), row.getInteger("z"));
 			Block block = world.getBlockAt(loc);
-			int id = block.getTypeId();
+			undo.add(block.getState());
 			switch (type) {
 				case BLOCK_BREAK:
+				case EXPLOSION:
 					block.setTypeId(Integer.parseInt(row.getString("data")));
-					row.set("data", id);
 					break;
 				case BLOCK_PLACE:
-					if (row.getString("data").indexOf("-") == -1) {
+					if (row.getString("data").indexOf("-") == -1)
 						block.setType(Material.AIR);
-						row.set("data", id);
-					}
-					else {
+					else
 						block.setTypeId(Integer.parseInt(row.getString("data").substring(0, row.getString("data").indexOf("-"))));
-						row.set("data", block.getTypeId() + "-" + row.getString("data").substring(row.getString("data").indexOf("-") + 1));
-					}
 					break;
 				case LAVA_BUCKET:
 				case WATER_BUCKET:
 					block.setType(Material.AIR);
-					row.set("data", id);
 					break;
 			}
-			undo.add(row);
 			
 		}
 		return undo;

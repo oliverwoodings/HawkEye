@@ -1,6 +1,10 @@
 package uk.co.oliwali.DataLog.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import uk.co.oliwali.DataLog.DataLog;
+import uk.co.oliwali.DataLog.DataType;
 import uk.co.oliwali.DataLog.SearchQuery;
 import uk.co.oliwali.DataLog.SearchQuery.SearchType;
 import uk.co.oliwali.DataLog.util.Config;
@@ -21,7 +25,10 @@ public class HereCommand extends BaseCommand {
 			int integer = Integer.parseInt(args.get(0));
 			if (integer > Config.maxRadius || integer < 0)
 				throw new Exception();
-			SearchQuery search = new SearchQuery(SearchType.SEARCH, sender, null, null, null, null, player.getLocation().toVector(), Integer.parseInt(args.get(0)), null, null);
+			List<Integer> actions = new ArrayList<Integer>();
+			for (DataType type : DataType.values())
+				if (type.canHere()) actions.add(type.getId());
+			SearchQuery search = new SearchQuery(SearchType.SEARCH, sender, null, null, null, actions, player.getLocation().toVector(), Integer.parseInt(args.get(0)), null, null, "desc");
 			DataLog.server.getScheduler().scheduleAsyncDelayedTask(DataLog.server.getPluginManager().getPlugin("DataLog"), search);
 		} catch (Throwable t) {
 			Util.sendMessage(sender, "Invalid radius!");
