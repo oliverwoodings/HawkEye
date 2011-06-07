@@ -12,7 +12,9 @@ import org.bukkit.block.BlockState;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.Vector;
 
+import uk.co.oliwali.DataLog.SearchQuery.SearchType;
 import uk.co.oliwali.DataLog.util.Util;
 
 import com.avaje.ebean.EbeanServer;
@@ -46,6 +48,11 @@ public class DataManager {
 			dataEntry.setInfo(player, cplugin, dataType.getId(), loc, data);
 			db.save(dataEntry);
 		}
+	}
+	
+	public static void search(SearchType searchType, CommandSender sender, String dateFrom, String dateTo, String[] players, List<Integer> actions, Vector loc, Integer radius, String[] worlds, String[] filters, String order) {
+		SearchQuery search = new SearchQuery(searchType, sender, dateFrom, dateTo, players, actions, loc, radius, worlds, filters, order);
+		DataLog.server.getScheduler().scheduleAsyncDelayedTask(DataLog.server.getPluginManager().getPlugin("DataLog"), search);
 	}
 	
 	public static boolean displayPage(CommandSender sender, int page) {

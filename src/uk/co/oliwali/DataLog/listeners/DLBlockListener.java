@@ -1,5 +1,8 @@
 package uk.co.oliwali.DataLog.listeners;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -14,6 +17,8 @@ import org.bukkit.event.block.SnowFormEvent;
 import uk.co.oliwali.DataLog.DataLog;
 import uk.co.oliwali.DataLog.DataManager;
 import uk.co.oliwali.DataLog.DataType;
+import uk.co.oliwali.DataLog.SearchQuery.SearchType;
+import uk.co.oliwali.DataLog.util.Config;
 
 public class DLBlockListener extends BlockListener {
 	
@@ -38,7 +43,14 @@ public class DLBlockListener extends BlockListener {
 		Player player = event.getPlayer();
 		Block block   = event.getBlock();
 		Location loc  = block.getLocation();
-		DataManager.addEntry(player, DataType.BLOCK_PLACE, loc, event.getBlockReplacedState().getTypeId() + "-" + block.getTypeId());
+		if (block.getTypeId() == Config.toolBlock && DataLog.toolEnabled.containsKey(player)) {
+			List<Integer> actions = new ArrayList<Integer>();
+			for (DataType type : DataType.values())
+				if (type.canHere()) actions.add(type.getId());
+			DataManager.search(SearchType.SEARCH, player, null, null, null, actions, loc.toVector(), 0, null, null, "desc");
+			event.setCancelled(true);
+		}
+		else DataManager.addEntry(player, DataType.BLOCK_PLACE, loc, event.getBlockReplacedState().getTypeId() + "-" + block.getTypeId());
 	}
 	
 	public void onSignChange(SignChangeEvent event) {

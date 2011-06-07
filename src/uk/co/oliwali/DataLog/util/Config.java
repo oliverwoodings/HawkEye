@@ -13,6 +13,7 @@ public class Config {
 	public static List<String> commandFilter = new ArrayList<String>();
 	public static int maxLines = 0;
 	public static int maxRadius;
+	public static int toolBlock;
 	private Configuration config;
 	
 	public Config (DataLog plugin) {
@@ -40,6 +41,8 @@ public class Config {
 			config.setProperty("max-lines", 0);
 		if (!keys.contains("max-radius"))
 			config.setProperty("max-radius", 100);
+		if (!keys.contains("tool-block"))
+			config.setProperty("tool-block", 17);
 		if (!keys.contains("command-filter")) {
 			List<String> cmds = new ArrayList<String>();
 			cmds.add("/login");
@@ -63,6 +66,7 @@ public class Config {
 		commandFilter = config.getStringList("command-filter", null);
 		maxLines = config.getInt("max-lines", 0);
 		maxRadius = config.getInt("max-radius", 0);
+		toolBlock = config.getInt("tool-block", 17);
 
 	}
 	

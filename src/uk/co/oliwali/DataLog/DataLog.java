@@ -3,6 +3,7 @@ package uk.co.oliwali.DataLog;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -11,6 +12,7 @@ import javax.persistence.PersistenceException;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.PluginManager;
@@ -23,6 +25,7 @@ import uk.co.oliwali.DataLog.commands.PageCommand;
 import uk.co.oliwali.DataLog.commands.RollbackCommand;
 import uk.co.oliwali.DataLog.commands.SearchCommand;
 import uk.co.oliwali.DataLog.commands.SearchHelpCommand;
+import uk.co.oliwali.DataLog.commands.ToolCommand;
 import uk.co.oliwali.DataLog.commands.TptoCommand;
 import uk.co.oliwali.DataLog.commands.UndoCommand;
 import uk.co.oliwali.DataLog.listeners.DLBlockListener;
@@ -43,6 +46,7 @@ public class DataLog extends JavaPlugin {
 	public DLEntityListener entityListener = new DLEntityListener(this);
 	public DLPlayerListener playerListener = new DLPlayerListener(this);
 	public static List<BaseCommand> commands = new ArrayList<BaseCommand>();
+	public static HashMap<Player, Boolean> toolEnabled = new HashMap<Player, Boolean>();
 	
 	public void onDisable() {
 		Util.info("Version " + version + " disabled!");
@@ -87,6 +91,7 @@ public class DataLog extends JavaPlugin {
         commands.add(new HereCommand());
         commands.add(new RollbackCommand());
         commands.add(new UndoCommand());
+        commands.add(new ToolCommand());
         
         Util.info("Version " + version + " enabled!");
         

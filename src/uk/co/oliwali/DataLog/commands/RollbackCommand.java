@@ -6,8 +6,7 @@ import java.util.Calendar;
 import java.util.List;
 import org.bukkit.util.Vector;
 
-import uk.co.oliwali.DataLog.DataLog;
-import uk.co.oliwali.DataLog.SearchQuery;
+import uk.co.oliwali.DataLog.DataManager;
 import uk.co.oliwali.DataLog.DataType;
 import uk.co.oliwali.DataLog.SearchQuery.SearchType;
 import uk.co.oliwali.DataLog.util.Permission;
@@ -133,8 +132,7 @@ public class RollbackCommand extends BaseCommand {
 				actions.add(type.getId());
 		}
 		
-		SearchQuery search = new SearchQuery(SearchType.ROLLBACK, sender, dateFrom, dateTo, players, actions, loc, radius, worlds, filters, "desc");
-		DataLog.server.getScheduler().scheduleAsyncDelayedTask(DataLog.server.getPluginManager().getPlugin("DataLog"), search);
+		DataManager.search(SearchType.ROLLBACK, sender, dateFrom, dateTo, players, actions, loc, radius, worlds, filters, "desc");
 		return true;
 	}
 	

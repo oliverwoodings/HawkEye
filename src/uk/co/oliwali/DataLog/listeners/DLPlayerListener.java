@@ -1,5 +1,8 @@
 package uk.co.oliwali.DataLog.listeners;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -15,6 +18,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import uk.co.oliwali.DataLog.DataLog;
 import uk.co.oliwali.DataLog.DataManager;
 import uk.co.oliwali.DataLog.DataType;
+import uk.co.oliwali.DataLog.SearchQuery.SearchType;
 import uk.co.oliwali.DataLog.util.Config;
 
 public class DLPlayerListener extends PlayerListener {
@@ -67,11 +71,20 @@ public class DLPlayerListener extends PlayerListener {
 	
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		
-		if (event.isCancelled())
-			return;
 		Player player = event.getPlayer();
 		Block block = event.getClickedBlock();
 		Location loc = block.getLocation();
+		
+		if (event.getAction() == Action.LEFT_CLICK_BLOCK && player.getItemInHand().getTypeId() == Config.toolBlock && DataLog.toolEnabled.containsKey(player)) {
+			List<Integer> actions = new ArrayList<Integer>();
+			for (DataType type : DataType.values())
+				if (type.canHere()) actions.add(type.getId());
+			DataManager.search(SearchType.SEARCH, player, null, null, null, actions, loc.toVector(), 0, null, null, "desc");
+			event.setCancelled(true);
+		}
+
+		if (event.isCancelled())
+			return;
 
 		switch (block.getType()) {
 			case CHEST:

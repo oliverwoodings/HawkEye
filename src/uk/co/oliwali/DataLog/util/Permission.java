@@ -57,6 +57,10 @@ public class Permission {
 		return hasPermission(player, "datalog.rollback");
 	}
 	
+	public static boolean tool(CommandSender player) {
+		return hasPermission(player, "datalog.tool");
+	}
+	
 	private enum PermissionPlugin {
 		PERMISSIONS,
 		OP

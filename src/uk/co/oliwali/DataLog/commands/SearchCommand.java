@@ -7,8 +7,7 @@ import java.util.List;
 
 import org.bukkit.util.Vector;
 
-import uk.co.oliwali.DataLog.DataLog;
-import uk.co.oliwali.DataLog.SearchQuery;
+import uk.co.oliwali.DataLog.DataManager;
 import uk.co.oliwali.DataLog.DataType;
 import uk.co.oliwali.DataLog.SearchQuery.SearchType;
 import uk.co.oliwali.DataLog.util.Permission;
@@ -125,8 +124,7 @@ public class SearchCommand extends BaseCommand {
 			return true;
 		}
 		
-		SearchQuery search = new SearchQuery(SearchType.SEARCH, sender, dateFrom, dateTo, players, actions, loc, radius, worlds, filters, "asc");
-		DataLog.server.getScheduler().scheduleAsyncDelayedTask(DataLog.server.getPluginManager().getPlugin("DataLog"), search);
+		DataManager.search(SearchType.SEARCH, sender, dateFrom, dateTo, players, actions, loc, radius, worlds, filters, "asc");
 		return true;
 	}
 	

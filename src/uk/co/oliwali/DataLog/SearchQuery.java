@@ -66,12 +66,19 @@ public class SearchQuery implements Runnable {
 		args.add("`action` IN (" + Util.join(acs, ",") + ")");
 		
 		if (loc != null) {
-			int range = 5;
-			if (radius != null)
-				range = radius;
-			args.add("(`x` BETWEEN " + (loc.getX() - range) + " AND " + (loc.getX() + range) + ")");
-			args.add("(`y` BETWEEN " + (loc.getY() - range) + " AND " + (loc.getY() + range) + ")");
-			args.add("(`z` BETWEEN " + (loc.getZ() - range) + " AND " + (loc.getZ() + range) + ")");
+			if (radius == 0) {
+				args.add("`x` = " + loc.getX());
+				args.add("`y` = " + loc.getY());
+				args.add("`z` = " + loc.getZ());
+			}
+			else {
+				int range = 5;
+				if (radius != null)
+					range = radius;
+				args.add("(`x` BETWEEN " + (loc.getX() - range) + " AND " + (loc.getX() + range) + ")");
+				args.add("(`y` BETWEEN " + (loc.getY() - range) + " AND " + (loc.getY() + range) + ")");
+				args.add("(`z` BETWEEN " + (loc.getZ() - range) + " AND " + (loc.getZ() + range) + ")");
+			}
 		}
 		if (worlds != null) {
 			for (int i = 0; i < worlds.length; i++)
