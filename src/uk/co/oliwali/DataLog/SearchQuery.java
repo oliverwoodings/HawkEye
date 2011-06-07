@@ -15,6 +15,7 @@ import uk.co.oliwali.DataLog.util.Util;
 
 public class SearchQuery implements Runnable {
 	
+	private SearchType searchType;
 	private String[] players;
 	private Vector loc;
 	private Integer radius;
@@ -24,10 +25,9 @@ public class SearchQuery implements Runnable {
 	private String dateTo;
 	private String[] filters;
 	private CommandSender sender;
-	private Runnable returnObject;
 	
-	public SearchQuery(Runnable returnObject, CommandSender sender, String dateFrom, String dateTo, String[] players, List<Integer> actions, Vector loc, Integer radius, String[] worlds, String[] filters) {
-		this.returnObject = returnObject;
+	public SearchQuery(SearchType searchType, CommandSender sender, String dateFrom, String dateTo, String[] players, List<Integer> actions, Vector loc, Integer radius, String[] worlds, String[] filters) {
+		this.searchType = searchType;
 		this.sender = sender;
 		this.players = players;
 		this.dateFrom = dateFrom;
@@ -90,7 +90,15 @@ public class SearchQuery implements Runnable {
 		if (results == null || results.size() == 0)
 			Util.sendMessage(sender, "&cNo results found matching those criteria");
 		DataManager.searchResults.put(sender, results);
-		returnObject.run();
+		if (searchType == SearchType.ROLLBACK)
+			DataManager.undoResults.put(sender, DataManager.rollback(results));
+		if (searchType == SearchType.SEARCH)
+			DataManager.displayPage(sender, 1);
+	}
+	
+	public enum SearchType {
+		ROLLBACK,
+		SEARCH
 	}
 	
 }

@@ -1,10 +1,13 @@
 package uk.co.oliwali.DataLog;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -19,6 +22,7 @@ public class DataManager {
 	public static EbeanServer db;
 	private static DataLog plugin;
 	public static HashMap<CommandSender, List<SqlRow>> searchResults = new HashMap<CommandSender, List<SqlRow>>();
+	public static HashMap<CommandSender, List<SqlRow>> undoResults = new HashMap<CommandSender, List<SqlRow>>();
 	
 	public DataManager(DataLog instance) {
 		plugin = instance;
@@ -53,8 +57,14 @@ public class DataManager {
 				break;
 			SqlRow row = results.get(i);
 			String data = row.getString("data");
-			if (row.getInteger("action") == 0 || row.getInteger("action") == 1)
-				data = Material.getMaterial(row.getInteger("data")).name();
+			if (row.getInteger("action") == 0)
+				data = Material.getMaterial(data).name();
+			if (row.getInteger("action") == 1) {
+				if (data.indexOf("-") == -1)
+					data = Material.getMaterial(data).name();
+				else
+					data = Material.getMaterial(Integer.parseInt(data.substring(0, data.indexOf("-")))).name() + " changed to " + Material.getMaterial(Integer.parseInt(data.substring(data.indexOf("-") + 1))).name();
+			}
 			String action = DataType.fromId(row.getInteger("action")).getConfigName();
 			if (row.getInteger("action") == 16) {
 				action = data.substring(0, data.indexOf("-"));
@@ -85,6 +95,41 @@ public class DataManager {
 	
 	public static DataEntry getEntry(int id) {
 		return db.find(DataEntry.class).where().eq("dataid", id).findUnique();
+	}
+	
+	public static List<SqlRow> rollback(List<SqlRow> results) {
+		List<SqlRow> undo = new ArrayList<SqlRow>();
+		for (SqlRow row : results.toArray(new SqlRow[0])) {
+			
+			DataType type = DataType.fromId(row.getInteger("action"));
+			if (type == null || !type.canRollback())
+				continue;
+			
+			World world = DataLog.server.getWorld(row.getString("world"));
+			if (world == null)
+				continue;
+			
+			undo.add(row);
+			Location loc = new Location(world, row.getInteger("x"), row.getInteger("y"), row.getInteger("z"));
+			Block block = world.getBlockAt(loc);
+			switch (type) {
+				case BLOCK_BREAK:
+					block.setTypeId(Integer.parseInt(row.getString("data")));
+					break;
+				case BLOCK_PLACE:
+					if (row.getString("data").indexOf("-") == -1)
+						block.setType(Material.AIR);
+					else
+						block.setTypeId(Integer.parseInt(row.getString("data").substring(0, row.getString("data").indexOf("-"))));
+					break;
+				case LAVA_BUCKET:
+				case WATER_BUCKET:
+					block.setType(Material.AIR);
+					break;
+			}
+			
+		}
+		return undo;
 	}
 
 }

@@ -35,7 +35,7 @@ public class DLBlockListener extends BlockListener {
 		Player player = event.getPlayer();
 		Block block   = event.getBlock();
 		Location loc  = block.getLocation();
-		DataManager.addEntry(player, DataType.BLOCK_PLACE, loc, Integer.toString(block.getTypeId()));
+		DataManager.addEntry(player, DataType.BLOCK_PLACE, loc, event.getBlockReplacedState().getTypeId() + "-" + block.getTypeId());
 	}
 	
 	public void onSignChange(SignChangeEvent event) {

@@ -8,7 +8,7 @@ public enum DataType {
 	
 	BLOCK_BREAK(0, "block-break", true),
 	BLOCK_PLACE(1, "block-place", true),
-	SIGN_PLACE(2, "sign-place", true),
+	SIGN_PLACE(2, "sign-place"),
 	CHAT(3, "chat"),
 	COMMAND(4, "command"),
 	JOIN(5, "join"),

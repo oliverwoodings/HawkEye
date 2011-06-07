@@ -4,22 +4,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 
-import com.avaje.ebean.SqlRow;
-
 import uk.co.oliwali.DataLog.DataLog;
-import uk.co.oliwali.DataLog.DataManager;
 import uk.co.oliwali.DataLog.SearchQuery;
 import uk.co.oliwali.DataLog.DataType;
+import uk.co.oliwali.DataLog.SearchQuery.SearchType;
 import uk.co.oliwali.DataLog.util.Permission;
 import uk.co.oliwali.DataLog.util.Util;
 
-public class RollbackCommand extends BaseCommand implements Runnable {
+public class RollbackCommand extends BaseCommand {
 
 	public RollbackCommand() {
 		name = "rollback";
@@ -135,36 +129,13 @@ public class RollbackCommand extends BaseCommand implements Runnable {
 		}
 		loc = player.getLocation().toVector();
 		
-		SearchQuery search = new SearchQuery(this, sender, dateFrom, dateTo, players, actions, loc, radius, worlds, filters);
+		SearchQuery search = new SearchQuery(SearchType.ROLLBACK, sender, dateFrom, dateTo, players, actions, loc, radius, worlds, filters);
 		DataLog.server.getScheduler().scheduleAsyncDelayedTask(DataLog.server.getPluginManager().getPlugin("DataLog"), search);
 		return true;
 	}
 	
 	public boolean permission() {
 		return Permission.search(sender);
-	}
-
-	public void run() {
-		DataManager.displayPage(sender, 1);
-		List<SqlRow> results = DataManager.searchResults.get(sender);
-		for (SqlRow row : results.toArray(new SqlRow[0])) {
-			
-			DataType type = DataType.fromId(row.getInteger("action"));
-			if (type == null || !type.canRollback())
-				continue;
-			
-			World world = DataLog.server.getWorld(row.getString("world"));
-			if (world == null)
-				continue;
-			Location loc = new Location(world, row.getInteger("x"), row.getInteger("y"), row.getInteger("z"));
-			Block block = world.getBlockAt(loc);
-			switch (type) {
-				case BLOCK_BREAK:
-					block.setTypeId(Integer.parseInt(row.getString("data")));
-					break;
-			}
-			
-		}
 	}
 
 }
