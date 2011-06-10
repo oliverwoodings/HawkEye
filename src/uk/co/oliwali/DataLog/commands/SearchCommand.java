@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.bukkit.util.Vector;
 
-import uk.co.oliwali.DataLog.DataManager;
-import uk.co.oliwali.DataLog.DataType;
-import uk.co.oliwali.DataLog.SearchQuery.SearchType;
+import uk.co.oliwali.DataLog.database.SearchQuery.SearchType;
+import uk.co.oliwali.DataLog.database.DataType;
+import uk.co.oliwali.DataLog.database.SearchQuery;
 import uk.co.oliwali.DataLog.util.Permission;
 import uk.co.oliwali.DataLog.util.Util;
 
@@ -124,7 +124,8 @@ public class SearchCommand extends BaseCommand {
 			return true;
 		}
 		
-		DataManager.search(SearchType.SEARCH, sender, dateFrom, dateTo, players, actions, loc, radius, worlds, filters, "asc");
+		Thread thread = new SearchQuery(SearchType.SEARCH, sender, dateFrom, dateTo, players, actions, loc, radius, worlds, filters, "asc");
+		thread.start();
 		return true;
 	}
 	

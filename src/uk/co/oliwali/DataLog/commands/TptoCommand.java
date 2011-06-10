@@ -3,9 +3,9 @@ package uk.co.oliwali.DataLog.commands;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-import uk.co.oliwali.DataLog.DataEntry;
 import uk.co.oliwali.DataLog.DataLog;
-import uk.co.oliwali.DataLog.DataManager;
+import uk.co.oliwali.DataLog.database.DataManager;
+import uk.co.oliwali.DataLog.database.DataEntry;
 import uk.co.oliwali.DataLog.util.Permission;
 import uk.co.oliwali.DataLog.util.Util;
 
@@ -24,6 +24,10 @@ public class TptoCommand extends BaseCommand {
 			return true;
 		}
 		DataEntry entry = DataManager.getEntry(Integer.parseInt(args.get(0)));
+		if (entry == null) {
+			Util.sendMessage(sender, "&cEntry not found");
+			return true;
+		}
 		World world = DataLog.server.getWorld(entry.getWorld());
 		if (world == null) {
 			Util.sendMessage(sender, "&cWorld &7" + entry.getWorld() + "&c does not exist!");

@@ -2,7 +2,6 @@ package uk.co.oliwali.DataLog.commands;
 
 import org.bukkit.inventory.ItemStack;
 
-import uk.co.oliwali.DataLog.DataLog;
 import uk.co.oliwali.DataLog.util.Config;
 import uk.co.oliwali.DataLog.util.Permission;
 import uk.co.oliwali.DataLog.util.Util;
@@ -17,8 +16,8 @@ public class ToolCommand extends BaseCommand {
 	}
 	
 	public boolean execute() {
-		if (DataLog.toolEnabled.get(player) == null) {
-			DataLog.toolEnabled.put(player, true);
+		if (!session.isUsingTool()) {
+			session.setUsingTool(true);
 			if (!player.getInventory().contains(Config.toolBlock)) {
 				ItemStack stack = new ItemStack(Config.toolBlock, 1);
 				if (player.getInventory().firstEmpty() == -1)
@@ -29,7 +28,7 @@ public class ToolCommand extends BaseCommand {
 			Util.sendMessage(sender, "&cDataLog tool enabled! &7Left click a block or place the tool to get infomation");
 		}
 		else {
-			DataLog.toolEnabled.remove(player);
+			session.setUsingTool(false);
 			Util.sendMessage(sender, "&cDataLog tool disabled");
 		}
 		return true;

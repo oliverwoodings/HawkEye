@@ -6,9 +6,9 @@ import java.util.Calendar;
 import java.util.List;
 import org.bukkit.util.Vector;
 
-import uk.co.oliwali.DataLog.DataManager;
-import uk.co.oliwali.DataLog.DataType;
-import uk.co.oliwali.DataLog.SearchQuery.SearchType;
+import uk.co.oliwali.DataLog.database.SearchQuery.SearchType;
+import uk.co.oliwali.DataLog.database.DataType;
+import uk.co.oliwali.DataLog.database.SearchQuery;
 import uk.co.oliwali.DataLog.util.Permission;
 import uk.co.oliwali.DataLog.util.Util;
 
@@ -132,7 +132,8 @@ public class RollbackCommand extends BaseCommand {
 				actions.add(type.getId());
 		}
 		
-		DataManager.search(SearchType.ROLLBACK, sender, dateFrom, dateTo, players, actions, loc, radius, worlds, filters, "desc");
+		Thread thread = new SearchQuery(SearchType.ROLLBACK, sender, dateFrom, dateTo, players, actions, loc, radius, worlds, filters, "desc");
+		thread.start();
 		return true;
 	}
 	

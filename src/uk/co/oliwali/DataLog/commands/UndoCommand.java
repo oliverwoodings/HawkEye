@@ -1,13 +1,7 @@
 package uk.co.oliwali.DataLog.commands;
 
-
-import java.util.List;
-
-import org.bukkit.block.BlockState;
-
-import uk.co.oliwali.DataLog.DataManager;
+import uk.co.oliwali.DataLog.Rollback;
 import uk.co.oliwali.DataLog.util.Permission;
-import uk.co.oliwali.DataLog.util.Util;
 
 public class UndoCommand extends BaseCommand {
 
@@ -18,15 +12,7 @@ public class UndoCommand extends BaseCommand {
 	}
 	
 	public boolean execute() {
-		List<BlockState> undoList = DataManager.undoResults.get(sender);
-		if (undoList == null)
-			Util.sendMessage(sender, "&cNo previous rollback to undo!");
-		else {
-			Util.sendMessage(sender, "&cUndoing rollback (&7" +  undoList.size() + " edits&7)...");
-			for (BlockState block : undoList.toArray(new BlockState[0]))
-				block.update();
-			Util.sendMessage(sender, "&cUndo complete");
-		}
+		Rollback.undo(session);
 		return true;
 	}
 

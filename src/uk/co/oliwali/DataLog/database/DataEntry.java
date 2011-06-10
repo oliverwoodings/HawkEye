@@ -1,4 +1,4 @@
-package uk.co.oliwali.DataLog;
+package uk.co.oliwali.DataLog.database;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

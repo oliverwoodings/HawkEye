@@ -4,8 +4,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import uk.co.oliwali.DataLog.DataManager;
-import uk.co.oliwali.DataLog.DataType;
+import uk.co.oliwali.DataLog.database.DataManager;
+import uk.co.oliwali.DataLog.database.DataType;
 
 public class DataLogAPI {
 

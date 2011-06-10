@@ -1,5 +1,7 @@
-package uk.co.oliwali.DataLog;
+package uk.co.oliwali.DataLog.database;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -7,13 +9,17 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.util.Vector;
 
-import com.avaje.ebean.SqlRow;
-
+import uk.co.oliwali.DataLog.DataLog;
+import uk.co.oliwali.DataLog.DisplayManager;
+import uk.co.oliwali.DataLog.PlayerSession;
+import uk.co.oliwali.DataLog.Rollback;
+import uk.co.oliwali.DataLog.database.DataManager;
+import uk.co.oliwali.DataLog.database.DataType;
 import uk.co.oliwali.DataLog.util.Config;
 import uk.co.oliwali.DataLog.util.Permission;
 import uk.co.oliwali.DataLog.util.Util;
 
-public class SearchQuery implements Runnable {
+public class SearchQuery extends Thread {
 	
 	private SearchType searchType;
 	private String[] players;
@@ -44,26 +50,32 @@ public class SearchQuery implements Runnable {
 	public void run() {
 		String sql = "SELECT * FROM `datalog` WHERE ";
 		List<String> args = new ArrayList<String>();
-		if (dateFrom != null)
-			args.add("`date` >= '" + dateFrom + "'");
-		if (dateTo != null)
-			args.add("`date` <= '" + dateTo + "'");
 		if (players != null) {
 			for (int i = 0; i < players.length; i++)
 				players[i] = "'" + players[i].toLowerCase() + "'";
 			args.add("LOWER(`player`) IN (" + Util.join(Arrays.asList(players), ",") + ")");
 		}
-		
+		if (worlds != null) {
+			for (int i = 0; i < worlds.length; i++)
+				worlds[i] = "'" + worlds[i].toLowerCase() + "'";
+			args.add("LOWER(`world`) IN (" + Util.join(Arrays.asList(worlds), ",") + ")");
+		}
 		if (actions == null || actions.size() == 0) {
 			actions = new ArrayList<Integer>();
 			for (DataType type : DataType.values())
 				actions.add(type.getId());
 		}
+		
 		List<Integer> acs = new ArrayList<Integer>();
 		for (int act : actions.toArray(new Integer[actions.size()]))
 			if (Permission.searchType(sender, DataType.fromId(act).getConfigName()))
 				acs.add(act);
 		args.add("`action` IN (" + Util.join(acs, ",") + ")");
+		
+		if (dateFrom != null)
+			args.add("`date` >= '" + dateFrom + "'");
+		if (dateTo != null)
+			args.add("`date` <= '" + dateTo + "'");
 		
 		if (loc != null) {
 			if (radius == 0) {
@@ -79,11 +91,6 @@ public class SearchQuery implements Runnable {
 				args.add("(`y` BETWEEN " + (loc.getY() - range) + " AND " + (loc.getY() + range) + ")");
 				args.add("(`z` BETWEEN " + (loc.getZ() - range) + " AND " + (loc.getZ() + range) + ")");
 			}
-		}
-		if (worlds != null) {
-			for (int i = 0; i < worlds.length; i++)
-				worlds[i] = "'" + worlds[i].toLowerCase() + "'";
-			args.add("LOWER(`world`) IN (" + Util.join(Arrays.asList(worlds), ",") + ")");
 		}
 		if (filters != null) {
 			for (int i = 0; i < filters.length; i++)
@@ -101,18 +108,44 @@ public class SearchQuery implements Runnable {
 		}
 		if (Config.maxLines > 0)
 			sql += " LIMIT " + Config.maxLines;
-		Util.sendMessage(sender, "&cSearching database...");
-		List<SqlRow> results = DataManager.db.createSqlQuery(sql).findList();
-		if (results == null || results.size() == 0)
-			Util.sendMessage(sender, "&cNo results found matching those criteria");
-		DataManager.searchResults.put(sender, results);
-		if (searchType == SearchType.ROLLBACK) {
-			Util.sendMessage(sender, "&cRolling back &7" + results.size() + " edits&7...");
-			DataManager.undoResults.put(sender, DataManager.rollback(results));
-			Util.sendMessage(sender, "&cRollback complete");
+		
+		ResultSet res;
+		PlayerSession session = DataLog.playerSessions.get(sender);
+		Util.sendMessage(session.getSender(), "&cSearching for matching logs...");
+		List<DataEntry> results = new ArrayList<DataEntry>();
+		try {
+			res = DataManager.getConnection().createStatement().executeQuery(sql);
+			while (res.next()) {
+				DataEntry entry = new DataEntry();
+				entry.setPlayer(DataManager.getPlayer(res.getInt("player_id")));
+				entry.setDate(res.getString("player"));
+				entry.setDataid(res.getInt("dataid"));
+				entry.setAction(res.getInt("action"));
+				entry.setData(res.getString("data"));
+				entry.setPlugin(res.getString("plugin"));
+				entry.setWorld(DataManager.getWorld(res.getInt("world")));
+				entry.setX(res.getInt("x"));
+				entry.setY(res.getInt("y"));
+				entry.setZ(res.getInt("z"));
+				results.add(entry);
+			}
+		} catch (SQLException ex) {
+			Util.severe("Error executing MySQL query: " + ex);
+			Util.sendMessage(sender, "&cError executing MySQL query, search aborted");
+			return;
 		}
-		if (searchType == SearchType.SEARCH)
-			DataManager.displayPage(sender, 1);
+		
+		switch (searchType) {
+			case ROLLBACK:
+				session.setRollbackResults(results);
+				Rollback.rollback(session);
+				break;
+			case SEARCH:
+				session.setSearchResults(results);
+				DisplayManager.displayPage(session, 1);
+				break;
+		}
+		
 	}
 	
 	public enum SearchType {
