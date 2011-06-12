@@ -13,8 +13,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import uk.co.oliwali.DataLog.DataLog;
-import uk.co.oliwali.DataLog.DataManager;
-import uk.co.oliwali.DataLog.DataType;
+import uk.co.oliwali.DataLog.PlayerSession;
+import uk.co.oliwali.DataLog.database.DataManager;
+import uk.co.oliwali.DataLog.database.DataType;
 import uk.co.oliwali.DataLog.util.Config;
 
 public class DLPlayerListener extends PlayerListener {
@@ -45,6 +46,7 @@ public class DLPlayerListener extends PlayerListener {
 	
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
+		DataLog.playerSessions.put(player, new PlayerSession(player));
 		Location loc  = player.getLocation();
 		DataManager.addEntry(player, DataType.JOIN, loc, player.getAddress().getAddress().getHostAddress().toString());
 	}
@@ -67,11 +69,18 @@ public class DLPlayerListener extends PlayerListener {
 	
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		
-		if (event.isCancelled())
-			return;
 		Player player = event.getPlayer();
 		Block block = event.getClickedBlock();
-		Location loc = block.getLocation();
+		Location loc = null;
+		if (block != null) loc = block.getLocation();
+		
+		if (event.getAction() == Action.LEFT_CLICK_BLOCK && player.getItemInHand().getTypeId() == Config.toolBlock && DataLog.playerSessions.get(player).isUsingTool()) {
+			DataManager.toolSearch(player, loc);
+			event.setCancelled(true);
+		}
+
+		if (event.isCancelled())
+			return;
 
 		switch (block.getType()) {
 			case CHEST:

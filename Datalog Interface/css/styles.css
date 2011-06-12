@@ -106,7 +106,9 @@ input, textarea {
 
 .actions {
 	margin-left: 40px;
+	margin-top: -15px;
 	width: 280px;
+	font-size: 13px;
 }
 	.actions div {
 		width: 140px;

@@ -4,8 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
-import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import uk.co.oliwali.DataLog.database.SearchQuery.SearchType;
@@ -14,12 +12,13 @@ import uk.co.oliwali.DataLog.database.SearchQuery;
 import uk.co.oliwali.DataLog.util.Permission;
 import uk.co.oliwali.DataLog.util.Util;
 
-public class SearchCommand extends BaseCommand {
+public class RollbackCommand extends BaseCommand {
 
-	public SearchCommand() {
-		name = "search";
+	public RollbackCommand() {
+		name = "rollback";
 		argLength = 1;
-		usage = "<parameters> <- search the DataLog database. Type &c/dl searchhelp&7 for more info";
+		bePlayer = true;
+		usage = "<parameters> <- rollback actions. Type &c/dl rollbackhelp&7 for more info";
 	}
 	
 	public boolean execute() {
@@ -45,21 +44,11 @@ public class SearchCommand extends BaseCommand {
 				else if (param.equals("w")) worlds = values;
 				else if (param.equals("f")) filters = values;
 				else if (param.equals("a")) {
-					for (String value : values)
-						actions.add(DataType.fromName(value).getId());
-				}
-				else if (param.equals("l")) {
-					if (values[0].equalsIgnoreCase("here")) {
-						if (sender instanceof Player)
-							loc = player.getLocation().toVector();
-						else
+					for (String value : values) {
+						DataType type = DataType.fromName(value);
+						if (type == null || !type.canRollback())
 							throw new Exception();
-					}
-					else {
-						loc = new Vector();
-						loc.setX(Integer.parseInt(values[0]));
-						loc.setY(Integer.parseInt(values[1]));
-						loc.setZ(Integer.parseInt(values[2]));
+						actions.add(DataType.fromName(value).getId());
 					}
 				}
 				else if (param.equals("r"))
@@ -129,17 +118,28 @@ public class SearchCommand extends BaseCommand {
 				
 			}
 		} catch (Throwable t) {
-			Util.sendMessage(sender, "&cInvalid search format!");
+			Util.sendMessage(sender, "&cInvalid rollback parameters/format!");
 			return true;
 		}
 		
-		Thread thread = new SearchQuery(SearchType.SEARCH, sender, dateFrom, dateTo, players, actions, loc, radius, worlds, filters, "asc");
+		if (worlds == null) {
+			worlds = new String[1];
+			worlds[0] = player.getWorld().getName();
+		}
+		loc = Util.getSimpleLocation(player.getLocation()).toVector();
+		if (actions.size() == 0) {
+			for (DataType type : DataType.values())
+				if (type.canRollback())
+					actions.add(type.getId());
+		}
+		
+		Thread thread = new SearchQuery(SearchType.ROLLBACK, sender, dateFrom, dateTo, players, actions, loc, radius, worlds, filters, "desc");
 		thread.start();
 		return true;
 	}
 	
 	public boolean permission() {
-		return Permission.search(sender);
+		return Permission.rollback(sender);
 	}
 
 }

@@ -1,12 +1,16 @@
 package uk.co.oliwali.DataLog.commands;
 
-import uk.co.oliwali.DataLog.DataLog;
-import uk.co.oliwali.DataLog.DataManager;
-import uk.co.oliwali.DataLog.SearchQuery;
+import java.util.ArrayList;
+import java.util.List;
+
+import uk.co.oliwali.DataLog.database.SearchQuery.SearchType;
+import uk.co.oliwali.DataLog.database.DataType;
+import uk.co.oliwali.DataLog.database.SearchQuery;
 import uk.co.oliwali.DataLog.util.Config;
+import uk.co.oliwali.DataLog.util.Permission;
 import uk.co.oliwali.DataLog.util.Util;
 
-public class HereCommand extends BaseCommand implements Runnable {
+public class HereCommand extends BaseCommand {
 
 	public HereCommand() {
 		name = "here";
@@ -20,8 +24,11 @@ public class HereCommand extends BaseCommand implements Runnable {
 			int integer = Integer.parseInt(args.get(0));
 			if (integer > Config.maxRadius || integer < 0)
 				throw new Exception();
-			SearchQuery search = new SearchQuery(this, sender, null, null, null, null, player.getLocation().toVector(), Integer.parseInt(args.get(0)), null, null);
-			DataLog.server.getScheduler().scheduleAsyncDelayedTask(DataLog.server.getPluginManager().getPlugin("DataLog"), search);
+			List<Integer> actions = new ArrayList<Integer>();
+			for (DataType type : DataType.values())
+				if (type.canHere()) actions.add(type.getId());
+			Thread thread = new SearchQuery(SearchType.SEARCH, sender, null, null, null, actions, player.getLocation().toVector(), Integer.parseInt(args.get(0)), null, null, "desc");
+			thread.start();
 		} catch (Throwable t) {
 			Util.sendMessage(sender, "Invalid radius!");
 		}
@@ -29,11 +36,7 @@ public class HereCommand extends BaseCommand implements Runnable {
 	}
 
 	public boolean permission() {
-		return false;
-	}
-	
-	public void run() {
-		DataManager.displayPage(sender, 1);
+		return Permission.search(sender);
 	}
 	
 }

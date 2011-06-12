@@ -6,6 +6,8 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import uk.co.oliwali.DataLog.DataLog;
+import uk.co.oliwali.DataLog.PlayerSession;
 import uk.co.oliwali.DataLog.util.Util;
 
 public abstract class BaseCommand {
@@ -13,14 +15,16 @@ public abstract class BaseCommand {
 	public CommandSender sender;
 	public List<String> args = new ArrayList<String>();
 	public String name;
-	public int argLength;
+	public int argLength = 0;
 	public String usage;
 	public boolean bePlayer = false;
 	public Player player;
 	public String usedCommand;
+	public PlayerSession session;
 	
 	public boolean run(CommandSender csender, String[] preArgs, String cmd) {
 		sender = csender;
+		session = DataLog.playerSessions.get(sender);
 		args.clear();
 		for (String arg : preArgs)
 			args.add(arg);

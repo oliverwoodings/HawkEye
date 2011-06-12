@@ -53,43 +53,12 @@ public class Permission {
 		return hasPermission(player, "datalog.tpto");
 	}
 	
-	public static String getPrefix(Player player) {
-		String prefix = "&f";
-		switch (handler) {
-			case PERMISSIONS:
-				String permPrefix = permissionPlugin.getGroupPrefix(player.getWorld().getName(), getGroup(player));
-				if (permPrefix != null)
-					prefix = permPrefix;
-				break;
-			case OP:
-				if (player.isOp())
-					prefix = "&c";
-				break;
-		}
-		if (prefix.length() == 0)
-			return "&f";
-		return prefix;
+	public static boolean rollback(CommandSender player) {
+		return hasPermission(player, "datalog.rollback");
 	}
 	
-	public static String getSuffix(Player player) {
-		String prefix = "";
-		switch (handler) {
-			case PERMISSIONS:
-				prefix = permissionPlugin.getGroupPrefix(player.getWorld().getName(), getGroup(player));
-				break;
-		}
-		return prefix;
-	}
-	
-	public static String getGroup(Player player) {
-		switch (handler) {
-			case PERMISSIONS:
-				return permissionPlugin.getGroup(player.getWorld().getName(), player.getName());
-			case OP:
-				if (player.isOp())
-					return "op";
-		}
-		return "regular";
+	public static boolean tool(CommandSender player) {
+		return hasPermission(player, "datalog.tool");
 	}
 	
 	private enum PermissionPlugin {
