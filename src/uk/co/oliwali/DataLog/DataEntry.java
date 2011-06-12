@@ -5,6 +5,7 @@ import java.util.Calendar;
 
 import com.avaje.ebean.validation.NotNull;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import org.bukkit.Location;
@@ -16,6 +17,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class DataEntry {
 
     @Id
+    @GeneratedValue
     private int dataid;
     
     @NotNull
