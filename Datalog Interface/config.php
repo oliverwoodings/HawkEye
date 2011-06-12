@@ -26,7 +26,12 @@
 					
 					//Limit the maximum number of results that can be returned. Do not use quotes
 					//Set to 0 for no limit
-					"maxResults" => 0
+					"maxResults" => 0,
+					
+					//Language pack - default is english.php
+					//You can create your own based off the english.php file,
+					//then change the name below to your language file name
+					"langFile" => "french.php"
 					);
 	
 	$con = mysql_connect($config["dbHost"], $config["dbUser"], $config["dbPass"]);
