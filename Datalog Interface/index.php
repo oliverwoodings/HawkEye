@@ -17,6 +17,7 @@
         <link rel="stylesheet" type="text/css" href="css/jquery-ui-timepicker.css" />
         <link rel="stylesheet" type="text/css" href="css/custom-theme/jquery-ui-1.8.13.custom.css" />
 		<link rel="stylesheet" type="text/css" href="css/uniform.default.css" />
+        <link rel="icon" type="image/png" href="images/favicon.ico" />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title><?php echo $lang["pageTitle"]; ?></title>
     </head>
