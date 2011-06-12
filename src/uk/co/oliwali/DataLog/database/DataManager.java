@@ -4,6 +4,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -213,9 +214,8 @@ public class DataManager extends TimerTask {
 		if (queue.isEmpty())
 			return;
 		JDCConnection conn = getConnection();
-		Statement stmnt = null;
+		PreparedStatement stmnt = null;
 		try {
-			stmnt = conn.createStatement();
 			while (!queue.isEmpty()) {
 				DataEntry entry = queue.poll();
 				if (!dbPlayers.containsKey(entry.getPlayer()))
@@ -224,7 +224,18 @@ public class DataManager extends TimerTask {
 				if (!dbWorlds.containsKey(entry.getWorld()))
 					if (!addWorld(entry.getWorld()))
 						continue;
-				stmnt.execute("INSERT into `datalog` (date, player_id, action, world_id, x, y, z, data, plugin) VALUES ('" + entry.getDate() + "', '" + dbPlayers.get(entry.getPlayer()) + "', '" + entry.getAction() + "', '" + dbWorlds.get(entry.getWorld()) + "', '" + entry.getX() + "', '" + entry.getY() + "', '" + entry.getZ() + "', '" + entry.getData() + "', '" + entry.getPlugin() + "');");
+				
+				stmnt = conn.prepareStatement("INSERT into `datalog` (date, player_id, action, world_id, x, y, z, data, plugin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);");
+				stmnt.setString(1, entry.getDate());
+				stmnt.setInt(2, dbPlayers.get(entry.getPlayer()));
+				stmnt.setInt(3, entry.getAction());
+				stmnt.setInt(4, dbWorlds.get(entry.getWorld()));
+				stmnt.setDouble(5, entry.getX());
+				stmnt.setDouble(6, entry.getY());
+				stmnt.setDouble(7, entry.getZ());
+				stmnt.setString(8, entry.getData());
+				stmnt.setString(9, entry.getPlugin());
+				stmnt.executeUpdate();
 			}
 		} catch (SQLException ex) {
 			Util.severe("SQL Exception: " + ex);
