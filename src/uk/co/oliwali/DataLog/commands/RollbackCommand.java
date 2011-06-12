@@ -126,10 +126,11 @@ public class RollbackCommand extends BaseCommand {
 			worlds = new String[1];
 			worlds[0] = player.getWorld().getName();
 		}
-		loc = player.getLocation().toVector();
+		loc = Util.getSimpleLocation(player.getLocation()).toVector();
 		if (actions.size() == 0) {
 			for (DataType type : DataType.values())
-				actions.add(type.getId());
+				if (type.canRollback())
+					actions.add(type.getId());
 		}
 		
 		Thread thread = new SearchQuery(SearchType.ROLLBACK, sender, dateFrom, dateTo, players, actions, loc, radius, worlds, filters, "desc");

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import uk.co.oliwali.DataLog.database.SearchQuery.SearchType;
@@ -48,10 +49,18 @@ public class SearchCommand extends BaseCommand {
 						actions.add(DataType.fromName(value).getId());
 				}
 				else if (param.equals("l")) {
-					loc = new Vector();
-					loc.setX(Integer.parseInt(values[0]));
-					loc.setY(Integer.parseInt(values[1]));
-					loc.setZ(Integer.parseInt(values[2]));
+					if (values[0].equalsIgnoreCase("here")) {
+						if (sender instanceof Player)
+							loc = player.getLocation().toVector();
+						else
+							throw new Exception();
+					}
+					else {
+						loc = new Vector();
+						loc.setX(Integer.parseInt(values[0]));
+						loc.setY(Integer.parseInt(values[1]));
+						loc.setZ(Integer.parseInt(values[2]));
+					}
 				}
 				else if (param.equals("r"))
 					radius = Integer.parseInt(values[0]);

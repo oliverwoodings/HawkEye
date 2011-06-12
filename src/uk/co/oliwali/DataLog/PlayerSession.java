@@ -14,6 +14,10 @@ public class PlayerSession {
 	private List<DataEntry> rollbackResults  = null;
 	private List<BlockState> rollbackUndo = null;
 	private boolean usingTool = false;
+	
+	public PlayerSession(CommandSender sender) {
+		this.sender = sender;
+	}
 
 	public CommandSender getSender() {
 		return sender;

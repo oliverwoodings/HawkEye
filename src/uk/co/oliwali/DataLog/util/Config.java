@@ -18,6 +18,7 @@ public class Config {
 	public static String user;
 	public static String password;
 	public static String database;
+	public static String cleanseAge;
 	
 	private Configuration config;
 	
@@ -53,6 +54,8 @@ public class Config {
 			config.setProperty("max-radius", 100);
 		if (!keys.contains("tool-block"))
 			config.setProperty("tool-block", 17);
+		if (!keys.contains("cleanse-age"))
+			config.setProperty("cleanse-age", "0d0h0s");
 		if (!keys.contains("command-filter")) {
 			List<String> cmds = new ArrayList<String>();
 			cmds.add("/login");
@@ -62,6 +65,8 @@ public class Config {
 		}
 		//Check MySQL settings
 		keys = config.getKeys("mysql");
+		if (keys == null)
+			keys = new ArrayList<String>();
 		if (!keys.contains("username"))
 			config.setProperty("mysql.username", "root");
 		if (!keys.contains("password"))
@@ -71,7 +76,7 @@ public class Config {
 		if (!keys.contains("database"))
 			config.setProperty("mysql.database", "minecraft");
 		if (!keys.contains("port"))
-			config.setProperty("port", 3306);
+			config.setProperty("mysql.port", 3306);
 		for (DataType type : DataType.values()) {
 			if (config.getProperty(getNode(type)) == null)
 				config.setProperty(getNode(type), true);
@@ -93,6 +98,7 @@ public class Config {
 		password = config.getString("mysql.password", "");
 		url = "jdbc:mysql://" + config.getString("mysql.hostname") + ":" + config.getString("mysql.port") + "/" + config.getString("mysql.database");
 		database = config.getString("mysql.database");
+		cleanseAge = config.getString("cleanse-age");
 	}
 	
 	//Check if a type is logged or not

@@ -13,6 +13,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import uk.co.oliwali.DataLog.DataLog;
+import uk.co.oliwali.DataLog.PlayerSession;
 import uk.co.oliwali.DataLog.database.DataManager;
 import uk.co.oliwali.DataLog.database.DataType;
 import uk.co.oliwali.DataLog.util.Config;
@@ -45,6 +46,7 @@ public class DLPlayerListener extends PlayerListener {
 	
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
+		DataLog.playerSessions.put(player, new PlayerSession(player));
 		Location loc  = player.getLocation();
 		DataManager.addEntry(player, DataType.JOIN, loc, player.getAddress().getAddress().getHostAddress().toString());
 	}

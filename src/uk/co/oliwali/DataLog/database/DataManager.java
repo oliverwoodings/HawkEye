@@ -1,5 +1,6 @@
 package uk.co.oliwali.DataLog.database;
 
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -32,10 +34,27 @@ public class DataManager extends TimerTask {
 		plugin = instance;
 		connections = new ConnectionManager(Config.url, Config.user, Config.password);
 		getConnection().close();
+		
+		//Check tables and update player/world lists
 		if (!checkTables())
 			throw new Exception();
 		if (!updateDbLists())
 			throw new Exception();
+
+		//Start cleansing utility
+		try {
+			CleanseUtil util = new CleanseUtil();
+			if (util.date != null) {
+				Timer cleanse = new Timer();
+				cleanse.scheduleAtFixedRate(util, 0, 1200000);
+			}
+		} catch (Exception e) {
+			Util.severe("Unable to start cleansing utility - check your cleanse age");
+		}
+
+		//Start logging timer
+		Timer timer = new Timer();
+		timer.scheduleAtFixedRate(this, 2000, 2000);
 	}
 	
 	public static void addEntry(Player player, DataType dataType, Location loc, String data) {
@@ -58,15 +77,16 @@ public class DataManager extends TimerTask {
 	
 	public static DataEntry getEntry(int id) {
 		try {
-			ResultSet res = getConnection().createStatement().executeQuery("SELECT * FROM `datalog` WHERE `dataid` = " + id);
+			ResultSet res = getConnection().createStatement().executeQuery("SELECT * FROM `datalog` WHERE `data_id` = " + id);
+			res.next();
 			DataEntry entry = new DataEntry();
+			entry.setDataid(res.getInt("data_id"));
+			entry.setDate(res.getString("date"));
 			entry.setPlayer(DataManager.getPlayer(res.getInt("player_id")));
-			entry.setDate(res.getString("player"));
-			entry.setDataid(res.getInt("dataid"));
 			entry.setAction(res.getInt("action"));
 			entry.setData(res.getString("data"));
 			entry.setPlugin(res.getString("plugin"));
-			entry.setWorld(DataManager.getWorld(res.getInt("world")));
+			entry.setWorld(DataManager.getWorld(res.getInt("world_id")));
 			entry.setX(res.getInt("x"));
 			entry.setY(res.getInt("y"));
 			entry.setZ(res.getInt("z"));
@@ -79,14 +99,14 @@ public class DataManager extends TimerTask {
 	
 	public static String getPlayer(int id) {
 		for (Entry<String, Integer> entry : dbPlayers.entrySet())
-			if (entry.getValue().equals(id))
+			if (entry.getValue() == id)
 				return entry.getKey();
 		return null;
 	}
 	
 	public static String getWorld(int id) {
 		for (Entry<String, Integer> entry : dbWorlds.entrySet())
-			if (entry.getValue().equals(id))
+			if (entry.getValue() == id)
 				return entry.getKey();
 		return null;
 	}
@@ -95,7 +115,8 @@ public class DataManager extends TimerTask {
 		List<Integer> actions = new ArrayList<Integer>();
 		for (DataType type : DataType.values())
 			if (type.canHere()) actions.add(type.getId());
-		Thread thread = new SearchQuery(SearchType.SEARCH, player, null, null, null, actions, loc.toVector(), 0, null, null, "desc");
+		loc = Util.getSimpleLocation(loc);
+		Thread thread = new SearchQuery(SearchType.SEARCH, player, null, null, null, actions, loc.toVector(), 0, null, null, "asc");
 		thread.start();
 	}
 	
@@ -103,7 +124,7 @@ public class DataManager extends TimerTask {
 		try {
 			return connections.getConnection();
 		} catch (final SQLException ex) {
-			Util.severe("Error whilst attempting to get connection");
+			Util.severe("Error whilst attempting to get connection: " + ex);
 			return null;
 		}
 	}
@@ -113,8 +134,8 @@ public class DataManager extends TimerTask {
 			JDCConnection conn = getConnection();
 			conn.createStatement().execute("INSERT IGNORE INTO `dl_players` (player) VALUES ('" + name + "');");
 			conn.commit();
-		} catch (SQLException e) {
-			Util.severe("Unable to add player to database");
+		} catch (SQLException ex) {
+			Util.severe("Unable to add player to database: " + ex);
 			return false;
 		}
 		if (!updateDbLists())
@@ -127,8 +148,8 @@ public class DataManager extends TimerTask {
 			JDCConnection conn = getConnection();
 			conn.createStatement().execute("INSERT IGNORE INTO `dl_worlds` (world) VALUES ('" + name + "');");
 			conn.commit();
-		} catch (SQLException e) {
-			Util.severe("Unable to add world to database");
+		} catch (SQLException ex) {
+			Util.severe("Unable to add world to database: " + ex);
 			return false;
 		}
 		if (!updateDbLists())
@@ -142,12 +163,12 @@ public class DataManager extends TimerTask {
 			Statement stmnt = conn.createStatement();
 			ResultSet res = stmnt.executeQuery("SELECT * FROM `dl_players`;");
 			while (res.next())
-				dbPlayers.put(res.getString(1), res.getInt(0));
+				dbPlayers.put(res.getString("player"), res.getInt("player_id"));
 			res = stmnt.executeQuery("SELECT * FROM `dl_worlds`;");
 			while (res.next())
-				dbWorlds.put(res.getString(1), res.getInt(0));
-		} catch (SQLException e) {
-			Util.severe("Unable to update local data lists from database");
+				dbWorlds.put(res.getString("world"), res.getInt("world_id"));
+		} catch (SQLException ex) {
+			Util.severe("Unable to update local data lists from database: " + ex);
 			return false;
 		}
 		return true;
@@ -157,21 +178,21 @@ public class DataManager extends TimerTask {
 		try {
 			JDCConnection conn = getConnection();
 			Statement stmnt = conn.createStatement();
-			
+			DatabaseMetaData dbm = conn.getMetaData();
 			//Check if tables exist
-			if (!stmnt.execute("SHOW TABLES LIKE 'dl_players'")) {
+			if (!JDBCUtil.tableExists(dbm, "dl_players")) {
 				Util.info("Table `dl_players` not found, creating...");
 				stmnt.execute("CREATE TABLE IF NOT EXISTS `dl_players` (`player_id` int(11) NOT NULL AUTO_INCREMENT, `player` varchar(255) NOT NULL, PRIMARY KEY (`player_id`), KEY `player` (`player`) ) ENGINE=MyISAM;");
 			}
-			if (!stmnt.execute("SHOW TABLES LIKE 'dl_worlds'")) {
+			if (!JDBCUtil.tableExists(dbm, "dl_worlds")) {
 				Util.info("Table `dl_worlds` not found, creating...");
 				stmnt.execute("CREATE TABLE IF NOT EXISTS `dl_worlds` (`world_id` int(11) NOT NULL AUTO_INCREMENT, `world` varchar(255) NOT NULL, PRIMARY KEY (`world_id`), KEY `world` (`world`) ) ENGINE=MyISAM;");
 			}
-			if (!stmnt.execute("SHOW TABLES LIKE 'datalog'")) {
+			if (!JDBCUtil.tableExists(dbm, "datalog")) {
 				Util.info("Table `datalog` not found, creating...");
 				stmnt.execute("CREATE TABLE IF NOT EXISTS `datalog` (`data_id` int(11) NOT NULL AUTO_INCREMENT, `date` varchar(255) NOT NULL, `player_id` int(11) NOT NULL, `action` int(11) NOT NULL, `world_id` varchar(255) NOT NULL, `x` double NOT NULL, `y` double NOT NULL, `z` double NOT NULL, `data` varchar(255) DEFAULT NULL, `plugin` varchar(255) DEFAULT 'DataLog', PRIMARY KEY (`data_id`), KEY `player_action_world` (`player_id`,`action`,`world_id`) ) ENGINE=MyISAM;");
 			}
-			else if (!stmnt.execute("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" + Config.database + "' AND TABLE_NAME = 'datalog' AND COLUMN_NAME = 'player_id'")) {
+			else if (!JDBCUtil.columnExists(dbm, "datalog", "player_id")) {
 				Util.info("Pre-v1.1.0 database detected, performing legacy database update please wait...");
 				stmnt.execute("CREATE TABLE IF NOT EXISTS `datalog2` (`data_id` int(11) NOT NULL AUTO_INCREMENT, `date` varchar(255) NOT NULL, `player_id` int(11) NOT NULL, `action` int(11) NOT NULL, `world_id` varchar(255) NOT NULL, `x` double NOT NULL, `y` double NOT NULL, `z` double NOT NULL, `data` varchar(255) DEFAULT NULL, `plugin` varchar(255) DEFAULT 'DataLog', PRIMARY KEY (`data_id`), KEY `player_action_world` (`player_id`,`action`,`world_id`) ) ENGINE=MyISAM;");
 				stmnt.execute("INSERT INTO `dl_players` (player) SELECT DISTINCT `player` FROM `datalog`");
@@ -183,7 +204,6 @@ public class DataManager extends TimerTask {
 				stmnt.execute("RENAME TABLE `datalog2` TO `datalog`");
 				Util.info("Legacy database update complete");
 			}
-			conn.commit();
 		} catch (SQLException ex) {
 			Util.severe("Error checking DataLog tables: " + ex);
 			return false;
@@ -198,20 +218,16 @@ public class DataManager extends TimerTask {
 		Statement stmnt = null;
 		try {
 			stmnt = conn.createStatement();
-			int rows = 1;
 			while (!queue.isEmpty()) {
 				DataEntry entry = queue.poll();
 				if (!dbPlayers.containsKey(entry.getPlayer()))
 					if (!addPlayer(entry.getPlayer()))
 						continue;
-				if (!dbPlayers.containsKey(entry.getWorld()))
+				if (!dbWorlds.containsKey(entry.getWorld()))
 					if (!addWorld(entry.getWorld()))
 						continue;
 				stmnt.execute("INSERT into `datalog` (date, player_id, action, world_id, x, y, z, data, plugin) VALUES ('" + entry.getDate() + "', '" + dbPlayers.get(entry.getPlayer()) + "', '" + entry.getAction() + "', '" + dbWorlds.get(entry.getWorld()) + "', '" + entry.getX() + "', '" + entry.getY() + "', '" + entry.getZ() + "', '" + entry.getData() + "', '" + entry.getPlugin() + "');");
-				if (rows % 50 == 0)
-					conn.commit();
 			}
-			conn.commit();
 		} catch (SQLException ex) {
 			Util.severe("SQL Exception: " + ex);
 		} finally {

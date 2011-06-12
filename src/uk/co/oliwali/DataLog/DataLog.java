@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.PluginManager;
@@ -49,13 +50,18 @@ public class DataLog extends JavaPlugin {
 	}
 	
 	public void onEnable() {
+		
+		Util.info("Starting DataLog initiation process...");
 
-		//Set up config and database
+		//Set up config and permissions
         PluginManager pm = getServer().getPluginManager();
 		server = getServer();
 		name = this.getDescription().getName();
         version = this.getDescription().getVersion();
         config = new Config(this);
+        new Permission(this);
+        
+        //Initiate database connection
         try {
 			new DataManager(this);
 		} catch (Exception e) {
@@ -63,7 +69,10 @@ public class DataLog extends JavaPlugin {
 			pm.disablePlugin(this);
 			return;
 		}
-        new Permission(this);
+		
+		//Add console session
+		ConsoleCommandSender sender = new ConsoleCommandSender(getServer());
+		playerSessions.put(sender, new PlayerSession(sender));
         
         // Register events
         pm.registerEvent(Type.BLOCK_BREAK, blockListener, Event.Priority.Monitor, this);
