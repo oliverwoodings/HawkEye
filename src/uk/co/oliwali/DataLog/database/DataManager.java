@@ -133,7 +133,6 @@ public class DataManager extends TimerTask {
 		try {
 			JDCConnection conn = getConnection();
 			conn.createStatement().execute("INSERT IGNORE INTO `dl_players` (player) VALUES ('" + name + "');");
-			conn.commit();
 		} catch (SQLException ex) {
 			Util.severe("Unable to add player to database: " + ex);
 			return false;
@@ -147,7 +146,6 @@ public class DataManager extends TimerTask {
 		try {
 			JDCConnection conn = getConnection();
 			conn.createStatement().execute("INSERT IGNORE INTO `dl_worlds` (world) VALUES ('" + name + "');");
-			conn.commit();
 		} catch (SQLException ex) {
 			Util.severe("Unable to add world to database: " + ex);
 			return false;

@@ -16,23 +16,45 @@
 	
 	if (strtolower($data["password"]) != strtolower($config["password"]) && $config["password"] != "")
 		return error($lang["messages"]["invalidPass"]);
+		
+	//Get players
+	$players = array();
+	$res = mysql_query("SELECT * FROM dl_players");
+	if (!$res)
+		return error(mysql_error());
+	if (mysql_num_rows($res) == 0)
+		return error($lang["messages"]["noResults"]);
+	while ($player = mysql_fetch_object($res))
+		$players[$player->player_id] = $player->player;
 	
-	$sql = "SELECT datalog.data_id, datalog.date, dl_players.player, datalog.action, dl_worlds.world, datalog.x, datalog.y, datalog.z, datalog.data, datalog.plugin FROM `datalog`, `dl_players`, `dl_worlds` WHERE ";
+	//Get worlds
+	$worlds = array();
+	$res = mysql_query("SELECT * FROM dl_worlds");
+	if (!$res)
+		return error(mysql_error());
+	if (mysql_num_rows($res) == 0)
+		return error($lang["messages"]["noResults"]);
+	while ($world = mysql_fetch_object($res))
+		$worlds[$world->world_id] = $world->world;
+	
+	$sql = "SELECT * FROM `datalog` WHERE ";
 	$args = array();
 	
-	if ($data["dateFrom"] != "" && $data["dateFrom"] != " ")
-		array_push($args, "`date` >= '" . $data["dateFrom"] . "'");
-	if ($data["dateTo"] != "" && $data["dateTo"] != " ")
-		array_push($args, "`date` <= '" . $data["dateTo"] . "'");
 	if ($data["players"][0] != "") {
+		$pids = array();
 		foreach ($data["players"] as $key => $val)
-			$data["players"][$key] = "'" . $val . "%'";
-		array_push($args, "(LOWER(dl_players.player) LIKE " . join(" OR LOWER(dl_players.player) LIKE ", $data["players"]) . ")");
+			foreach ($players as $key2 => $val2)
+				if (strstr($val2, $val))
+					array_push($pids, $key2);
+		array_push($args, "player_id IN (" . join(",", $pids) . ")");
 	}
 	if ($data["worlds"][0] != "") {
+		$wids = array();
 		foreach ($data["worlds"] as $key => $val)
-			$data["worlds"][$key] = "'" . $val . "%'";
-		array_push($args, "(LOWER(dl_worlds.world) LIKE " . join(" OR LOWER(dl_worlds.world) LIKE ", $data["worlds"]) . ")");
+			foreach ($worlds as $key2 => $val2)
+				if (strstr($val2, $val))
+					array_push($wids, $key2);
+		array_push($args, "world_id IN (" . join(",", $wids) . ")");
 	}
 	if (count($data["actions"]) == 0)
 		return error($lang["messages"]["noActions"]);
@@ -54,6 +76,11 @@
 		else
 			array_push($data["keywords"], $data["block"]);
 	}
+	
+	if ($data["dateFrom"] != "" && $data["dateFrom"] != " ")
+		array_push($args, "`date` >= '" . $data["dateFrom"] . "'");
+	if ($data["dateTo"] != "" && $data["dateTo"] != " ")
+		array_push($args, "`date` <= '" . $data["dateTo"] . "'");
 	if ($data["keywords"][0] != "") {
 		foreach ($data["keywords"] as $key => $val)
 			$data["keywords"][$key] = "'%" . $val . "%'";
@@ -121,7 +148,7 @@
 			$fdata = join("-", $arr);
 		}
 		$action = str_replace(array_reverse(array_keys($lang["actions"])), array_reverse($lang["actions"]), $action);
-		echo '<tr><td>' . $entry->data_id . '</td><td width="155px">' . $entry->date . "</td><td>" . $entry->player . "</td><td>" . $action . "</td><td>" . $entry->world . "</td><td>" . round($entry->x, 1).",".round($entry->y, 1).",".round($entry->z, 1) . '</td><td id="dataEntry" title="' . $entry->data . '">' . $fdata . "</td></tr>";
+		echo '<tr><td>' . $entry->data_id . '</td><td width="155px">' . $entry->date . "</td><td>" . $players[$entry->player_id] . "</td><td>" . $action . "</td><td>" . $worlds[$entry->world_id] . "</td><td>" . round($entry->x, 1).",".round($entry->y, 1).",".round($entry->z, 1) . '</td><td id="dataEntry" title="' . $entry->data . '">' . $fdata . "</td></tr>";
 	}
 	echo "</table>";
 		
