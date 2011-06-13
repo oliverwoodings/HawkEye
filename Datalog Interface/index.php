@@ -84,7 +84,10 @@
                                     <option value="0"> </option>
                                 </select> <?php echo $lang["filter"]["block"]; ?>
                             </span><br /><br />
-                            <button class="searchButton"><?php echo $lang["filter"]["search"]; ?></button>
+                            <div>
+                           		<div><button class="searchButton"><?php echo $lang["filter"]["search"]; ?></button></div>
+                            	<div class="orderRadio"><input title="<?php echo $lang["tips"]["reverse"]; ?>" type="checkbox" checked="checked" name="reverse" /> <?php echo $lang["filter"]["reverse"]; ?></div>
+                            </div>
                         </div>
                     </form>
 

@@ -21,7 +21,8 @@
 									  "dFrom" => "Date From",
 									  "dTo" => "Date To",
 									  "block" => "Block",
-									  "search" => "Rechercher"),
+									  "search" => "Rechercher",
+									  "reverse" => "Inverser l'ordre de"),
 					
 					"tips" => array("hideFilter" => "Afficher / Masquer les options de filtre",
 									"hideResults" => "Afficher / Masquer les résultats",
@@ -34,7 +35,8 @@
 									"worlds" => "(Facultatif) Liste des mondes séparés par des virgules. Laissez vide pour tous les mondes",
 									"dFrom" => "(Facultatif) Heure et date pour commencer la recherche de",
 									"dTo" => "(Facultatif) Date et heure de chercher à",
-									"block" => "(Facultatif) Block à rechercher dans 'Block Break' et 'Block Place' événements"),
+									"block" => "(Facultatif) Block à rechercher dans 'Block Break' et 'Block Place' événements",
+									"reverse" => "Si elle est cochée, afin de grumes seront dans l'ordre chronologique inverse. Décochez la case pour afficher les journaux de conversation"),
 					
 					"actions" => array("Bloc de Pause",
 									   "Bloc de Place",

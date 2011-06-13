@@ -24,7 +24,8 @@
 									  "dFrom" => "Date From",
 									  "dTo" => "Date To",
 									  "block" => "Block",
-									  "search" => "Search"),
+									  "search" => "Search",
+									  "reverse" => "Reverse Order"),
 					
 					"tips" => array("hideFilter" => "Show/Hide Filter Options",
 									"hideResults" => "Show/Hide Results",
@@ -37,7 +38,8 @@
 									"worlds" => "(Optional) List of worlds seperated by commas. Leave blank for all worlds",
 									"dFrom" => "(Optional) Time and date to start searching from",
 									"dTo" => "(Optional) Time and date to search up to",
-									"block" => "(Optional) Block to search for in 'Block Break' and 'Block Place' events"),
+									"block" => "(Optional) Block to search for in 'Block Break' and 'Block Place' events",
+									"reverse" => "If checked, order of logs will be in reverse-chronological order. Uncheck for viewing chat logs"),
 					
 					"actions" => array("Block Break",
 									   "Block Place",

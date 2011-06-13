@@ -127,6 +127,12 @@ input, textarea {
 	margin-top: -3px;
 	margin-left: 3px;
 }
+.orderRadio {
+	vertical-align: middle;
+	margin-left: 10px;
+	margin-top: 7px;
+	line-height: 18px;
+}
 
 .tooltip {
 	background-color: #000;
