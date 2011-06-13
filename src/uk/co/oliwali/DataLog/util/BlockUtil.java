@@ -10,8 +10,8 @@ public class BlockUtil {
 		return getBlockString(block.getState());
 	}
 	public static String getBlockString(BlockState block) {
-		if (block.getData().getData() != 0)
-			return block.getTypeId() + ":" + block.getData();
+		if (block.getRawData() != 0)
+			return block.getTypeId() + ":" + block.getRawData();
 		return Integer.toString(block.getTypeId());
 	}
 	

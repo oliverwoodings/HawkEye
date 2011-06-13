@@ -133,7 +133,7 @@ public class RollbackCommand extends BaseCommand {
 					actions.add(type.getId());
 		}
 		
-		Thread thread = new SearchQuery(SearchType.ROLLBACK, sender, dateFrom, dateTo, players, actions, loc, radius, worlds, filters, "asc");
+		Thread thread = new SearchQuery(SearchType.ROLLBACK, sender, dateFrom, dateTo, players, actions, loc, radius, worlds, filters, "desc");
 		thread.start();
 		return true;
 	}

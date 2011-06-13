@@ -130,6 +130,21 @@ public class DataManager extends TimerTask {
 		}
 	}
 	
+	public static DataEntry createEntryFromRes(ResultSet res) throws SQLException {
+		DataEntry entry = new DataEntry();
+		entry.setPlayer(DataManager.getPlayer(res.getInt("player_id")));
+		entry.setDate(res.getString("date"));
+		entry.setDataid(res.getInt("data_id"));
+		entry.setAction(res.getInt("action"));
+		entry.setData(res.getString("data"));
+		entry.setPlugin(res.getString("plugin"));
+		entry.setWorld(DataManager.getWorld(res.getInt("world_id")));
+		entry.setX(res.getInt("x"));
+		entry.setY(res.getInt("y"));
+		entry.setZ(res.getInt("z"));
+		return entry;
+	}
+	
 	private boolean addPlayer(String name) {
 		try {
 			JDCConnection conn = getConnection();
@@ -189,11 +204,11 @@ public class DataManager extends TimerTask {
 			}
 			if (!JDBCUtil.tableExists(dbm, "datalog")) {
 				Util.info("Table `datalog` not found, creating...");
-				stmnt.execute("CREATE TABLE IF NOT EXISTS `datalog` (`data_id` int(11) NOT NULL AUTO_INCREMENT, `date` varchar(255) NOT NULL, `player_id` int(11) NOT NULL, `action` int(11) NOT NULL, `world_id` varchar(255) NOT NULL, `x` double NOT NULL, `y` double NOT NULL, `z` double NOT NULL, `data` varchar(255) DEFAULT NULL, `plugin` varchar(255) DEFAULT 'DataLog', PRIMARY KEY (`data_id`), KEY `player_action_world` (`player_id`,`action`,`world_id`) ) ENGINE=MyISAM;");
+				stmnt.execute("CREATE TABLE IF NOT EXISTS `datalog` (`data_id` int(11) NOT NULL AUTO_INCREMENT, `date` varchar(255) NOT NULL, `player_id` int(11) NOT NULL, `action` int(11) NOT NULL, `world_id` varchar(255) NOT NULL, `x` double NOT NULL, `y` double NOT NULL, `z` double NOT NULL, `data` varchar(255) DEFAULT NULL, `plugin` varchar(255) DEFAULT 'DataLog', PRIMARY KEY (`data_id`), KEY `player_action_world` (`player_id`,`action`,`world_id`), KEY `x_y_z` (`x`,`y`,`z` )) ENGINE=MyISAM;");
 			}
 			else if (!JDBCUtil.columnExists(dbm, "datalog", "player_id")) {
 				Util.info("Pre-v1.1.0 database detected, performing legacy database update please wait...");
-				stmnt.execute("CREATE TABLE IF NOT EXISTS `datalog2` (`data_id` int(11) NOT NULL AUTO_INCREMENT, `date` varchar(255) NOT NULL, `player_id` int(11) NOT NULL, `action` int(11) NOT NULL, `world_id` varchar(255) NOT NULL, `x` double NOT NULL, `y` double NOT NULL, `z` double NOT NULL, `data` varchar(255) DEFAULT NULL, `plugin` varchar(255) DEFAULT 'DataLog', PRIMARY KEY (`data_id`), KEY `player_action_world` (`player_id`,`action`,`world_id`) ) ENGINE=MyISAM;");
+				stmnt.execute("CREATE TABLE IF NOT EXISTS `datalog2` (`data_id` int(11) NOT NULL AUTO_INCREMENT, `date` varchar(255) NOT NULL, `player_id` int(11) NOT NULL, `action` int(11) NOT NULL, `world_id` varchar(255) NOT NULL, `x` double NOT NULL, `y` double NOT NULL, `z` double NOT NULL, `data` varchar(255) DEFAULT NULL, `plugin` varchar(255) DEFAULT 'DataLog', PRIMARY KEY (`data_id`), KEY `player_action_world` (`player_id`,`action`,`world_id`), KEY `x_y_z` (`x`,`y`,`z` )) ENGINE=MyISAM;");
 				stmnt.execute("INSERT INTO `dl_players` (player) SELECT DISTINCT `player` FROM `datalog`");
 				stmnt.execute("INSERT INTO `dl_worlds` (world) SELECT DISTINCT `world` FROM `datalog`");
 				Util.info("Players and worlds imported into new structure. Importing main data please wait...");

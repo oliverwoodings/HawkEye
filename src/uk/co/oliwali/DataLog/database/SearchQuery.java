@@ -2,6 +2,7 @@ package uk.co.oliwali.DataLog.database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -49,8 +50,12 @@ public class SearchQuery extends Thread {
 	}
 	
 	public void run() {
+		
+		Util.debug("Beginning search query");
 		String sql = "SELECT * FROM `datalog` WHERE ";
 		List<String> args = new ArrayList<String>();
+		
+		Util.debug("Building players");
 		if (players != null) {
 			List<Integer> pids = new ArrayList<Integer>();
 			for (String player : players) {
@@ -61,9 +66,13 @@ public class SearchQuery extends Thread {
 			}
 			if (pids.size() > 0)
 				args.add("player_id IN (" + Util.join(pids, ",") + ")");
-			else Util.sendMessage(sender, "&cNo players found matching your specifications");
-			return;
+			else {
+				Util.sendMessage(sender, "&cNo players found matching your specifications");
+				return;
+			}
 		}
+		
+		Util.debug("Building worlds");
 		if (worlds != null) {
 			List<Integer> wids = new ArrayList<Integer>();
 			for (String world : worlds) {
@@ -74,9 +83,13 @@ public class SearchQuery extends Thread {
 			}
 			if (wids.size() > 0)
 				args.add("world_id IN (" + Util.join(wids, ",") + ")");
-			else Util.sendMessage(sender, "&cNo worlds found matching your specifications");
-			return;
+			else {
+				Util.sendMessage(sender, "&cNo worlds found matching your specifications");
+				return;
+			}
 		}
+		
+		Util.debug("Building actions");
 		if (actions == null || actions.size() == 0) {
 			actions = new ArrayList<Integer>();
 			for (DataType type : DataType.values())
@@ -88,11 +101,13 @@ public class SearchQuery extends Thread {
 				acs.add(act);
 		args.add("action IN (" + Util.join(acs, ",") + ")");
 		
+		Util.debug("Building dates");
 		if (dateFrom != null)
 			args.add("date >= '" + dateFrom + "'");
 		if (dateTo != null)
 			args.add("date <= '" + dateTo + "'");
 		
+		Util.debug("Building location");
 		if (loc != null) {
 			if (radius == 0) {
 				args.add("x = " + loc.getX());
@@ -108,20 +123,16 @@ public class SearchQuery extends Thread {
 				args.add("(z BETWEEN " + (loc.getZ() - range) + " AND " + (loc.getZ() + range) + ")");
 			}
 		}
+		
+		Util.debug("Building filters");
 		if (filters != null) {
 			for (int i = 0; i < filters.length; i++)
 				filters[i] = "'%" + filters[i] + "%'";
 			args.add("data LIKE " + Util.join(Arrays.asList(filters), " OR datalog.data LIKE "));
 		}
 		
+		Util.debug("Building orders and limits");
 		sql += Util.join(args, " AND ");
-		if (order != null) {
-			sql += " ORDER BY data_id ";
-			if (order.equalsIgnoreCase("desc"))
-				sql += "DESC";
-			if (order.equalsIgnoreCase("asc"))
-				sql += "ASC";
-		}
 		if (Config.maxLines > 0)
 			sql += " LIMIT " + Config.maxLines;
 		
@@ -131,26 +142,35 @@ public class SearchQuery extends Thread {
 		PlayerSession session = DataLog.playerSessions.get(sender);
 		Util.sendMessage(session.getSender(), "&cSearching for matching logs...");
 		List<DataEntry> results = new ArrayList<DataEntry>();
+		JDCConnection conn = DataManager.getConnection();
+		Statement stmnt = null;
+		
 		try {
-			res = DataManager.getConnection().createStatement().executeQuery(sql);
-			while (res.next()) {
-				DataEntry entry = new DataEntry();
-				entry.setPlayer(DataManager.getPlayer(res.getInt("player_id")));
-				entry.setDate(res.getString("date"));
-				entry.setDataid(res.getInt("data_id"));
-				entry.setAction(res.getInt("action"));
-				entry.setData(res.getString("data"));
-				entry.setPlugin(res.getString("plugin"));
-				entry.setWorld(DataManager.getWorld(res.getInt("world_id")));
-				entry.setX(res.getInt("x"));
-				entry.setY(res.getInt("y"));
-				entry.setZ(res.getInt("z"));
-				results.add(entry);
+			stmnt = conn.createStatement();
+			res = stmnt.executeQuery(sql);
+			Util.debug("Getting results");
+			if (order == "desc") {
+				res.afterLast();
+				while (res.previous())
+					results.add(DataManager.createEntryFromRes(res));
+			}
+			else {
+				while (res.next())
+					results.add(DataManager.createEntryFromRes(res));
 			}
 		} catch (SQLException ex) {
 			Util.severe("Error executing MySQL query: " + ex);
 			Util.sendMessage(sender, "&cError executing MySQL query, search aborted");
 			return;
+		} finally {
+			try {
+				if (stmnt != null)
+					stmnt.close();
+				conn.close();
+			} catch (SQLException ex) {
+				Util.severe("Unable to close SQL connection: " + ex);
+			}
+				
 		}
 		
 		switch (searchType) {
@@ -163,6 +183,7 @@ public class SearchQuery extends Thread {
 				DisplayManager.displayPage(session, 1);
 				break;
 		}
+		Util.debug("Search complete");
 		
 	}
 	

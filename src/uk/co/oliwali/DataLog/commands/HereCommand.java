@@ -33,7 +33,7 @@ public class HereCommand extends BaseCommand {
 			Thread thread = new SearchQuery(SearchType.SEARCH, sender, null, null, players, actions, player.getLocation().toVector(), Integer.parseInt(args.get(0)), player.getWorld().getName().split(","), null, "desc");
 			thread.start();
 		} catch (Throwable t) {
-			Util.sendMessage(sender, "Invalid radius!");
+			Util.sendMessage(sender, "&cInvalid radius!");
 		}
 		return true;
 	}

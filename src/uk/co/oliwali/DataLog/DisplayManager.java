@@ -44,7 +44,7 @@ public class DisplayManager {
 				action = data.substring(0, data.indexOf("-"));
 				data = data.substring(data.indexOf("-") + 1);
 			}
-			sendLine(session.getSender(), "&7id" + entry.getDataid() + " &c" + entry.getDate().substring(5) + " &7" + entry.getPlayer() + " &c" + action);
+			sendLine(session.getSender(), "&7id:" + entry.getDataid() + " &c" + entry.getDate().substring(5) + " &7" + entry.getPlayer() + " &c" + action);
 			sendLine(session.getSender(), "   &7Loc: &c" + entry.getWorld() + "-" + entry.getX() + "," + entry.getY() + "," + entry.getZ() + " &7Data: &c" + data);
 		}
 		Util.sendMessage(session.getSender(), "&8-----------------------------------------------------");

@@ -9,6 +9,7 @@ import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.PluginManager;
@@ -60,6 +61,10 @@ public class DataLog extends JavaPlugin {
         version = this.getDescription().getVersion();
         config = new Config(this);
         new Permission(this);
+        
+        //Create player sessions
+        for (Player player : server.getOnlinePlayers())
+        	playerSessions.put(player, new PlayerSession(player));
         
         //Initiate database connection
         try {
