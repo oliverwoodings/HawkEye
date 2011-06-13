@@ -1,4 +1,4 @@
-00,None
+00,Air
 26,Bed
 07,Bedrock
 47,Bookshelf

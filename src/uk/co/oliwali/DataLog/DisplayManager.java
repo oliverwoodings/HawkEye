@@ -44,15 +44,15 @@ public class DisplayManager {
 				action = data.substring(0, data.indexOf("-"));
 				data = data.substring(data.indexOf("-") + 1);
 			}
-			sendLine(session.getSender(), "&7id:" + entry.getDataid() + " &c" + entry.getDate().substring(5) + " &7" + entry.getPlayer() + " &c" + action);
-			sendLine(session.getSender(), "   &7Loc: &c" + entry.getWorld() + "-" + entry.getX() + "," + entry.getY() + "," + entry.getZ() + " &7Data: &c" + data);
+			sendLine(session.getSender(), "&cid:" + entry.getDataid() + " &7" + entry.getDate().substring(5) + " &c" + entry.getPlayer() + " &7" + action);
+			sendLine(session.getSender(), "   &cLoc: &7" + entry.getWorld() + "-" + entry.getX() + "," + entry.getY() + "," + entry.getZ() + " &cData: &7" + data);
 		}
 		Util.sendMessage(session.getSender(), "&8-----------------------------------------------------");
 		return;
 	}
 	
 	public static void sendLine(CommandSender sender, String line) {
-		int len = 70;
+		int len = 68;
 		if (line.length() < len)
 			Util.sendMessage(sender, "&8| " + line);
 		else

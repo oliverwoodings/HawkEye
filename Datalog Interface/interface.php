@@ -46,7 +46,8 @@
 			foreach ($players as $key2 => $val2)
 				if (strstr($val2, $val))
 					array_push($pids, $key2);
-		array_push($args, "player_id IN (" . join(",", $pids) . ")");
+		if (count($pids) > 0)
+			array_push($args, "player_id IN (" . join(",", $pids) . ")");
 	}
 	if ($data["worlds"][0] != "") {
 		$wids = array();
@@ -54,7 +55,8 @@
 			foreach ($worlds as $key2 => $val2)
 				if (strstr($val2, $val))
 					array_push($wids, $key2);
-		array_push($args, "world_id IN (" . join(",", $wids) . ")");
+		if (count($wids) > 0)
+			array_push($args, "world_id IN (" . join(",", $wids) . ")");
 	}
 	if (count($data["actions"]) == 0)
 		return error($lang["messages"]["noActions"]);
@@ -112,34 +114,24 @@
 			
 	//Loop through results
 	$items = explode("\n", file_get_contents("items.txt"));
-	while ($entry = mysql_fetch_object($res)) {
+	$results = array();
+	while ($entry = mysql_fetch_object($res))
+		array_push($results, $entry);
+	if ($data["reverse"] == TRUE)
+		$results = array_reverse($results);
+	foreach ($results as $entry) {
 		$fdata = $entry->data;
 		if (strlen($entry->data) > 40)
 			$fdata = substr($fdata, 0, 40) . "...";
 		$action = $entry->action;
 		if ($action == 0) {
-			foreach ($items as $i) {
-				$item = explode(",", $i);
-				if ((int)$item[0] == (int)$fdata)
-					$fdata = $item[1];
-			}
+			$fdata = getBlockName($fdata);
 		}
 		if ($action == 1) {
 			$arr = explode("-", $fdata);
-			if (count($arr) == 1) {
-				foreach ($items as $i) {
-					$item = explode(",", $i);
-					if ((int)$item[0] == (int)$arr[0])
-						$fdata = $item[1] . " replaced by ";
-				}
-			}
-			else {
-				foreach ($items as $i) {
-					$item = explode(",", $i);
-					if ((int)$item[0] == (int)$arr[1])
-						$fdata .= $item[1];
-				}
-			}
+			if (count($arr) > 1)
+				$fdata = getBlockName($arr[0]) . " replaced by " . getBlockName($arr[1]);
+			else $fdata = getBlockName($arr[0]);
 		}
 		if ($action == 16) {
 			$arr = explode("-", $fdata);
@@ -151,6 +143,24 @@
 		echo '<tr><td>' . $entry->data_id . '</td><td width="155px">' . $entry->date . "</td><td>" . $players[$entry->player_id] . "</td><td>" . $action . "</td><td>" . $worlds[$entry->world_id] . "</td><td>" . round($entry->x, 1).",".round($entry->y, 1).",".round($entry->z, 1) . '</td><td id="dataEntry" title="' . $entry->data . '">' . $fdata . "</td></tr>";
 	}
 	echo "</table>";
+	
+	/*
+	// FUNCTION: getBlockName($string);
+	// Gets block name of block
+	*/
+	function getBlockName($string) {
+		global $items;
+		$parts = explode(":", $string);
+		foreach ($items as $i) {
+			$item = explode(",", $i);
+			if ($item[0] == $parts[0]) {
+				if (count($parts) == 2)
+					return $item[1] . ":" . $parts[1];
+				else return $item[1];
+			}
+		}
+		return $string;
+	}
 		
 	
 	/*
@@ -158,6 +168,7 @@
 	// Displays an error box with the inputted text
 	*/
 	function error($message) {
+		global $lang;
 		echo '<div class="ui-widget">
 				<div class="ui-state-highlight ui-corner-all searchError"> 
 					<p><span class="ui-icon ui-icon-alert"></span>
