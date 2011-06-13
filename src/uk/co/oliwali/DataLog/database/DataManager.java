@@ -117,7 +117,7 @@ public class DataManager extends TimerTask {
 		for (DataType type : DataType.values())
 			if (type.canHere()) actions.add(type.getId());
 		loc = Util.getSimpleLocation(loc);
-		Thread thread = new SearchQuery(SearchType.SEARCH, player, null, null, null, actions, loc.toVector(), 0, null, null, "asc");
+		Thread thread = new SearchQuery(SearchType.SEARCH, player, null, null, null, actions, loc.toVector(), 0, loc.getWorld().getName().split(","), null, "desc");
 		thread.start();
 	}
 	

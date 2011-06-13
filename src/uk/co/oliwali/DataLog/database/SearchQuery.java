@@ -61,6 +61,8 @@ public class SearchQuery extends Thread {
 			}
 			if (pids.size() > 0)
 				args.add("player_id IN (" + Util.join(pids, ",") + ")");
+			else Util.sendMessage(sender, "&cNo players found matching your specifications");
+			return;
 		}
 		if (worlds != null) {
 			List<Integer> wids = new ArrayList<Integer>();
@@ -72,6 +74,8 @@ public class SearchQuery extends Thread {
 			}
 			if (wids.size() > 0)
 				args.add("world_id IN (" + Util.join(wids, ",") + ")");
+			else Util.sendMessage(sender, "&cNo worlds found matching your specifications");
+			return;
 		}
 		if (actions == null || actions.size() == 0) {
 			actions = new ArrayList<Integer>();

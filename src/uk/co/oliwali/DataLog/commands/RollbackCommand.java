@@ -58,7 +58,7 @@ public class RollbackCommand extends BaseCommand {
 					for (int i = 0; i < arg.length(); i++) {
 						String c = arg.substring(i, i+1);
 						if (!Util.isInteger(c)) {
-							if (c.equals("m") || c .equals("s") || c.equals("h"))
+							if (c.equals("w") || c.equals("d") || c.equals("m") || c .equals("s") || c.equals("h"))
 								type = 0;
 							if (c.equals("-") || c.equals(":"))
 								type = 1;
@@ -133,7 +133,7 @@ public class RollbackCommand extends BaseCommand {
 					actions.add(type.getId());
 		}
 		
-		Thread thread = new SearchQuery(SearchType.ROLLBACK, sender, dateFrom, dateTo, players, actions, loc, radius, worlds, filters, "desc");
+		Thread thread = new SearchQuery(SearchType.ROLLBACK, sender, dateFrom, dateTo, players, actions, loc, radius, worlds, filters, "asc");
 		thread.start();
 		return true;
 	}

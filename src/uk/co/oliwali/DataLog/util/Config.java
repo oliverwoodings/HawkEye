@@ -1,6 +1,7 @@
 package uk.co.oliwali.DataLog.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.util.config.Configuration;
@@ -19,6 +20,7 @@ public class Config {
 	public static String password;
 	public static String database;
 	public static String cleanseAge;
+	public static List<Integer> blockFilter = new ArrayList<Integer>();
 	
 	private Configuration config;
 	
@@ -63,6 +65,8 @@ public class Config {
 			cmds.add("/register");
 			config.setProperty("command-filter", cmds);
 		}
+		if (!keys.contains("block-filter"))
+			config.setProperty("block-filter", Arrays.asList(new Integer[]{33,34}));
 		//Check MySQL settings
 		keys = config.getKeys("mysql");
 		if (keys == null)
@@ -99,6 +103,7 @@ public class Config {
 		url = "jdbc:mysql://" + config.getString("mysql.hostname") + ":" + config.getString("mysql.port") + "/" + config.getString("mysql.database");
 		database = config.getString("mysql.database");
 		cleanseAge = config.getString("cleanse-age");
+		blockFilter = config.getIntList("block-filter", null);
 	}
 	
 	//Check if a type is logged or not

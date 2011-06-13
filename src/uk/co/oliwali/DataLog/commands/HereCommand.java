@@ -14,9 +14,9 @@ public class HereCommand extends BaseCommand {
 
 	public HereCommand() {
 		name = "here";
-		argLength = 1;
+		argLength = 0;
 		bePlayer = true;
-		usage = "<radius> <- radius to search around you";
+		usage = "[radius] [player] <- search around you for data";
 	}
 	
 	public boolean execute() {
@@ -27,7 +27,10 @@ public class HereCommand extends BaseCommand {
 			List<Integer> actions = new ArrayList<Integer>();
 			for (DataType type : DataType.values())
 				if (type.canHere()) actions.add(type.getId());
-			Thread thread = new SearchQuery(SearchType.SEARCH, sender, null, null, null, actions, player.getLocation().toVector(), Integer.parseInt(args.get(0)), null, null, "desc");
+			String[] players = null;
+			if (args.size() > 1)
+				players = args.get(1).split(",");
+			Thread thread = new SearchQuery(SearchType.SEARCH, sender, null, null, players, actions, player.getLocation().toVector(), Integer.parseInt(args.get(0)), player.getWorld().getName().split(","), null, "desc");
 			thread.start();
 		} catch (Throwable t) {
 			Util.sendMessage(sender, "Invalid radius!");

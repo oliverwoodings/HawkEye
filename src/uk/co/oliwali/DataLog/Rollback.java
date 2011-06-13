@@ -69,10 +69,8 @@ public class Rollback {
 			return;
 		}
 		Util.sendMessage(session.getSender(), "&cUndoing rollback (&7" + results.size() + " action(s)&c)");
-		for (BlockState block : results.toArray(new BlockState[0])) {
-			Util.info(block.getType().name());
+		for (BlockState block : results.toArray(new BlockState[0]))
 			block.update(true);
-		}
 		Util.sendMessage(session.getSender(), "&cUndo complete");
 		session.setRollbackUndo(null);
 		session.setRollbackResults(null);
