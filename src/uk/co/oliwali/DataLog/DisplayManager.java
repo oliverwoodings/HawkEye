@@ -2,11 +2,11 @@ package uk.co.oliwali.DataLog;
 
 import java.util.List;
 
-import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 
 import uk.co.oliwali.DataLog.database.DataEntry;
 import uk.co.oliwali.DataLog.database.DataType;
+import uk.co.oliwali.DataLog.util.BlockUtil;
 import uk.co.oliwali.DataLog.util.Util;
 
 public class DisplayManager {
@@ -32,12 +32,12 @@ public class DisplayManager {
 			DataEntry entry = results.get(i);
 			String data = entry.getData();
 			if (entry.getAction() == 0)
-				data = Material.getMaterial(Integer.parseInt(data)).name();
+				data = BlockUtil.getBlockStringName(data);
 			if (entry.getAction() == 1) {
 				if (data.indexOf("-") == -1)
-					data = Material.getMaterial(Integer.parseInt(data)).name();
+					data = BlockUtil.getBlockStringName(data);
 				else
-					data = Material.getMaterial(Integer.parseInt(data.substring(0, data.indexOf("-")))).name() + " changed to " + Material.getMaterial(Integer.parseInt(data.substring(data.indexOf("-") + 1))).name();
+					data = BlockUtil.getBlockStringName(data.substring(0, data.indexOf("-"))) + " changed to " + BlockUtil.getBlockStringName(data.substring(data.indexOf("-") + 1));
 			}
 			String action = DataType.fromId(entry.getAction()).getConfigName();
 			if (entry.getAction() == 16) {

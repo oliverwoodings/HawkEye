@@ -14,6 +14,7 @@ import org.bukkit.event.block.SnowFormEvent;
 import uk.co.oliwali.DataLog.DataLog;
 import uk.co.oliwali.DataLog.database.DataManager;
 import uk.co.oliwali.DataLog.database.DataType;
+import uk.co.oliwali.DataLog.util.BlockUtil;
 import uk.co.oliwali.DataLog.util.Config;
 
 public class DLBlockListener extends BlockListener {
@@ -31,7 +32,7 @@ public class DLBlockListener extends BlockListener {
 		Block block   = event.getBlock();
 		Location loc  = block.getLocation();
 		if (!Config.blockFilter.contains(block.getTypeId()))
-			DataManager.addEntry(player, DataType.BLOCK_BREAK, loc, Integer.toString(block.getTypeId()));
+			DataManager.addEntry(player, DataType.BLOCK_BREAK, loc, BlockUtil.getBlockString(block));
 	}
 	
 	public void onBlockPlace(BlockPlaceEvent event) {
@@ -45,7 +46,7 @@ public class DLBlockListener extends BlockListener {
 			event.setCancelled(true);
 		}
 		else if (!Config.blockFilter.contains(block.getTypeId()))
-			DataManager.addEntry(player, DataType.BLOCK_PLACE, loc, event.getBlockReplacedState().getTypeId() + "-" + block.getTypeId());
+			DataManager.addEntry(player, DataType.BLOCK_PLACE, loc, BlockUtil.getBlockString(event.getBlockReplacedState()) + "-" + BlockUtil.getBlockString(block));
 	}
 	
 	public void onSignChange(SignChangeEvent event) {

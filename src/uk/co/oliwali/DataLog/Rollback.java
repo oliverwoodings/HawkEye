@@ -11,6 +11,7 @@ import org.bukkit.block.BlockState;
 
 import uk.co.oliwali.DataLog.database.DataEntry;
 import uk.co.oliwali.DataLog.database.DataType;
+import uk.co.oliwali.DataLog.util.BlockUtil;
 import uk.co.oliwali.DataLog.util.Util;
 
 public class Rollback {
@@ -42,13 +43,13 @@ public class Rollback {
 				case BLOCK_BURN:
 				case LEAF_DECAY:
 				case EXPLOSION:
-					block.setTypeId(Integer.parseInt(entry.getData()));
+					BlockUtil.setBlockString(block, entry.getData());
 					break;
 				case BLOCK_PLACE:
 					if (entry.getData().indexOf("-") == -1)
 						block.setType(Material.AIR);
 					else
-						block.setTypeId(Integer.parseInt(entry.getData().substring(0, entry.getData().indexOf("-"))));
+						BlockUtil.setBlockString(block, entry.getData().substring(0, entry.getData().indexOf("-")));
 					break;
 				case LAVA_BUCKET:
 				case WATER_BUCKET:

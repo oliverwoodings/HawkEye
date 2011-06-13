@@ -125,6 +125,8 @@ public class SearchQuery extends Thread {
 		if (Config.maxLines > 0)
 			sql += " LIMIT " + Config.maxLines;
 		
+		Util.debug("Searching: " + sql);
+		
 		ResultSet res;
 		PlayerSession session = DataLog.playerSessions.get(sender);
 		Util.sendMessage(session.getSender(), "&cSearching for matching logs...");

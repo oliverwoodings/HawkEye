@@ -19,6 +19,11 @@ public class Util {
 		log.severe("[DataLog] " + msg);
 	}
 	
+	public static void debug(String msg) {
+		if (Config.debug)
+			Util.info("DEBUG: " + msg);
+	}
+	
 	public static void sendMessage(CommandSender player, String msg) {
 		int i;
 		String part;
