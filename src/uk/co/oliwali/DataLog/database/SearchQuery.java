@@ -60,7 +60,7 @@ public class SearchQuery extends Thread {
 			List<Integer> pids = new ArrayList<Integer>();
 			for (String player : players) {
 				for (Map.Entry<String, Integer> entry : DataManager.dbPlayers.entrySet()) {
-					if (entry.getKey().contains(player))
+					if (entry.getKey().toLowerCase().contains(player.toLowerCase()))
 							pids.add(entry.getValue());
 				}
 			}
@@ -77,7 +77,7 @@ public class SearchQuery extends Thread {
 			List<Integer> wids = new ArrayList<Integer>();
 			for (String world : worlds) {
 				for (Map.Entry<String, Integer> entry : DataManager.dbWorlds.entrySet()) {
-					if (entry.getKey().contains(world))
+					if (entry.getKey().toLowerCase().contains(world.toLowerCase()))
 							wids.add(entry.getValue());
 				}
 			}
