@@ -22,6 +22,7 @@ public class Config {
 	public static String cleanseAge;
 	public static List<Integer> blockFilter = new ArrayList<Integer>();
 	public static boolean debug;
+	public static int poolSize;
 	
 	private Configuration config;
 	
@@ -59,6 +60,8 @@ public class Config {
 			config.setProperty("tool-block", 17);
 		if (!keys.contains("cleanse-age"))
 			config.setProperty("cleanse-age", "0d0h0s");
+		if (!keys.contains("max-connections"))
+			config.setProperty("max-connections", 10);
 		if (!keys.contains("command-filter")) {
 			List<String> cmds = new ArrayList<String>();
 			cmds.add("/login");
@@ -108,6 +111,7 @@ public class Config {
 		cleanseAge = config.getString("cleanse-age");
 		blockFilter = config.getIntList("block-filter", null);
 		debug = config.getBoolean("debug", false);
+		poolSize = config.getInt("max-connections", 10);
 	}
 	
 	//Check if a type is logged or not

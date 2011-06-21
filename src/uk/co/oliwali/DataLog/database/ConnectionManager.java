@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import uk.co.oliwali.DataLog.util.Config;
+
 public class ConnectionManager implements Closeable {
 	
 	private static int poolsize = 10;
@@ -21,6 +23,7 @@ public class ConnectionManager implements Closeable {
 		this.url = url;
 		this.user = user;
 		this.password = password;
+		poolsize = Config.poolSize;
 		connections = new Vector<JDCConnection>(poolsize);
 		reaper = new ConnectionReaper();
 		reaper.start();
