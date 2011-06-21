@@ -77,8 +77,10 @@ public class DataManager extends TimerTask {
 	}
 	
 	public static DataEntry getEntry(int id) {
+		JDCConnection conn = null;
 		try {
-			ResultSet res = getConnection().createStatement().executeQuery("SELECT * FROM `datalog` WHERE `data_id` = " + id);
+			conn = getConnection();
+			ResultSet res = conn.createStatement().executeQuery("SELECT * FROM `datalog` WHERE `data_id` = " + id);
 			res.next();
 			DataEntry entry = new DataEntry();
 			entry.setDataid(res.getInt("data_id"));
@@ -94,6 +96,8 @@ public class DataManager extends TimerTask {
 			return entry;
 		} catch (SQLException ex) {
 			Util.severe("Unable to retrieve data entry from MySQL Server: " + ex);
+		} finally {
+			conn.close();
 		}
 		return null;
 	}
@@ -146,12 +150,15 @@ public class DataManager extends TimerTask {
 	}
 	
 	private boolean addPlayer(String name) {
+		JDCConnection conn = null;
 		try {
-			JDCConnection conn = getConnection();
+			conn = getConnection();
 			conn.createStatement().execute("INSERT IGNORE INTO `dl_players` (player) VALUES ('" + name + "');");
 		} catch (SQLException ex) {
 			Util.severe("Unable to add player to database: " + ex);
 			return false;
+		} finally {
+			conn.close();
 		}
 		if (!updateDbLists())
 			return false;
@@ -159,12 +166,15 @@ public class DataManager extends TimerTask {
 	}
 	
 	private boolean addWorld(String name) {
+		JDCConnection conn = null;
 		try {
-			JDCConnection conn = getConnection();
+			conn = getConnection();
 			conn.createStatement().execute("INSERT IGNORE INTO `dl_worlds` (world) VALUES ('" + name + "');");
 		} catch (SQLException ex) {
 			Util.severe("Unable to add world to database: " + ex);
 			return false;
+		} finally {
+			conn.close();
 		}
 		if (!updateDbLists())
 			return false;
@@ -172,9 +182,11 @@ public class DataManager extends TimerTask {
 	}
 	
 	private boolean updateDbLists() {
+		JDCConnection conn = null;
+		Statement stmnt = null;
 		try {
-			JDCConnection conn = getConnection();
-			Statement stmnt = conn.createStatement();
+			conn = getConnection();
+			stmnt = conn.createStatement();
 			ResultSet res = stmnt.executeQuery("SELECT * FROM `dl_players`;");
 			while (res.next())
 				dbPlayers.put(res.getString("player"), res.getInt("player_id"));
@@ -184,14 +196,25 @@ public class DataManager extends TimerTask {
 		} catch (SQLException ex) {
 			Util.severe("Unable to update local data lists from database: " + ex);
 			return false;
+		} finally {
+			try {
+				if (stmnt != null)
+					stmnt.close();
+				conn.close();
+			} catch (SQLException ex) {
+				Util.severe("Unable to close SQL connection: " + ex);
+			}
+				
 		}
 		return true;
 	}
 	
 	private boolean checkTables() {
+		JDCConnection conn = null;
+		Statement stmnt = null;
 		try {
-			JDCConnection conn = getConnection();
-			Statement stmnt = conn.createStatement();
+			conn = getConnection();
+			stmnt = conn.createStatement();
 			DatabaseMetaData dbm = conn.getMetaData();
 			//Check if tables exist
 			if (!JDBCUtil.tableExists(dbm, "dl_players")) {
@@ -221,6 +244,15 @@ public class DataManager extends TimerTask {
 		} catch (SQLException ex) {
 			Util.severe("Error checking DataLog tables: " + ex);
 			return false;
+		} finally {
+			try {
+				if (stmnt != null)
+					stmnt.close();
+				conn.close();
+			} catch (SQLException ex) {
+				Util.severe("Unable to close SQL connection: " + ex);
+			}
+				
 		}
 		return true;
 	}
@@ -266,6 +298,5 @@ public class DataManager extends TimerTask {
 		}
 		
 	}
-	
 	
 }
