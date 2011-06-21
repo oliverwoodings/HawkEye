@@ -109,7 +109,7 @@ public class SearchQuery extends Thread {
 		
 		Util.debug("Building location");
 		if (loc != null) {
-			if (radius == 0) {
+			if (radius == null || radius == 0) {
 				args.add("x = " + loc.getX());
 				args.add("y = " + loc.getY());
 				args.add("z = " + loc.getZ());
