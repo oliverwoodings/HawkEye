@@ -6,11 +6,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.inventory.ItemStack;
 
 import uk.co.oliwali.DataLog.DataLog;
 import uk.co.oliwali.DataLog.PlayerSession;
@@ -113,6 +116,28 @@ public class DLPlayerListener extends PlayerListener {
 		}
 			
 		
+	}
+	
+	public void onPlayerDropItem(PlayerDropItemEvent event) {
+		Player player = event.getPlayer();
+		ItemStack stack = event.getItemDrop().getItemStack();
+		String data = null;
+		if (stack.getData() != null)
+			data = stack.getAmount() + " " + stack.getData().toString() + stack.getType().name();
+		else
+			data = stack.getAmount() + stack.getType().name();
+		DataManager.addEntry(player, DataType.ITEM_DROP, player.getLocation(), data);
+	}
+	
+	public void onPlayerPickupItem(PlayerPickupItemEvent event) {
+		Player player = event.getPlayer();
+		ItemStack stack = event.getItem().getItemStack();
+		String data = null;
+		if (stack.getData() != null)
+			data = stack.getAmount() + " " + stack.getData().toString() + stack.getType().name();
+		else
+			data = stack.getAmount() + stack.getType().name();
+		DataManager.addEntry(player, DataType.ITEM_DROP, player.getLocation(), data);
 	}
 	
 	private double distance(Location from, Location to) {
