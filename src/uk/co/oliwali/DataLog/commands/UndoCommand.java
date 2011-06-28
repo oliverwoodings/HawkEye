@@ -1,6 +1,6 @@
 package uk.co.oliwali.DataLog.commands;
 
-import uk.co.oliwali.DataLog.Rollback;
+import uk.co.oliwali.DataLog.Undo;
 import uk.co.oliwali.DataLog.util.Permission;
 
 public class UndoCommand extends BaseCommand {
@@ -12,7 +12,8 @@ public class UndoCommand extends BaseCommand {
 	}
 	
 	public boolean execute() {
-		Rollback.undo(session);
+		Thread thread = new Thread(new Undo(session));
+		thread.start();
 		return true;
 	}
 

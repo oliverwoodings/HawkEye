@@ -27,10 +27,11 @@ public enum DataType {
 	BLOCK_BURN(18, "block-burn", true),
 	SNOW_FORM(19, "snow-form", true),
 	LEAF_DECAY(20, "leaf-decay", true),
-	OTHER_DEATH(21, "other-death"),
-	CHEST_TRANSACTION(22, true, "chest-transaction", true),
-	ITEM_DROP(23, "item-drop"),
-	ITEM_PICKUP(24, "item-pickup");
+	MOB_DEATH(21, "mob-death", true),
+	OTHER_DEATH(22, "other-death"),
+	CHEST_TRANSACTION(23, true, "chest-transaction", true),
+	ITEM_DROP(24, "item-drop"),
+	ITEM_PICKUP(25, "item-pickup");
 	
 	private int id;
 	private boolean canHere;

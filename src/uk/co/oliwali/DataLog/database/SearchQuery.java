@@ -176,7 +176,8 @@ public class SearchQuery extends Thread {
 		switch (searchType) {
 			case ROLLBACK:
 				session.setRollbackResults(results);
-				Rollback.rollback(session);
+				Thread thread = new Thread(new Rollback(session));
+				thread.start();
 				break;
 			case SEARCH:
 				session.setSearchResults(results);

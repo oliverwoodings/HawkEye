@@ -14,9 +14,15 @@ import uk.co.oliwali.DataLog.database.DataType;
 import uk.co.oliwali.DataLog.util.BlockUtil;
 import uk.co.oliwali.DataLog.util.Util;
 
-public class Rollback {
+public class Rollback implements Runnable {
 	
-	public static void rollback(PlayerSession session) {
+	public PlayerSession session = null;
+	
+	public Rollback(PlayerSession session) {
+		this.session = session;
+	}
+	
+	public void run() {
 		List<DataEntry> results = session.getRollbackResults();
 		if (results == null) {
 			Util.sendMessage(session.getSender(), "&cNo results found to rollback");
@@ -61,20 +67,6 @@ public class Rollback {
 		session.setRollbackUndo(undo);
 		Util.sendMessage(session.getSender(), "&cRollbacked &7" + undo.size() + "&c actions out of &7" + results.size() + "&c attempted");
 		Util.sendMessage(session.getSender(), "&cUndo this rollback using &7/dl undo");
-	}
-	
-	public static void undo(PlayerSession session) {
-		List<BlockState> results = session.getRollbackUndo();
-		if (results == null || results.size() == 0) {
-			Util.sendMessage(session.getSender(), "&cNo rollbacks to undo");
-			return;
-		}
-		Util.sendMessage(session.getSender(), "&cUndoing rollback (&7" + results.size() + " action(s)&c)");
-		for (BlockState block : results.toArray(new BlockState[0]))
-			block.update(true);
-		Util.sendMessage(session.getSender(), "&cUndo complete");
-		session.setRollbackUndo(null);
-		session.setRollbackResults(null);
 	}
 
 }
