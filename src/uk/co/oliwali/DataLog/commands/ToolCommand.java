@@ -18,8 +18,8 @@ public class ToolCommand extends BaseCommand {
 	public boolean execute() {
 		if (!session.isUsingTool()) {
 			session.setUsingTool(true);
-			if (!player.getInventory().contains(Config.toolBlock)) {
-				ItemStack stack = new ItemStack(Config.toolBlock, 1);
+			if (!player.getInventory().contains(Config.ToolBlock)) {
+				ItemStack stack = new ItemStack(Config.ToolBlock, 1);
 				if (player.getInventory().firstEmpty() == -1)
 					player.getWorld().dropItem(player.getLocation(), stack);
 				else

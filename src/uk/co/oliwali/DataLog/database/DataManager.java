@@ -33,7 +33,7 @@ public class DataManager extends TimerTask {
 	
 	public DataManager(DataLog instance) throws Exception {
 		plugin = instance;
-		connections = new ConnectionManager(Config.url, Config.user, Config.password);
+		connections = new ConnectionManager(Config.DbUrl, Config.DbUser, Config.DbPassword);
 		getConnection().close();
 		
 		//Check tables and update player/world lists
@@ -80,7 +80,7 @@ public class DataManager extends TimerTask {
 		JDCConnection conn = null;
 		try {
 			conn = getConnection();
-			ResultSet res = conn.createStatement().executeQuery("SELECT * FROM `datalog` WHERE `data_id` = " + id);
+			ResultSet res = conn.createStatement().executeQuery("SELECT * FROM `" + Config.DbDatalogTable + "` WHERE `data_id` = " + id);
 			res.next();
 			DataEntry entry = new DataEntry();
 			entry.setDataid(res.getInt("data_id"));
@@ -153,7 +153,7 @@ public class DataManager extends TimerTask {
 		JDCConnection conn = null;
 		try {
 			conn = getConnection();
-			conn.createStatement().execute("INSERT IGNORE INTO `dl_players` (player) VALUES ('" + name + "');");
+			conn.createStatement().execute("INSERT IGNORE INTO `" + Config.DbPlayerTable + "` (player) VALUES ('" + name + "');");
 		} catch (SQLException ex) {
 			Util.severe("Unable to add player to database: " + ex);
 			return false;
@@ -169,7 +169,7 @@ public class DataManager extends TimerTask {
 		JDCConnection conn = null;
 		try {
 			conn = getConnection();
-			conn.createStatement().execute("INSERT IGNORE INTO `dl_worlds` (world) VALUES ('" + name + "');");
+			conn.createStatement().execute("INSERT IGNORE INTO `" + Config.DbWorldTable + "` (world) VALUES ('" + name + "');");
 		} catch (SQLException ex) {
 			Util.severe("Unable to add world to database: " + ex);
 			return false;
@@ -187,10 +187,10 @@ public class DataManager extends TimerTask {
 		try {
 			conn = getConnection();
 			stmnt = conn.createStatement();
-			ResultSet res = stmnt.executeQuery("SELECT * FROM `dl_players`;");
+			ResultSet res = stmnt.executeQuery("SELECT * FROM `" + Config.DbPlayerTable + "`;");
 			while (res.next())
 				dbPlayers.put(res.getString("player"), res.getInt("player_id"));
-			res = stmnt.executeQuery("SELECT * FROM `dl_worlds`;");
+			res = stmnt.executeQuery("SELECT * FROM `" + Config.DbWorldTable + "`;");
 			while (res.next())
 				dbWorlds.put(res.getString("world"), res.getInt("world_id"));
 		} catch (SQLException ex) {
@@ -217,28 +217,28 @@ public class DataManager extends TimerTask {
 			stmnt = conn.createStatement();
 			DatabaseMetaData dbm = conn.getMetaData();
 			//Check if tables exist
-			if (!JDBCUtil.tableExists(dbm, "dl_players")) {
-				Util.info("Table `dl_players` not found, creating...");
-				stmnt.execute("CREATE TABLE IF NOT EXISTS `dl_players` (`player_id` int(11) NOT NULL AUTO_INCREMENT, `player` varchar(255) NOT NULL, PRIMARY KEY (`player_id`), KEY `player` (`player`) ) ENGINE=MyISAM;");
+			if (!JDBCUtil.tableExists(dbm, Config.DbPlayerTable)) {
+				Util.info("Table `" + Config.DbPlayerTable + "` not found, creating...");
+				stmnt.execute("CREATE TABLE IF NOT EXISTS `" + Config.DbPlayerTable + "` (`player_id` int(11) NOT NULL AUTO_INCREMENT, `player` varchar(255) NOT NULL, PRIMARY KEY (`player_id`), KEY `player` (`player`) ) ENGINE=MyISAM;");
 			}
-			if (!JDBCUtil.tableExists(dbm, "dl_worlds")) {
-				Util.info("Table `dl_worlds` not found, creating...");
-				stmnt.execute("CREATE TABLE IF NOT EXISTS `dl_worlds` (`world_id` int(11) NOT NULL AUTO_INCREMENT, `world` varchar(255) NOT NULL, PRIMARY KEY (`world_id`), KEY `world` (`world`) ) ENGINE=MyISAM;");
+			if (!JDBCUtil.tableExists(dbm, Config.DbWorldTable)) {
+				Util.info("Table `" + Config.DbWorldTable + "` not found, creating...");
+				stmnt.execute("CREATE TABLE IF NOT EXISTS `" + Config.DbWorldTable + "` (`world_id` int(11) NOT NULL AUTO_INCREMENT, `world` varchar(255) NOT NULL, PRIMARY KEY (`world_id`), KEY `world` (`world`) ) ENGINE=MyISAM;");
 			}
-			if (!JDBCUtil.tableExists(dbm, "datalog")) {
-				Util.info("Table `datalog` not found, creating...");
-				stmnt.execute("CREATE TABLE IF NOT EXISTS `datalog` (`data_id` int(11) NOT NULL AUTO_INCREMENT, `date` varchar(255) NOT NULL, `player_id` int(11) NOT NULL, `action` int(11) NOT NULL, `world_id` varchar(255) NOT NULL, `x` double NOT NULL, `y` double NOT NULL, `z` double NOT NULL, `data` varchar(255) DEFAULT NULL, `plugin` varchar(255) DEFAULT 'DataLog', PRIMARY KEY (`data_id`), KEY `player_action_world` (`player_id`,`action`,`world_id`), KEY `x_y_z` (`x`,`y`,`z` )) ENGINE=MyISAM;");
+			if (!JDBCUtil.tableExists(dbm, Config.DbDatalogTable)) {
+				Util.info("Table `" + Config.DbDatalogTable + "` not found, creating...");
+				stmnt.execute("CREATE TABLE IF NOT EXISTS `" + Config.DbDatalogTable + "` (`data_id` int(11) NOT NULL AUTO_INCREMENT, `date` varchar(255) NOT NULL, `player_id` int(11) NOT NULL, `action` int(11) NOT NULL, `world_id` varchar(255) NOT NULL, `x` double NOT NULL, `y` double NOT NULL, `z` double NOT NULL, `data` varchar(255) DEFAULT NULL, `plugin` varchar(255) DEFAULT 'DataLog', PRIMARY KEY (`data_id`), KEY `player_action_world` (`player_id`,`action`,`world_id`), KEY `x_y_z` (`x`,`y`,`z` )) ENGINE=MyISAM;");
 			}
-			else if (!JDBCUtil.columnExists(dbm, "datalog", "player_id")) {
+			else if (!JDBCUtil.columnExists(dbm, Config.DbDatalogTable, "player_id")) {
 				Util.info("Pre-v1.1.0 database detected, performing legacy database update please wait...");
-				stmnt.execute("CREATE TABLE IF NOT EXISTS `datalog2` (`data_id` int(11) NOT NULL AUTO_INCREMENT, `date` varchar(255) NOT NULL, `player_id` int(11) NOT NULL, `action` int(11) NOT NULL, `world_id` varchar(255) NOT NULL, `x` double NOT NULL, `y` double NOT NULL, `z` double NOT NULL, `data` varchar(255) DEFAULT NULL, `plugin` varchar(255) DEFAULT 'DataLog', PRIMARY KEY (`data_id`), KEY `player_action_world` (`player_id`,`action`,`world_id`), KEY `x_y_z` (`x`,`y`,`z` )) ENGINE=MyISAM;");
-				stmnt.execute("INSERT INTO `dl_players` (player) SELECT DISTINCT `player` FROM `datalog`");
-				stmnt.execute("INSERT INTO `dl_worlds` (world) SELECT DISTINCT `world` FROM `datalog`");
+				stmnt.execute("CREATE TABLE IF NOT EXISTS `" + Config.DbDatalogTable + "2` (`data_id` int(11) NOT NULL AUTO_INCREMENT, `date` varchar(255) NOT NULL, `player_id` int(11) NOT NULL, `action` int(11) NOT NULL, `world_id` varchar(255) NOT NULL, `x` double NOT NULL, `y` double NOT NULL, `z` double NOT NULL, `data` varchar(255) DEFAULT NULL, `plugin` varchar(255) DEFAULT 'DataLog', PRIMARY KEY (`data_id`), KEY `player_action_world` (`player_id`,`action`,`world_id`), KEY `x_y_z` (`x`,`y`,`z` )) ENGINE=MyISAM;");
+				stmnt.execute("INSERT INTO `" + Config.DbPlayerTable + "` (player) SELECT DISTINCT `player` FROM `" + Config.DbDatalogTable + "`");
+				stmnt.execute("INSERT INTO `" + Config.DbWorldTable + "` (world) SELECT DISTINCT `world` FROM `" + Config.DbDatalogTable + "`");
 				Util.info("Players and worlds imported into new structure. Importing main data please wait...");
-				stmnt.execute("INSERT INTO `datalog2` (date, player_id, action, world_id, x, y, z, data, plugin) SELECT datalog.date, dl_players.player_id, datalog.action, dl_worlds.world_id, datalog.x, datalog.y, datalog.z, datalog.data, datalog.plugin FROM `datalog`, `dl_players`, `dl_worlds` WHERE dl_players.player = datalog.player AND dl_worlds.world = datalog.world");
+				stmnt.execute("INSERT INTO `" + Config.DbDatalogTable + "2` (date, player_id, action, world_id, x, y, z, data, plugin) SELECT " + Config.DbDatalogTable + ".date, " + Config.DbPlayerTable + ".player_id, " + Config.DbDatalogTable + ".action, " + Config.DbWorldTable + ".world_id, " + Config.DbDatalogTable + ".x, " + Config.DbDatalogTable + ".y, " + Config.DbDatalogTable + ".z, " + Config.DbDatalogTable + ".data, " + Config.DbDatalogTable + ".plugin FROM `" + Config.DbDatalogTable + "`, `" + Config.DbPlayerTable + "`, `" + Config.DbWorldTable + "` WHERE " + Config.DbPlayerTable + ".player = " + Config.DbDatalogTable + ".player AND " + Config.DbWorldTable + ".world = " + Config.DbDatalogTable + ".world");
 				Util.info("Import complete, cleaning up old table and renaming new...");
-				stmnt.execute("DROP TABLE `datalog`;");
-				stmnt.execute("RENAME TABLE `datalog2` TO `datalog`");
+				stmnt.execute("DROP TABLE `" + Config.DbDatalogTable + "`;");
+				stmnt.execute("RENAME TABLE `" + Config.DbDatalogTable + "2` TO `" + Config.DbDatalogTable + "`");
 				Util.info("Legacy database update complete");
 			}
 		} catch (SQLException ex) {
@@ -272,7 +272,7 @@ public class DataManager extends TimerTask {
 					if (!addWorld(entry.getWorld()))
 						continue;
 				
-				stmnt = conn.prepareStatement("INSERT into `datalog` (date, player_id, action, world_id, x, y, z, data, plugin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);");
+				stmnt = conn.prepareStatement("INSERT into `" + Config.DbDatalogTable + "` (date, player_id, action, world_id, x, y, z, data, plugin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);");
 				stmnt.setString(1, entry.getDate());
 				stmnt.setInt(2, dbPlayers.get(entry.getPlayer()));
 				stmnt.setInt(3, entry.getAction());

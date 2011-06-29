@@ -43,7 +43,7 @@ public class DLPlayerListener extends PlayerListener {
 		String message = event.getMessage();
 		String command = message.split(" ")[0];
 		//Check if command is in filter list or not
-		if (!Config.commandFilter.contains(command))
+		if (!Config.CommandFilter.contains(command))
 			DataManager.addEntry(player, DataType.COMMAND, loc, message);
 	}
 	
@@ -77,7 +77,7 @@ public class DLPlayerListener extends PlayerListener {
 		Location loc = null;
 		if (block != null) loc = block.getLocation();
 		
-		if (event.getAction() == Action.LEFT_CLICK_BLOCK && player.getItemInHand().getTypeId() == Config.toolBlock && DataLog.playerSessions.get(player).isUsingTool()) {
+		if (event.getAction() == Action.LEFT_CLICK_BLOCK && player.getItemInHand().getTypeId() == Config.ToolBlock && DataLog.playerSessions.get(player).isUsingTool()) {
 			DataManager.toolSearch(player, loc);
 			event.setCancelled(true);
 		}

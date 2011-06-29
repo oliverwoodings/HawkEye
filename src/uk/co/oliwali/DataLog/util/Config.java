@@ -11,18 +11,21 @@ import uk.co.oliwali.DataLog.database.DataType;
 
 public class Config {
 	
-	public static List<String> commandFilter = new ArrayList<String>();
-	public static int maxLines = 0;
-	public static int maxRadius;
-	public static int toolBlock;
-	public static String url;
-	public static String user;
-	public static String password;
-	public static String database;
-	public static String cleanseAge;
-	public static List<Integer> blockFilter = new ArrayList<Integer>();
-	public static boolean debug;
-	public static int poolSize;
+	public static List<String> CommandFilter = new ArrayList<String>();
+	public static int MaxLines = 0;
+	public static int MaxRadius;
+	public static int ToolBlock;
+	public static String DbUrl;
+	public static String DbUser;
+	public static String DbPassword;
+	public static String DbDatabase;
+	public static String DbDatalogTable;
+	public static String DbPlayerTable;
+	public static String DbWorldTable;
+	public static String CleanseAge;
+	public static List<Integer> BlockFilter = new ArrayList<Integer>();
+	public static boolean Debug;
+	public static int PoolSize;
 	
 	private Configuration config;
 	
@@ -87,6 +90,12 @@ public class Config {
 			config.setProperty("mysql.database", "minecraft");
 		if (!keys.contains("port"))
 			config.setProperty("mysql.port", 3306);
+		if (!keys.contains("datalog-table"))
+			config.setProperty("mysql.datalog-table", "datalog");
+		if (!keys.contains("player-table"))
+			config.setProperty("mysql.player-table", "dl_players");
+		if (!keys.contains("world-table"))
+			config.setProperty("mysql.world-table", "dl_worlds");
 		for (DataType type : DataType.values()) {
 			if (config.getProperty(getNode(type)) == null)
 				config.setProperty(getNode(type), true);
@@ -100,18 +109,21 @@ public class Config {
 			Util.severe("Error while writing to config.yml");
 
 		//Load values
-		commandFilter = config.getStringList("command-filter", null);
-		maxLines = config.getInt("max-lines", 0);
-		maxRadius = config.getInt("max-radius", 0);
-		toolBlock = config.getInt("tool-block", 17);
-		user = config.getString("mysql.username", "root");
-		password = config.getString("mysql.password", "");
-		url = "jdbc:mysql://" + config.getString("mysql.hostname") + ":" + config.getString("mysql.port") + "/" + config.getString("mysql.database");
-		database = config.getString("mysql.database");
-		cleanseAge = config.getString("cleanse-age");
-		blockFilter = config.getIntList("block-filter", null);
-		debug = config.getBoolean("debug", false);
-		poolSize = config.getInt("max-connections", 10);
+		CommandFilter = config.getStringList("command-filter", null);
+		MaxLines = config.getInt("max-lines", 0);
+		MaxRadius = config.getInt("max-radius", 0);
+		ToolBlock = config.getInt("tool-block", 17);
+		DbUser = config.getString("mysql.username", "root");
+		DbPassword = config.getString("mysql.password", "");
+		DbUrl = "jdbc:mysql://" + config.getString("mysql.hostname") + ":" + config.getString("mysql.port") + "/" + config.getString("mysql.database");
+		DbDatabase = config.getString("mysql.database");
+		DbDatalogTable = config.getString("mysql.datalog-table");
+		DbPlayerTable = config.getString("mysql.player-table");
+		DbWorldTable = config.getString("mysql.world-table");
+		CleanseAge = config.getString("cleanse-age");
+		BlockFilter = config.getIntList("block-filter", null);
+		Debug = config.getBoolean("debug", false);
+		PoolSize = config.getInt("max-connections", 10);
 	}
 	
 	//Check if a type is logged or not

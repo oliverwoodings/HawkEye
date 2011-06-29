@@ -31,7 +31,7 @@ public class DLBlockListener extends BlockListener {
 		Player player = event.getPlayer();
 		Block block   = event.getBlock();
 		Location loc  = block.getLocation();
-		if (!Config.blockFilter.contains(block.getTypeId()))
+		if (!Config.BlockFilter.contains(block.getTypeId()))
 			DataManager.addEntry(player, DataType.BLOCK_BREAK, loc, BlockUtil.getBlockString(block));
 	}
 	
@@ -41,11 +41,11 @@ public class DLBlockListener extends BlockListener {
 		Player player = event.getPlayer();
 		Block block   = event.getBlock();
 		Location loc  = block.getLocation();
-		if (block.getTypeId() == Config.toolBlock && DataLog.playerSessions.get(player).isUsingTool()) {
+		if (block.getTypeId() == Config.ToolBlock && DataLog.playerSessions.get(player).isUsingTool()) {
 			DataManager.toolSearch(player, loc);
 			event.setCancelled(true);
 		}
-		else if (!Config.blockFilter.contains(block.getTypeId()))
+		else if (!Config.BlockFilter.contains(block.getTypeId()))
 			DataManager.addEntry(player, DataType.BLOCK_PLACE, loc, BlockUtil.getBlockString(event.getBlockReplacedState()) + "-" + BlockUtil.getBlockString(block));
 	}
 	

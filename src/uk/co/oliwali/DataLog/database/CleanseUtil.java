@@ -15,7 +15,7 @@ public class CleanseUtil extends TimerTask {
 	
 	public CleanseUtil() throws Exception {
 		
-		if (Config.cleanseAge.equalsIgnoreCase("0") || Config.cleanseAge.equalsIgnoreCase("0d0h0s"))
+		if (Config.CleanseAge.equalsIgnoreCase("0") || Config.CleanseAge.equalsIgnoreCase("0d0h0s"))
 			return;
 		
 		int weeks = 0;
@@ -25,8 +25,8 @@ public class CleanseUtil extends TimerTask {
 		int secs = 0;
 		
 		String nums = "";
-		for (int i = 0; i < Config.cleanseAge.length(); i++) {
-			String c = Config.cleanseAge.substring(i, i+1);
+		for (int i = 0; i < Config.CleanseAge.length(); i++) {
+			String c = Config.CleanseAge.substring(i, i+1);
 			if (Util.isInteger(c)) {
 				nums += c;
 				continue;

@@ -52,7 +52,7 @@ public class SearchQuery extends Thread {
 	public void run() {
 		
 		Util.debug("Beginning search query");
-		String sql = "SELECT * FROM `datalog` WHERE ";
+		String sql = "SELECT * FROM `" + Config.DbDatalogTable + "` WHERE ";
 		List<String> args = new ArrayList<String>();
 		
 		Util.debug("Building players");
@@ -133,8 +133,8 @@ public class SearchQuery extends Thread {
 		
 		Util.debug("Building orders and limits");
 		sql += Util.join(args, " AND ");
-		if (Config.maxLines > 0)
-			sql += " LIMIT " + Config.maxLines;
+		if (Config.MaxLines > 0)
+			sql += " LIMIT " + Config.MaxLines;
 		
 		Util.debug("Searching: " + sql);
 		

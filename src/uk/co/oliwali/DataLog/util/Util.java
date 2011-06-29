@@ -20,7 +20,7 @@ public class Util {
 	}
 	
 	public static void debug(String msg) {
-		if (Config.debug)
+		if (Config.Debug)
 			Util.info("DEBUG: " + msg);
 	}
 	

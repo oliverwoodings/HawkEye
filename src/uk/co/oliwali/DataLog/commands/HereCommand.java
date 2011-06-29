@@ -22,7 +22,7 @@ public class HereCommand extends BaseCommand {
 	public boolean execute() {
 		try {
 			int integer = Integer.parseInt(args.get(0));
-			if (integer > Config.maxRadius || integer < 0)
+			if (integer > Config.MaxRadius || integer < 0)
 				throw new Exception();
 			List<Integer> actions = new ArrayList<Integer>();
 			for (DataType type : DataType.values())
