@@ -1,4 +1,4 @@
-package uk.co.oliwali.DataLog.database;
+package uk.co.oliwali.DataLog;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -29,9 +29,8 @@ public enum DataType {
 	LEAF_DECAY(20, "leaf-decay", true),
 	MOB_DEATH(21, "mob-death", true),
 	OTHER_DEATH(22, "other-death"),
-	CHEST_TRANSACTION(23, true, "chest-transaction", true),
-	ITEM_DROP(24, "item-drop"),
-	ITEM_PICKUP(25, "item-pickup");
+	ITEM_DROP(23, "item-drop"),
+	ITEM_PICKUP(24, "item-pickup");
 	
 	private int id;
 	private boolean canHere;

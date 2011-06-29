@@ -11,7 +11,6 @@ import org.bukkit.block.BlockState;
 
 import uk.co.oliwali.DataLog.database.DataEntry;
 import uk.co.oliwali.DataLog.database.DataManager;
-import uk.co.oliwali.DataLog.database.DataType;
 import uk.co.oliwali.DataLog.util.BlockUtil;
 import uk.co.oliwali.DataLog.util.Config;
 import uk.co.oliwali.DataLog.util.Util;

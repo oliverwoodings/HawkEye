@@ -16,9 +16,9 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 
 import uk.co.oliwali.DataLog.DataLog;
+import uk.co.oliwali.DataLog.DataType;
 import uk.co.oliwali.DataLog.PlayerSession;
 import uk.co.oliwali.DataLog.database.DataManager;
-import uk.co.oliwali.DataLog.database.DataType;
 import uk.co.oliwali.DataLog.util.Config;
 
 public class DLPlayerListener extends PlayerListener {

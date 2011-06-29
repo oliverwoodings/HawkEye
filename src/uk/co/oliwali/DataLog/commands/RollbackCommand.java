@@ -6,8 +6,8 @@ import java.util.Calendar;
 import java.util.List;
 import org.bukkit.util.Vector;
 
+import uk.co.oliwali.DataLog.DataType;
 import uk.co.oliwali.DataLog.database.SearchQuery.SearchType;
-import uk.co.oliwali.DataLog.database.DataType;
 import uk.co.oliwali.DataLog.database.SearchQuery;
 import uk.co.oliwali.DataLog.util.Permission;
 import uk.co.oliwali.DataLog.util.Util;

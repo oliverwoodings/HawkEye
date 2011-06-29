@@ -5,7 +5,6 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 
 import uk.co.oliwali.DataLog.database.DataEntry;
-import uk.co.oliwali.DataLog.database.DataType;
 import uk.co.oliwali.DataLog.util.BlockUtil;
 import uk.co.oliwali.DataLog.util.Util;
 

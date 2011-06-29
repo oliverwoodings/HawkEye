@@ -12,8 +12,8 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.block.SnowFormEvent;
 
 import uk.co.oliwali.DataLog.DataLog;
+import uk.co.oliwali.DataLog.DataType;
 import uk.co.oliwali.DataLog.database.DataManager;
-import uk.co.oliwali.DataLog.database.DataType;
 import uk.co.oliwali.DataLog.util.BlockUtil;
 import uk.co.oliwali.DataLog.util.Config;
 

@@ -13,8 +13,8 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityListener;
 
 import uk.co.oliwali.DataLog.DataLog;
+import uk.co.oliwali.DataLog.DataType;
 import uk.co.oliwali.DataLog.database.DataManager;
-import uk.co.oliwali.DataLog.database.DataType;
 public class DLEntityListener extends EntityListener {
 	
 	public DataLog plugin;

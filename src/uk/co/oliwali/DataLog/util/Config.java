@@ -7,7 +7,7 @@ import java.util.List;
 import org.bukkit.util.config.Configuration;
 
 import uk.co.oliwali.DataLog.DataLog;
-import uk.co.oliwali.DataLog.database.DataType;
+import uk.co.oliwali.DataLog.DataType;
 
 public class Config {
 	

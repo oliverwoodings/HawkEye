@@ -12,11 +12,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.util.Vector;
 
 import uk.co.oliwali.DataLog.DataLog;
+import uk.co.oliwali.DataLog.DataType;
 import uk.co.oliwali.DataLog.DisplayManager;
 import uk.co.oliwali.DataLog.PlayerSession;
 import uk.co.oliwali.DataLog.Rollback;
 import uk.co.oliwali.DataLog.database.DataManager;
-import uk.co.oliwali.DataLog.database.DataType;
 import uk.co.oliwali.DataLog.util.Config;
 import uk.co.oliwali.DataLog.util.Permission;
 import uk.co.oliwali.DataLog.util.Util;

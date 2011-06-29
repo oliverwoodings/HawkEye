@@ -3,8 +3,8 @@ package uk.co.oliwali.DataLog.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import uk.co.oliwali.DataLog.DataType;
 import uk.co.oliwali.DataLog.database.SearchQuery.SearchType;
-import uk.co.oliwali.DataLog.database.DataType;
 import uk.co.oliwali.DataLog.database.SearchQuery;
 import uk.co.oliwali.DataLog.util.Config;
 import uk.co.oliwali.DataLog.util.Permission;
