@@ -19,7 +19,7 @@
 					
 					//Set this to the password you want people to have to use to access the interface
 					//Leave blank for no password
-					"password" => "safetydance",
+					"password" => "",
 					
 					//Default radius to search for if user supplies a location
 					"radius" => 30,
@@ -31,7 +31,7 @@
 					//Language pack - default is english.php
 					//You can create your own based off the english.php file,
 					//then change the name below to your language file name
-					"langFile" => "french.php"
+					"langFile" => "english.php"
 					
 					);
 	
