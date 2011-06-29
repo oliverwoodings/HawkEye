@@ -23,6 +23,9 @@ public class Config {
 	public static List<Integer> blockFilter = new ArrayList<Integer>();
 	public static boolean debug;
 	public static int poolSize;
+	public static List<Integer> reportBlocks = new ArrayList<Integer>();
+	public static List<String> reportGroups = new ArrayList<String>();
+	public static String reportMessage;
 	
 	private Configuration config;
 	
@@ -73,6 +76,16 @@ public class Config {
 			config.setProperty("block-filter", Arrays.asList(new Integer[]{33,34}));
 		if (!keys.contains("debug"))
 			config.setProperty("debug", false);
+		//Data Log Can hold Report messages!
+		if (!keys.contains("report-blocks")) {
+			config.setProperty("report-blocks", Arrays.asList(new Integer[] {56}));
+		}
+		if (!keys.contains("report-groups")) {
+			config.setProperty("report-groups", Arrays.asList(new String[] {"admins"}));
+		}
+		if (!keys.contains("report-message")) {
+			config.setProperty("report-message", "%PLAYER% has broken a %BLOCK% at %LOC% on %WORLD%");
+		}
 		//Check MySQL settings
 		keys = config.getKeys("mysql");
 		if (keys == null)
@@ -112,6 +125,9 @@ public class Config {
 		blockFilter = config.getIntList("block-filter", null);
 		debug = config.getBoolean("debug", false);
 		poolSize = config.getInt("max-connections", 10);
+		reportBlocks = config.getIntList("report-blocks", null);
+		reportGroups = config.getStringList("report-groups", null);
+		reportMessage = config.getString("report-message");
 	}
 	
 	//Check if a type is logged or not
