@@ -84,7 +84,7 @@ public class Config {
 			config.setProperty("report-groups", Arrays.asList(new String[] {"admins"}));
 		}
 		if (!keys.contains("report-message")) {
-			config.setProperty("report-message", "%PLAYER% has broken a %BLOCK% at %LOC% on %WORLD%");
+			config.setProperty("report-message", "%PLAYER% has broken a %BLOCK% id %ID% at %LOC% on %WORLD%");
 		}
 		//Check MySQL settings
 		keys = config.getKeys("mysql");
