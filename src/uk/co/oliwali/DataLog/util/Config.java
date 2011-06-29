@@ -68,7 +68,7 @@ public class Config {
 			config.setProperty("mysql.max-connections", config.getInt("max-connections", 10));
 			config.removeProperty("max-connections");
 			config.setProperty("general.debug", config.getBoolean("debug", false));
-			config.removeProperty("max-debug");
+			config.removeProperty("debug");
 		}
 		
 		//Check filters

@@ -123,9 +123,9 @@ public class DLPlayerListener extends PlayerListener {
 		ItemStack stack = event.getItemDrop().getItemStack();
 		String data = null;
 		if (stack.getData() != null)
-			data = stack.getAmount() + " " + stack.getData().toString() + stack.getType().name();
+			data = stack.getAmount() + "x " + stack.getType().name() + " " + stack.getData().getItemType().name();
 		else
-			data = stack.getAmount() + stack.getType().name();
+			data = stack.getAmount() + "x " + stack.getType().name();
 		DataManager.addEntry(player, DataType.ITEM_DROP, player.getLocation(), data);
 	}
 	
@@ -134,10 +134,10 @@ public class DLPlayerListener extends PlayerListener {
 		ItemStack stack = event.getItem().getItemStack();
 		String data = null;
 		if (stack.getData() != null)
-			data = stack.getAmount() + " " + stack.getData().toString() + stack.getType().name();
+			data = stack.getAmount() + "x " + stack.getType().name() + " " + stack.getData().getItemType().name();
 		else
-			data = stack.getAmount() + stack.getType().name();
-		DataManager.addEntry(player, DataType.ITEM_DROP, player.getLocation(), data);
+			data = stack.getAmount() + "x " + stack.getType().name();
+		DataManager.addEntry(player, DataType.ITEM_PICKUP, player.getLocation(), data);
 	}
 	
 	private double distance(Location from, Location to) {

@@ -47,19 +47,23 @@
 		$pids = array();
 		foreach ($data["players"] as $key => $val)
 			foreach ($players as $key2 => $val2)
-				if (strstr($val2, $val))
+				if (stristr($val2, $val))
 					array_push($pids, $key2);
 		if (count($pids) > 0)
 			array_push($args, "player_id IN (" . join(",", $pids) . ")");
+		else
+			return error($lang["messages"]["noResults"]);
 	}
 	if ($data["worlds"][0] != "") {
 		$wids = array();
 		foreach ($data["worlds"] as $key => $val)
 			foreach ($worlds as $key2 => $val2)
-				if (strstr($val2, $val))
+				if (stristr($val2, $val))
 					array_push($wids, $key2);
 		if (count($wids) > 0)
 			array_push($args, "world_id IN (" . join(",", $wids) . ")");
+		else
+			return error($lang["messages"]["noResults"]);
 	}
 	if (count($data["actions"]) == 0)
 		return error($lang["messages"]["noActions"]);

@@ -88,10 +88,10 @@ public class DLEntityListener extends EntityListener {
 				DataManager.addEntry(victim, DataType.MOB_DEATH, loc, attacker);
 			}
 			else {
-				String cause = session.getLastDamageCause().name();
+				String cause = session.getLastDamageCause() == null?"Unknown":session.getLastDamageCause().name();
 				String[] words = cause.split("_");
 				for (int i = 0; i < words.length; i++)
-					words[i] = words[i].substring(0,1).toUpperCase() + words[i].substring(1);
+					words[i] = words[i].substring(0,1).toUpperCase() + words[i].substring(1).toLowerCase();
 				cause = Util.join(Arrays.asList(words), " ");
 				DataManager.addEntry(victim, DataType.OTHER_DEATH, loc, cause);
 			}
