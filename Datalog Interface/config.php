@@ -31,7 +31,7 @@
 					//Language pack - default is english.php
 					//You can create your own based off the english.php file,
 					//then change the name below to your language file name
-					"langFile" => "english.php"
+					"langFile" => "french.php"
 					
 					);
 	
