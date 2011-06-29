@@ -13,6 +13,7 @@
 body {
 	font-family: Verdana, Tahoma, sans-serif;
 	background-image: url(../images/stripe.png);
+	font-weight: 100;
 }
 
 input, textarea {  
@@ -33,7 +34,7 @@ input, textarea {
         box-shadow: 0px 0px 5px #74ABE9;
     }
 
-.header, .filterContainer, .resultsContainer {
+.header, .filterContainer, .resultsContainer, .container, .headerLogin {
     width: 940px;
     margin-left: auto;
     margin-right: auto;
@@ -47,12 +48,35 @@ input, textarea {
     margin-top: 20px;
     padding: 20px;
 }
-.innerHeader, .innerFilter, .innerResults {
+.innerHeader, .innerFilter, .innerResults, .innerContainer {
     background-color: #F7F7F7;
     -moz-border-radius: 20px;
     -webkit-border-radius: 20px;
     border-radius: 20px 20px 20px 20px;
 	min-height: 40px;
+}
+
+.innerContainer {
+	min-height: 100px;
+	padding: 20px;
+}
+
+.password {
+	margin-left: 350px;
+	padding-top: 10px;
+}
+.loginb {
+	margin-left: 400px;
+	margin-top: 10px;
+}
+
+.headerLogin {
+	height: 85px;
+	font-family: Sketch;
+ 	font-weight: 100;
+	font-size: 74px;
+	vertical-align: middle;
+	text-align: center;
 }
 
 .header {
@@ -62,7 +86,26 @@ input, textarea {
 	font-size: 74px;
 	vertical-align: middle;
 	text-align: center;
+	margin-bottom: -20px;
 }
+
+.innerHeader {
+	height: 85px;
+}
+.innerHeader div {
+	float: left;
+}
+.headerText {
+	margin-left: 344px;
+}
+.logout {
+	font-size: 12px;
+	margin-top: 28px;
+	margin-left: 80px;
+}
+	.logout a {
+		text-decoration: none;
+	}
 
 .minmax {
 	position: relative;
@@ -90,7 +133,7 @@ input, textarea {
 }
 
 .filter {
-	height: 200px;
+	height: 240px;
 	margin-top: 10px;
 	white-space: nowrap;
 	font-size: 15px;
@@ -113,13 +156,14 @@ input, textarea {
 	.actions div {
 		width: 140px;
 	}
+
 .parameters1 {
 	margin-left: 20px;
-	margin-top: 3px;
+	margin-top: 10px;
 }
 .parameters2 {
 	margin-left: 20px;
-	margin-top: 3px;
+	margin-top: 10px;
 }
 .searchButton {
 	height: 40px;

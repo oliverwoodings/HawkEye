@@ -1,7 +1,15 @@
 <?php
+
+	session_start();
+		
 	//Include config and lang pack
 	include("config.php");
 	include("langs/" . $config["langFile"]);
+	
+	//If we aren't logged in, go to login page
+	if (!isset($_SESSION["loggedin"]) && $config["password"] != "")
+		header("Location: login.php");
+	
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -27,7 +35,7 @@
     
         <div class="header">
         	<div class="innerHeader">
-            	<p><?php echo $lang["title"]; ?></p>
+            	<div class="headerText"><?php echo $lang["title"]; ?><b class="logout"></div><div class="logout"><a href="login.php?page=logout"><button>Log Out</button></a></div>
             </div>
         </div>
         
@@ -54,10 +62,10 @@
                                 <div><input type="checkbox" name="action" value="8" /> <?php echo $lang["actions"][8]; ?></div><br />
                                 <div><input type="checkbox" name="action" value="9" /> <?php echo $lang["actions"][9]; ?></div><br />
                                 <div><input type="checkbox" name="action" value="10" /> <?php echo $lang["actions"][10]; ?></div><br />
-                            </div>
-                            <div>
                                 <div><input type="checkbox" name="action" value="11" /> <?php echo $lang["actions"][11]; ?></div><br />
                                 <div><input type="checkbox" name="action" value="12" /> <?php echo $lang["actions"][12]; ?></div><br />
+                            </div>
+                            <div>
                                 <div><input type="checkbox" name="action" value="13" /> <?php echo $lang["actions"][13]; ?></div><br />
                                 <div><input type="checkbox" name="action" value="14" /> <?php echo $lang["actions"][14]; ?></div><br />
                                 <div><input type="checkbox" name="action" value="15" /> <?php echo $lang["actions"][15]; ?></div><br />
@@ -65,15 +73,19 @@
                                 <div><input type="checkbox" name="action" value="17" /> <?php echo $lang["actions"][17]; ?></div><br />
                                 <div><input type="checkbox" name="action" value="18" /> <?php echo $lang["actions"][18]; ?></div><br />
                                 <div><input type="checkbox" name="action" value="19" /> <?php echo $lang["actions"][19]; ?></div><br />
-                                <div><input type="checkbox" name="action" value="20" /> <?php echo $lang["actions"][20]; ?></div>
+                                <div><input type="checkbox" name="action" value="20" /> <?php echo $lang["actions"][20]; ?></div><br />
+                                <div><input type="checkbox" name="action" value="21" /> <?php echo $lang["actions"][21]; ?></div><br />
+                        		<div><input type="checkbox" name="action" value="22" /> <?php echo $lang["actions"][22]; ?></div><br />
+                        		<div><input type="checkbox" name="action" value="23" /> <?php echo $lang["actions"][23]; ?></div><br />
+                        		<div><input type="checkbox" name="action" value="24" /> <?php echo $lang["actions"][24]; ?></div>
                             </div>
                         </div>
                         <div class="parameters1">
-                            <input title="<?php echo $lang["tips"]["password"]; ?>" type="password" name="password" /> <?php echo $lang["filter"]["password"]; ?><br />
                             <input title="<?php echo $lang["tips"]["players"]; ?>" type="text" name="players" /> <?php echo $lang["filter"]["players"]; ?><br />
                             <input title="<?php echo $lang["tips"]["xyz"]; ?>" type="text" style="width: 60px" name="x" /><input title="<?php echo $lang["tips"]["xyz"]; ?>" type="text" style="width: 60px" name="y" /><input title="<?php echo $lang["tips"]["xyz"]; ?>" type="text" style="width: 60px" name="z"/> <?php echo $lang["filter"]["xyz"]; ?><br />
                             <input title="<?php echo $lang["tips"]["range"]; ?>" type="text" name="range" /> <?php echo $lang["filter"]["range"]; ?><br />
                             <input title="<?php echo $lang["tips"]["keys"]; ?>" type="text" name="keywords" /> <?php echo $lang["filter"]["keys"]; ?><br />
+                            <input title="<?php echo $lang["tips"]["exclude"]; ?>" type="text" name="exclude" /> <?php echo $lang["filter"]["exclude"]; ?><br />
                         </div>
                         <div class="parameters2">
                             <input title="<?php echo $lang["tips"]["worlds"]; ?>" type="text" name="worlds" /> <?php echo $lang["filter"]["worlds"]; ?><br />

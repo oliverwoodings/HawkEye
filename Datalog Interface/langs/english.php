@@ -15,7 +15,6 @@
 					"title" => "DataLog",
 					
 					"filter" => array("title" => "Filter Options",
-									  "password" => "Password",
 									  "players" => "Players",
 									  "xyz" => "XYZ",
 									  "range" => "Range",
@@ -25,7 +24,8 @@
 									  "dTo" => "Date To",
 									  "block" => "Block",
 									  "search" => "Search",
-									  "reverse" => "Reverse Order"),
+									  "reverse" => "Reverse Order",
+									  "exclude" => "Exclude Filter"),
 					
 					"tips" => array("hideFilter" => "Show/Hide Filter Options",
 									"hideResults" => "Show/Hide Results",
@@ -39,7 +39,8 @@
 									"dFrom" => "(Optional) Time and date to start searching from",
 									"dTo" => "(Optional) Time and date to search up to",
 									"block" => "(Optional) Block to search for in 'Block Break' and 'Block Place' events",
-									"reverse" => "If checked, order of logs will be in reverse-chronological order. Uncheck for viewing chat logs"),
+									"reverse" => "If checked, order of logs will be in reverse-chronological order. Uncheck for viewing chat logs",
+									"exclude" => "(Optional) List of keywords to exclude from results separated by commas"),
 					
 					"actions" => array("Block Break",
 									   "Block Place",
@@ -61,7 +62,11 @@
 									   "Explosion",
 									   "Block Burn",
 									   "Snow Form",
-									   "Leaf Decay"),
+									   "Leaf Decay",
+									   "Mob Death",
+									   "Other Death",
+									   "Item Drop",
+									   "Item Pickup"),
 					
 					"results" => array("title" => "Results",
 									   "id" => "ID",
@@ -71,13 +76,17 @@
 									   "world" => "World",
 									   "xyz" => "XYZ",
 									   "data" => "Data"),
+									   
+					"login" => array("password" => "Password: ",
+									 "login" => "Login"),
 					
 					"messages" => array("clickTo" => "Click Search to Retrieve Data",
 										"breakMe" => "Stop trying to break me!",
 									    "invalidPass" => "Invalid Password!",
 									    "noActions" => "You must select at least 1 action to search by!",
 									    "noResults" => "No results found matching those options",
-									    "error" => "Error!")
+									    "error" => "Error!",
+									    "notLoggedIn" => "You are not logged in!")
 									  
 					
 					);

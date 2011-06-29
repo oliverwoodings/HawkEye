@@ -19,7 +19,7 @@
 					
 					//Set this to the password you want people to have to use to access the interface
 					//Leave blank for no password
-					"password" => "",
+					"password" => "safetydance",
 					
 					//Default radius to search for if user supplies a location
 					"radius" => 30,
@@ -32,6 +32,7 @@
 					//You can create your own based off the english.php file,
 					//then change the name below to your language file name
 					"langFile" => "english.php"
+					
 					);
 	
 	$con = mysql_connect($config["dbHost"], $config["dbUser"], $config["dbPass"]);

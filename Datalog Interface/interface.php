@@ -4,18 +4,21 @@
 	//         DataLog Interface Search File         //
 	//                 by oliverw92                  //
 	///////////////////////////////////////////////////
-
+	
+	session_start();
+	
 	//Include config, lang pack and MySQL connector
 	include("config.php");
 	include("langs/" . $config["langFile"]);
+	
+	//If not logged in, throw an error
+	if (!isset($_SESSION["loggedin"]) && $config["password"] != "")
+		return error($lang["messages"]["notLoggedIn"]);
 	
 	if (!isset($_GET["data"]))
 		return error($lang["messages"]["breakMe"]);
 		
 	$data = json_decode(stripslashes($_GET["data"]), true);
-	
-	if (strtolower($data["password"]) != strtolower($config["password"]) && $config["password"] != "")
-		return error($lang["messages"]["invalidPass"]);
 		
 	//Get players
 	$players = array();
@@ -88,6 +91,11 @@
 			$data["keywords"][$key] = "'%" . $val . "%'";
 		array_push($args, "`data` LIKE " . join(" OR `data` LIKE ", $data["keywords"]));
 	}
+	if ($data["exclude"][0] != "") {
+		foreach ($data["exclude"] as $key => $val)
+			$data["exclude"][$key] = "'%" . $val . "%'";
+		array_push($args, "`data` NOT LIKE " . join(" OR `data` LIKE ", $data["exclude"]));
+	}
 	
 	$sql .= join(" AND ", $args);
 	if ($config["maxResults"] > 0)
@@ -138,6 +146,9 @@
 			if (count($arr) > 0)
 				$action = array_shift($arr);
 			$fdata = join("-", $arr);
+		}
+		if ($action == 2) {
+			$fdata = str_replace("|", "<br />", $fdata);
 		}
 		$action = str_replace(array_reverse(array_keys($lang["actions"])), array_reverse($lang["actions"]), $action);
 		echo '<tr><td>' . $entry->data_id . '</td><td width="155px">' . $entry->date . "</td><td>" . $players[$entry->player_id] . "</td><td>" . $action . "</td><td>" . $worlds[$entry->world_id] . "</td><td>" . round($entry->x, 1).",".round($entry->y, 1).",".round($entry->z, 1) . '</td><td id="dataEntry" title="' . $entry->data . '">' . $fdata . "</td></tr>";

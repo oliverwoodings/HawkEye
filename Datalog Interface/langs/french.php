@@ -12,7 +12,6 @@
 					"title" => "DataLog",
 					
 					"filter" => array("title" => "Options de filtrage",
-									  "password" => "Mot de passe",
 									  "players" => "Joueurs",
 									  "xyz" => "XYZ",
 									  "range" => "Gamme",
@@ -74,7 +73,8 @@
 									    "invalidPass" => "Mot de passe invalide!",
 									    "noActions" => "Vous devez sélectionner au moins 1 action de recherche en!",
 									    "noResults" => "Aucun résultat correspondant à ces options",
-									    "error" => "Erreur!")
+									    "error" => "Erreur!",
+									    "notLoggedIn" => "You are not logged in!")
 									  
 					
 					);

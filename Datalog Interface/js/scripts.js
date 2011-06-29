@@ -22,6 +22,7 @@ $(document).ready(function(){
 	$('#resultsMin').click(function () { $('.results').slideToggle(); resultState = !resultState; });
 	$("select, input:checkbox, input:radio, input:file").uniform();
 	$("button").button();
+	$(".loginButton").button();
 	$("[title]").tooltip({
 		position: "center right",
 		offset: [-2, 10],
@@ -43,11 +44,11 @@ $(document).ready(function(){
 			
 			var filter = {
 				actions: new Array(),
-				password: $("[name=password]").val(),
 				players: $("[name=players]").val().split(","),
 				loc: new Array($("[name=x]").val(), $("[name=y]").val(), $("[name=z]").val()),
 				range: $("[name=range]").val(),
 				keywords: $("[name=keywords]").val().split(","),
+				exclude: $("[name=exclude]").val().split(","),
 				worlds: $("[name=worlds]").val().split(","),
 				dateFrom: $("#dateFrom").val() + " " + $("#timeFrom").val(),
 				dateTo: $("#dateTo").val() + " " + $("#timeTo").val(),

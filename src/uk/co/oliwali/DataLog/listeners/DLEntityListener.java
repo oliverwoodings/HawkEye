@@ -1,7 +1,6 @@
 package uk.co.oliwali.DataLog.listeners;
 
 import java.util.Arrays;
-import java.util.HashMap;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
