@@ -1,5 +1,6 @@
 package uk.co.oliwali.DataLog.listeners;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -16,6 +17,7 @@ import uk.co.oliwali.DataLog.database.DataManager;
 import uk.co.oliwali.DataLog.database.DataType;
 import uk.co.oliwali.DataLog.util.BlockUtil;
 import uk.co.oliwali.DataLog.util.Config;
+import uk.co.oliwali.DataLog.util.Permission;
 
 public class DLBlockListener extends BlockListener {
 	
@@ -33,6 +35,23 @@ public class DLBlockListener extends BlockListener {
 		Location loc  = block.getLocation();
 		if (!Config.blockFilter.contains(block.getTypeId()))
 			DataManager.addEntry(player, DataType.BLOCK_BREAK, loc, BlockUtil.getBlockString(block));
+		
+		//If this block is one we have set to report about, lets report it!
+		if (Config.reportBlocks.contains(block.getTypeId()) && !Config.reportGroups.isEmpty()) {
+			String message = Config.reportMessage;
+			message = message.replace("%PLAYER%", ChatColor.DARK_RED + player.getName() + ChatColor.WHITE);
+			message = message.replace("%BLOCK%", ChatColor.YELLOW + block.getType().name().toLowerCase() + ChatColor.WHITE);
+			message = message.replace("%ID%", ChatColor.DARK_RED + "" + block.getTypeId() + ChatColor.WHITE);
+			message = message.replace("%LOC%", ChatColor.DARK_RED + "x: " + block.getX() + " y: " + block.getY() + " z: " + block.getZ() + ChatColor.WHITE);
+			message = message.replace("%WORLD%", ChatColor.DARK_RED + loc.getWorld().getName() + ChatColor.WHITE);
+			for (Player p : plugin.getServer().getOnlinePlayers()) 
+				for (String group : Config.reportGroups) 
+					if (Permission.hasGroup(loc.getWorld().getName(), p, group)) {
+						p.sendMessage(message);
+						//Only report once
+						break;
+					}
+		}
 	}
 	
 	public void onBlockPlace(BlockPlaceEvent event) {
