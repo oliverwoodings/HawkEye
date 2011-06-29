@@ -1,5 +1,6 @@
 package uk.co.oliwali.DataLog.listeners;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -38,10 +39,11 @@ public class DLBlockListener extends BlockListener {
 		//If this block is one we have set to report about, lets report it!
 		if (Config.reportBlocks.contains(block.getTypeId()) && !Config.reportGroups.isEmpty()) {
 			String message = Config.reportMessage;
-			message = message.replace("%PLAYER%", player.getName());
-			message = message.replace("%BLOCK%", block.getType().name().toLowerCase());
-			message = message.replace("%LOC%", "x: " + block.getX() + " y: " + block.getY() + " z: " + block.getZ());
-			message = message.replace("%WORLD%", loc.getWorld().getName());
+			message = message.replace("%PLAYER%", ChatColor.DARK_RED + player.getName());
+			message = message.replace("%BLOCK%", ChatColor.YELLOW + block.getType().name().toLowerCase());
+			message = message.replace("%ID", ChatColor.DARK_RED + "" + block.getTypeId());
+			message = message.replace("%LOC%", ChatColor.DARK_RED + "x: " + block.getX() + " y: " + block.getY() + " z: " + block.getZ());
+			message = message.replace("%WORLD%", ChatColor.DARK_RED + loc.getWorld().getName());
 			for (Player p : plugin.getServer().getOnlinePlayers()) 
 				for (String group : Config.reportGroups) 
 					if (Permission.hasGroup(loc.getWorld().getName(), p, group)) {
