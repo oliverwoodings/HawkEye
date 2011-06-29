@@ -12,9 +12,13 @@ import uk.co.oliwali.DataLog.database.DataType;
 public class Config {
 	
 	public static List<String> CommandFilter = new ArrayList<String>();
+	public static List<Integer> BlockFilter = new ArrayList<Integer>();
 	public static int MaxLines = 0;
 	public static int MaxRadius;
 	public static int ToolBlock;
+	public static String CleanseAge;
+	public static boolean Debug;
+	public static boolean LogIpAddresses;
 	public static String DbUrl;
 	public static String DbUser;
 	public static String DbPassword;
@@ -22,9 +26,6 @@ public class Config {
 	public static String DbDatalogTable;
 	public static String DbPlayerTable;
 	public static String DbWorldTable;
-	public static String CleanseAge;
-	public static List<Integer> BlockFilter = new ArrayList<Integer>();
-	public static boolean Debug;
 	public static int PoolSize;
 	
 	private Configuration config;
@@ -53,29 +54,41 @@ public class Config {
 			Util.info("Updating config file to v1.1");
 			Util.info("IMPORTANT: After server has rebooted, stop server and configure plugins/DataLog/config.yml with new info");
 		}
-		
-		//Check if any keys are missing
-		if (!keys.contains("max-lines"))
-			config.setProperty("max-lines", 0);
-		if (!keys.contains("max-radius"))
-			config.setProperty("max-radius", 100);
-		if (!keys.contains("tool-block"))
-			config.setProperty("tool-block", 17);
-		if (!keys.contains("cleanse-age"))
-			config.setProperty("cleanse-age", "0d0h0s");
-		if (!keys.contains("max-connections"))
-			config.setProperty("max-connections", 10);
-		if (!keys.contains("command-filter")) {
-			List<String> cmds = new ArrayList<String>();
-			cmds.add("/login");
-			cmds.add("/restartsrv");
-			cmds.add("/register");
-			config.setProperty("command-filter", cmds);
+		//pre v1.2 - move settings around
+		else if (!keys.contains("general")) {
+			config.setProperty("general.max-lines", config.getInt("max-lines", 0));
+			config.removeProperty("max-lines");
+			config.setProperty("general.max-radius", config.getInt("max-radius", 0));
+			config.removeProperty("max-radius");
+			config.setProperty("general.tool-block", config.getInt("tool-block", 17));
+			config.removeProperty("tool-block");
+			config.setProperty("general.cleanse-age", config.getString("cleanse-age", "0d0h0s"));
+			config.removeProperty("cleanse-age");
+			config.setProperty("mysql.max-connections", config.getInt("max-connections", 10));
+			config.removeProperty("max-connections");
+			config.setProperty("general.debug", config.getBoolean("debug", false));
+			config.removeProperty("max-debug");
 		}
+		
+		//Check filters
+		if (!keys.contains("command-filter"))
+			config.setProperty("command-filter", Arrays.asList(new String[]{"/login", "/restartsrv", "/register"}));
 		if (!keys.contains("block-filter"))
 			config.setProperty("block-filter", Arrays.asList(new Integer[]{33,34}));
+		//Check general settings
+		keys = config.getKeys("general");
+		if (!keys.contains("max-lines"))
+			config.setProperty("general.max-lines", 0);
+		if (!keys.contains("max-radius"))
+			config.setProperty("general.max-radius", 100);
+		if (!keys.contains("tool-block"))
+			config.setProperty("general.tool-block", 17);
+		if (!keys.contains("cleanse-age"))
+			config.setProperty("general.cleanse-age", "0d0h0s");
 		if (!keys.contains("debug"))
-			config.setProperty("debug", false);
+			config.setProperty("general.debug", false);
+		if (!keys.contains("log-ip-addresses"))
+			config.setProperty("general.log-ip-addresses", true);
 		//Check MySQL settings
 		keys = config.getKeys("mysql");
 		if (keys == null)
@@ -96,6 +109,8 @@ public class Config {
 			config.setProperty("mysql.player-table", "dl_players");
 		if (!keys.contains("world-table"))
 			config.setProperty("mysql.world-table", "dl_worlds");
+		if (!keys.contains("max-connections"))
+			config.setProperty("mysql.max-connections", 10);
 		for (DataType type : DataType.values()) {
 			if (config.getProperty(getNode(type)) == null)
 				config.setProperty(getNode(type), true);
@@ -110,9 +125,13 @@ public class Config {
 
 		//Load values
 		CommandFilter = config.getStringList("command-filter", null);
-		MaxLines = config.getInt("max-lines", 0);
-		MaxRadius = config.getInt("max-radius", 0);
-		ToolBlock = config.getInt("tool-block", 17);
+		BlockFilter = config.getIntList("block-filter", null);
+		MaxLines = config.getInt("general.max-lines", 0);
+		MaxRadius = config.getInt("general.max-radius", 0);
+		ToolBlock = config.getInt("general.tool-block", 17);
+		CleanseAge = config.getString("general.cleanse-age");
+		Debug = config.getBoolean("general.debug", false);
+		LogIpAddresses = config.getBoolean("general.log-ip-addresses", true);
 		DbUser = config.getString("mysql.username", "root");
 		DbPassword = config.getString("mysql.password", "");
 		DbUrl = "jdbc:mysql://" + config.getString("mysql.hostname") + ":" + config.getString("mysql.port") + "/" + config.getString("mysql.database");
@@ -120,10 +139,7 @@ public class Config {
 		DbDatalogTable = config.getString("mysql.datalog-table");
 		DbPlayerTable = config.getString("mysql.player-table");
 		DbWorldTable = config.getString("mysql.world-table");
-		CleanseAge = config.getString("cleanse-age");
-		BlockFilter = config.getIntList("block-filter", null);
-		Debug = config.getBoolean("debug", false);
-		PoolSize = config.getInt("max-connections", 10);
+		PoolSize = config.getInt("mysql.max-connections", 10);
 	}
 	
 	//Check if a type is logged or not

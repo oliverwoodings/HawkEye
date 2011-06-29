@@ -51,13 +51,13 @@ public class DLPlayerListener extends PlayerListener {
 		Player player = event.getPlayer();
 		DataLog.playerSessions.put(player, new PlayerSession(player));
 		Location loc  = player.getLocation();
-		DataManager.addEntry(player, DataType.JOIN, loc, player.getAddress().getAddress().getHostAddress().toString());
+		DataManager.addEntry(player, DataType.JOIN, loc, Config.LogIpAddresses?player.getAddress().getAddress().getHostAddress().toString():"");
 	}
 	
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
 		Location loc  = player.getLocation();
-		DataManager.addEntry(player, DataType.QUIT, loc, player.getAddress().getAddress().getHostAddress().toString());
+		DataManager.addEntry(player, DataType.QUIT, loc, Config.LogIpAddresses?player.getAddress().getAddress().getHostAddress().toString():"");
 	}
 	
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
