@@ -72,8 +72,11 @@ public class DataManager extends TimerTask {
 			DataEntry dataEntry = new DataEntry();
 			loc = Util.getSimpleLocation(loc);
 			dataEntry.setInfo(player, cplugin, dataType.getId(), loc, data);
-			queue.add(dataEntry);
+			addEntry(dataEntry);
 		}
+	}
+	public static void addEntry(DataEntry entry) {
+		queue.add(entry);
 	}
 	
 	public static DataEntry getEntry(int id) {
@@ -100,6 +103,18 @@ public class DataManager extends TimerTask {
 			conn.close();
 		}
 		return null;
+	}
+	
+	public static void deleteEntry(int dataid) {
+		JDCConnection conn = null;
+		try {
+			conn = getConnection();
+			conn.createStatement().executeUpdate("DELETE FROM `" + Config.DbDatalogTable + "` WHERE `data_id` = " + dataid);
+		} catch (SQLException ex) {
+			Util.severe("Unable to delete data entry from MySQL Server: " + ex);
+		} finally {
+			conn.close();
+		}
 	}
 	
 	public static String getPlayer(int id) {
@@ -272,7 +287,12 @@ public class DataManager extends TimerTask {
 					if (!addWorld(entry.getWorld()))
 						continue;
 				
-				stmnt = conn.prepareStatement("INSERT into `" + Config.DbDatalogTable + "` (date, player_id, action, world_id, x, y, z, data, plugin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);");
+				if (entry.getDataid() > 0) {
+					stmnt = conn.prepareStatement("INSERT into `" + Config.DbDatalogTable + "` (date, player_id, action, world_id, x, y, z, data, plugin, data_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+					stmnt.setInt(10, entry.getDataid());
+				}
+				else
+					stmnt = conn.prepareStatement("INSERT into `" + Config.DbDatalogTable + "` (date, player_id, action, world_id, x, y, z, data, plugin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);");
 				stmnt.setString(1, entry.getDate());
 				stmnt.setInt(2, dbPlayers.get(entry.getPlayer()));
 				stmnt.setInt(3, entry.getAction());

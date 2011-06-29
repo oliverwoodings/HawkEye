@@ -10,8 +10,10 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 
 import uk.co.oliwali.DataLog.database.DataEntry;
+import uk.co.oliwali.DataLog.database.DataManager;
 import uk.co.oliwali.DataLog.database.DataType;
 import uk.co.oliwali.DataLog.util.BlockUtil;
+import uk.co.oliwali.DataLog.util.Config;
 import uk.co.oliwali.DataLog.util.Util;
 
 public class Rollback implements Runnable {
@@ -62,7 +64,10 @@ public class Rollback implements Runnable {
 					block.setType(Material.AIR);
 					break;
 			}
-		
+			
+			if (Config.DeleteDataOnRollback)
+				DataManager.deleteEntry(entry.getDataid());
+			
 		}
 		session.setRollbackUndo(undo);
 		Util.sendMessage(session.getSender(), "&cRollbacked &7" + undo.size() + "&c actions out of &7" + results.size() + "&c attempted");
