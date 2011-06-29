@@ -39,11 +39,11 @@ public class DLBlockListener extends BlockListener {
 		//If this block is one we have set to report about, lets report it!
 		if (Config.reportBlocks.contains(block.getTypeId()) && !Config.reportGroups.isEmpty()) {
 			String message = Config.reportMessage;
-			message = message.replace("%PLAYER%", ChatColor.DARK_RED + player.getName());
-			message = message.replace("%BLOCK%", ChatColor.YELLOW + block.getType().name().toLowerCase());
-			message = message.replace("%ID", ChatColor.DARK_RED + "" + block.getTypeId());
-			message = message.replace("%LOC%", ChatColor.DARK_RED + "x: " + block.getX() + " y: " + block.getY() + " z: " + block.getZ());
-			message = message.replace("%WORLD%", ChatColor.DARK_RED + loc.getWorld().getName());
+			message = message.replace("%PLAYER%", ChatColor.DARK_RED + player.getName() + ChatColor.WHITE);
+			message = message.replace("%BLOCK%", ChatColor.YELLOW + block.getType().name().toLowerCase() + ChatColor.WHITE);
+			message = message.replace("%ID%", ChatColor.DARK_RED + "" + block.getTypeId() + ChatColor.WHITE);
+			message = message.replace("%LOC%", ChatColor.DARK_RED + "x: " + block.getX() + " y: " + block.getY() + " z: " + block.getZ() + ChatColor.WHITE);
+			message = message.replace("%WORLD%", ChatColor.DARK_RED + loc.getWorld().getName() + ChatColor.WHITE);
 			for (Player p : plugin.getServer().getOnlinePlayers()) 
 				for (String group : Config.reportGroups) 
 					if (Permission.hasGroup(loc.getWorld().getName(), p, group)) {
