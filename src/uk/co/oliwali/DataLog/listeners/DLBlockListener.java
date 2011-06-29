@@ -38,14 +38,14 @@ public class DLBlockListener extends BlockListener {
 		//If this block is one we have set to report about, lets report it!
 		if (Config.reportBlocks.contains(block.getTypeId()) && !Config.reportGroups.isEmpty()) {
 			String message = Config.reportMessage;
-			message.replace("%PLAYER%", player.getName());
-			message.replace("%BLOCK%", block.getType().name().toLowerCase());
-			message.replace("%LOC%", "x: " + block.getX() + " y: " + block.getY() + " z: " + block.getZ());
-			message.replace("%WORLD%", loc.getWorld().getName());
+			message = message.replace("%PLAYER%", player.getName());
+			message = message.replace("%BLOCK%", block.getType().name().toLowerCase());
+			message = message.replace("%LOC%", "x: " + block.getX() + " y: " + block.getY() + " z: " + block.getZ());
+			message = message.replace("%WORLD%", loc.getWorld().getName());
 			for (Player p : plugin.getServer().getOnlinePlayers()) 
 				for (String group : Config.reportGroups) 
 					if (Permission.hasGroup(loc.getWorld().getName(), p, group)) {
-						player.sendMessage(message);
+						p.sendMessage(message);
 						//Only report once
 						break;
 					}
