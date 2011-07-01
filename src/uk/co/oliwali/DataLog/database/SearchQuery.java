@@ -21,6 +21,11 @@ import uk.co.oliwali.DataLog.util.Config;
 import uk.co.oliwali.DataLog.util.Permission;
 import uk.co.oliwali.DataLog.util.Util;
 
+/**
+ * Threadable class for performing a search query
+ * Used for in-game searches and rollbacks
+ * @author oliverw92
+ */
 public class SearchQuery extends Thread {
 	
 	private SearchType searchType;
@@ -49,12 +54,16 @@ public class SearchQuery extends Thread {
 		this.order = order;
 	}
 	
+	/**
+	 * Run the search query
+	 */
 	public void run() {
 		
 		Util.debug("Beginning search query");
 		String sql = "SELECT * FROM `" + Config.DbDatalogTable + "` WHERE ";
 		List<String> args = new ArrayList<String>();
 		
+		//Match players from database list
 		Util.debug("Building players");
 		if (players != null) {
 			List<Integer> pids = new ArrayList<Integer>();
@@ -72,6 +81,7 @@ public class SearchQuery extends Thread {
 			}
 		}
 		
+		//Match worlds from database list
 		Util.debug("Building worlds");
 		if (worlds != null) {
 			List<Integer> wids = new ArrayList<Integer>();
@@ -89,6 +99,7 @@ public class SearchQuery extends Thread {
 			}
 		}
 		
+		//Compile actions into SQL form
 		Util.debug("Building actions");
 		if (actions == null || actions.size() == 0) {
 			actions = new ArrayList<Integer>();
@@ -101,12 +112,14 @@ public class SearchQuery extends Thread {
 				acs.add(act);
 		args.add("action IN (" + Util.join(acs, ",") + ")");
 		
+		//Add dates
 		Util.debug("Building dates");
 		if (dateFrom != null)
 			args.add("date >= '" + dateFrom + "'");
 		if (dateTo != null)
 			args.add("date <= '" + dateTo + "'");
 		
+		//Check if location is exact or a range
 		Util.debug("Building location");
 		if (loc != null) {
 			if (radius == null || radius == 0) {
@@ -124,6 +137,7 @@ public class SearchQuery extends Thread {
 			}
 		}
 		
+		//Build the filters into SQL form
 		Util.debug("Building filters");
 		if (filters != null) {
 			for (int i = 0; i < filters.length; i++)
@@ -131,13 +145,15 @@ public class SearchQuery extends Thread {
 			args.add("data LIKE " + Util.join(Arrays.asList(filters), " OR datalog.data LIKE "));
 		}
 		
-		Util.debug("Building orders and limits");
+		//Check the limits
+		Util.debug("Building limits");
 		sql += Util.join(args, " AND ");
 		if (Config.MaxLines > 0)
 			sql += " LIMIT " + Config.MaxLines;
 		
 		Util.debug("Searching: " + sql);
 		
+		//Set up some stuff for the search
 		ResultSet res;
 		PlayerSession session = DataLog.playerSessions.get(sender);
 		Util.sendMessage(session.getSender(), "&cSearching for matching logs...");
@@ -146,9 +162,11 @@ public class SearchQuery extends Thread {
 		Statement stmnt = null;
 		
 		try {
+			//Execute query
 			stmnt = conn.createStatement();
 			res = stmnt.executeQuery(sql);
 			Util.debug("Getting results");
+			//Retrieve results in specified order
 			if (order == "desc") {
 				res.afterLast();
 				while (res.previous())
@@ -173,6 +191,7 @@ public class SearchQuery extends Thread {
 				
 		}
 		
+		//Perform actions dependent on the type of search
 		switch (searchType) {
 			case ROLLBACK:
 				session.setRollbackResults(results);
@@ -188,6 +207,10 @@ public class SearchQuery extends Thread {
 		
 	}
 	
+	/**
+	 * Enumeration for the different types of searching
+	 * @author oliverw92
+	 */
 	public enum SearchType {
 		ROLLBACK,
 		SEARCH

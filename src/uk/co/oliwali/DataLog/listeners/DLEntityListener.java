@@ -27,6 +27,12 @@ import uk.co.oliwali.DataLog.DataType;
 import uk.co.oliwali.DataLog.PlayerSession;
 import uk.co.oliwali.DataLog.database.DataManager;
 import uk.co.oliwali.DataLog.util.Util;
+
+/**
+ * Entity listener class for DataLog
+ * Contains system for managing player deaths
+ * @author oliverw92
+ */
 public class DLEntityListener extends EntityListener {
 	
 	public DataLog plugin;
@@ -35,6 +41,9 @@ public class DLEntityListener extends EntityListener {
 		plugin = dataLog;
 	}
 	
+	/**
+	 * Stores last attacks in the {@link PlayerSession} for the player
+	 */
 	public void onEntityDamage(EntityDamageEvent event) {
 		
 		if (event.isCancelled())
@@ -42,8 +51,8 @@ public class DLEntityListener extends EntityListener {
 		if (!(event.getEntity() instanceof Player))
 			return;
 		
+		//Store damage details in the PlayerSession
 		Player victim = (Player) event.getEntity();
-		
 		PlayerSession session = DataLog.playerSessions.get(victim);
 		session.setLastDamageCause(event.getCause());
 		if (event.getCause() == DamageCause.ENTITY_ATTACK) {
@@ -52,19 +61,26 @@ public class DLEntityListener extends EntityListener {
 		}
 	}
 	
+	/**
+	 * Uses the lastAttacker field in the players {@link PlayerSession} to log the death and cause
+	 */
 	public void onEntityDeath(EntityDeathEvent event) {
 		Entity entity = event.getEntity();
+		//Only interested if it is a player death
 		if (entity instanceof Player) {
 			Player victim   = (Player) entity;
 			PlayerSession session = DataLog.playerSessions.get(victim);
 			Location loc    = victim.getLocation();
+			//Entity attack
 			if (session.getLastDamageCause() == DamageCause.ENTITY_ATTACK) {
 				String attacker = null;
 				Entity attackEntity = session.getLastAttacker();
+				//Player attack
 				if (attackEntity instanceof Player) {
 					DataManager.addEntry(victim, DataType.PVP_DEATH, loc, ((Player)attackEntity).getName());
 					return;
 				}
+				//Creature attack
 				else if (attackEntity instanceof PigZombie)
 					attacker = "PigZombie";
 				else if (attackEntity instanceof Giant)
@@ -87,6 +103,7 @@ public class DLEntityListener extends EntityListener {
 					attacker = "Unknown";
 				DataManager.addEntry(victim, DataType.MOB_DEATH, loc, attacker);
 			}
+			//Other death
 			else {
 				String cause = session.getLastDamageCause() == null?"Unknown":session.getLastDamageCause().name();
 				String[] words = cause.split("_");

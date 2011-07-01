@@ -10,6 +10,11 @@ import uk.co.oliwali.DataLog.DataLog;
 import uk.co.oliwali.DataLog.DataType;
 import uk.co.oliwali.DataLog.Rule;
 
+/**
+ * Configuration manager for DataLog.
+ * Any field with the first letter capitalised is a config option
+ * @author oliverw92
+ */
 public class Config {
 	
 	public static List<String> CommandFilter = new ArrayList<String>();
@@ -33,6 +38,10 @@ public class Config {
 	
 	private Configuration config;
 	
+	/**
+	 * Loads the config from file and validates the data
+	 * @param plugin
+	 */
 	public Config (DataLog plugin) {
 		
 		config = plugin.getConfiguration();
@@ -182,13 +191,22 @@ public class Config {
 		Util.info(Rules.size() + " rule(s) out of " + keys.size() + " loaded from config file");
 	}
 	
-	//Check if a type is logged or not
+	/**
+	 * Check if a {@link DataType} is logged or not
+	 * @param dataType
+	 * @return true or false
+	 */
 	public boolean isLogged(DataType dataType) {
 		if (config.getBoolean(getNode(dataType), false) == true)
 			return true;
 		return false;
 	}
 	
+	/**
+	 * Returns a log node
+	 * @param type
+	 * @return string node
+	 */
 	private String getNode(DataType type) {
 		return "log." + type.getConfigName();
 	}

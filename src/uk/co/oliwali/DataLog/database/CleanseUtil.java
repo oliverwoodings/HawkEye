@@ -9,10 +9,21 @@ import java.util.TimerTask;
 import uk.co.oliwali.DataLog.util.Config;
 import uk.co.oliwali.DataLog.util.Util;
 
+/**
+ * DataBase cleansing utility.
+ * Deletes data older than date specified in config.
+ * This class should be run on a {Timer} in a separate thread
+ * @author oliverw92
+ */
 public class CleanseUtil extends TimerTask {
 	
 	public String date = null;
 	
+	/**
+	 * Initiates utility.
+	 * Throws exception if there are any errors processing the config time value
+	 * @throws Exception
+	 */
 	public CleanseUtil() throws Exception {
 		
 		if (Config.CleanseAge.equalsIgnoreCase("0") || Config.CleanseAge.equalsIgnoreCase("0d0h0s"))
@@ -52,7 +63,10 @@ public class CleanseUtil extends TimerTask {
 		
 		Util.info("Started cleanse thread for logs older than " + date);
 	}
-
+	
+	/**
+	 * Runs the cleansing utility
+	 */
 	public void run() {
 		
 		Util.info("Running cleanse utility...");

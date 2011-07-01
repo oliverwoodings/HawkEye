@@ -28,6 +28,11 @@ import uk.co.oliwali.DataLog.util.Util;
 import uk.co.oliwali.DataLog.database.JDCConnection;
 import uk.co.oliwali.DataLog.database.SearchQuery.SearchType;
 
+/**
+ * Handler for everything to do with the database.
+ * All queries except searching goes through this class.
+ * @author oliverw92
+ */
 public class DataManager extends TimerTask {
 	
 	private static DataLog plugin;
@@ -35,7 +40,13 @@ public class DataManager extends TimerTask {
 	private static ConnectionManager connections;
 	public static HashMap<String, Integer> dbPlayers = new HashMap<String, Integer>();
 	public static HashMap<String, Integer> dbWorlds = new HashMap<String, Integer>();
-	
+
+	/**
+	 * Initiates database connection pool, checks tables, starts cleansing utility
+	 * Throws an exception if it is unable to complete setup
+	 * @param instance
+	 * @throws Exception
+	 */
 	public DataManager(DataLog instance) throws Exception {
 		plugin = instance;
 		connections = new ConnectionManager(Config.DbUrl, Config.DbUser, Config.DbPassword);
@@ -63,6 +74,13 @@ public class DataManager extends TimerTask {
 		timer.scheduleAtFixedRate(this, 2000, 2000);
 	}
 	
+	/**
+	 * Closes down all connections
+	 */
+	public static void close() {
+		connections.close();
+	}
+	
 	public static boolean addEntry(Player player, DataType dataType, Location loc, String data) {
 		return addEntry(player, plugin, dataType, loc, data);
 	}
@@ -78,6 +96,12 @@ public class DataManager extends TimerTask {
 		dataEntry.setInfo(player, cplugin, dataType.getId(), loc, data);
 		return addEntry(dataEntry);
 	}
+	/**
+	 * Adds a {@link DataEntry} to the database queue.
+	 * {Rule}s are checked at this point
+	 * @param entry {@link DataEntry} to be added
+	 * @return
+	 */
 	public static boolean addEntry(DataEntry entry) {
 		DataType type = DataType.fromId(entry.getAction());
 		
@@ -136,6 +160,11 @@ public class DataManager extends TimerTask {
 		return false;
 	}
 	
+	/**
+	 * Retrieves an entry from the database
+	 * @param id id of entry to return
+	 * @return
+	 */
 	public static DataEntry getEntry(int id) {
 		JDCConnection conn = null;
 		try {
@@ -162,6 +191,10 @@ public class DataManager extends TimerTask {
 		return null;
 	}
 	
+	/**
+	 * Deletes an entry from the database
+	 * @param dataid id to delete
+	 */
 	public static void deleteEntry(int dataid) {
 		JDCConnection conn = null;
 		try {
@@ -174,6 +207,11 @@ public class DataManager extends TimerTask {
 		}
 	}
 	
+	/**
+	 * Get a players name from the database player list
+	 * @param id
+	 * @return player name
+	 */
 	public static String getPlayer(int id) {
 		for (Entry<String, Integer> entry : dbPlayers.entrySet())
 			if (entry.getValue() == id)
@@ -181,6 +219,11 @@ public class DataManager extends TimerTask {
 		return null;
 	}
 	
+	/**
+	 * Get a world name from the database world list
+	 * @param id
+	 * @return world name
+	 */
 	public static String getWorld(int id) {
 		for (Entry<String, Integer> entry : dbWorlds.entrySet())
 			if (entry.getValue() == id)
@@ -188,6 +231,11 @@ public class DataManager extends TimerTask {
 		return null;
 	}
 	
+	/**
+	 * Performs a DataLog tool search at the specified location
+	 * @param player
+	 * @param loc
+	 */
 	public static void toolSearch(Player player, Location loc) {
 		List<Integer> actions = new ArrayList<Integer>();
 		for (DataType type : DataType.values())
@@ -197,6 +245,10 @@ public class DataManager extends TimerTask {
 		thread.start();
 	}
 	
+	/**
+	 * Returns a database connection from the pool
+	 * @return {JDCConnection}
+	 */
 	public static JDCConnection getConnection() {
 		try {
 			return connections.getConnection();
@@ -206,6 +258,12 @@ public class DataManager extends TimerTask {
 		}
 	}
 	
+	/**
+	 * Creates a {@link DataEntry} from the inputted {ResultSet}
+	 * @param res
+	 * @return returns a {@link DataEntry}
+	 * @throws SQLException
+	 */
 	public static DataEntry createEntryFromRes(ResultSet res) throws SQLException {
 		DataEntry entry = new DataEntry();
 		entry.setPlayer(DataManager.getPlayer(res.getInt("player_id")));
@@ -221,6 +279,9 @@ public class DataManager extends TimerTask {
 		return entry;
 	}
 	
+	/**
+	 * Adds a player to the database
+	 */
 	private boolean addPlayer(String name) {
 		JDCConnection conn = null;
 		try {
@@ -237,6 +298,9 @@ public class DataManager extends TimerTask {
 		return true;
 	}
 	
+	/**
+	 * Adds a world to the database
+	 */
 	private boolean addWorld(String name) {
 		JDCConnection conn = null;
 		try {
@@ -253,6 +317,10 @@ public class DataManager extends TimerTask {
 		return true;
 	}
 	
+	/**
+	 * Updates world and player local lists
+	 * @return true on success, false on failure
+	 */
 	private boolean updateDbLists() {
 		JDCConnection conn = null;
 		Statement stmnt = null;
@@ -281,6 +349,10 @@ public class DataManager extends TimerTask {
 		return true;
 	}
 	
+	/**
+	 * Checks that all tables are up to date and exist
+	 * @return true on success, false on failure
+	 */
 	private boolean checkTables() {
 		JDCConnection conn = null;
 		Statement stmnt = null;
@@ -301,6 +373,7 @@ public class DataManager extends TimerTask {
 				Util.info("Table `" + Config.DbDatalogTable + "` not found, creating...");
 				stmnt.execute("CREATE TABLE IF NOT EXISTS `" + Config.DbDatalogTable + "` (`data_id` int(11) NOT NULL AUTO_INCREMENT, `date` varchar(255) NOT NULL, `player_id` int(11) NOT NULL, `action` int(11) NOT NULL, `world_id` varchar(255) NOT NULL, `x` double NOT NULL, `y` double NOT NULL, `z` double NOT NULL, `data` varchar(255) DEFAULT NULL, `plugin` varchar(255) DEFAULT 'DataLog', PRIMARY KEY (`data_id`), KEY `player_action_world` (`player_id`,`action`,`world_id`), KEY `x_y_z` (`x`,`y`,`z` )) ENGINE=MyISAM;");
 			}
+			//Update to post v1.1.0 database
 			else if (!JDBCUtil.columnExists(dbm, Config.DbDatalogTable, "player_id")) {
 				Util.info("Pre-v1.1.0 database detected, performing legacy database update please wait...");
 				stmnt.execute("CREATE TABLE IF NOT EXISTS `" + Config.DbDatalogTable + "2` (`data_id` int(11) NOT NULL AUTO_INCREMENT, `date` varchar(255) NOT NULL, `player_id` int(11) NOT NULL, `action` int(11) NOT NULL, `world_id` varchar(255) NOT NULL, `x` double NOT NULL, `y` double NOT NULL, `z` double NOT NULL, `data` varchar(255) DEFAULT NULL, `plugin` varchar(255) DEFAULT 'DataLog', PRIMARY KEY (`data_id`), KEY `player_action_world` (`player_id`,`action`,`world_id`), KEY `x_y_z` (`x`,`y`,`z` )) ENGINE=MyISAM;");
@@ -328,7 +401,10 @@ public class DataManager extends TimerTask {
 		}
 		return true;
 	}
-
+	
+	/**
+	 * Empty the {@link DataEntry} queue into the database
+	 */
 	public void run() {
 		if (queue.isEmpty())
 			return;

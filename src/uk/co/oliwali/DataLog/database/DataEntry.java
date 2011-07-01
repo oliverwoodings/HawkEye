@@ -3,42 +3,31 @@ package uk.co.oliwali.DataLog.database;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import com.avaje.ebean.validation.NotNull;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 
-@Entity()
-@Table(name="datalog")
+/**
+ * Represents a DataLog entry entity
+ * @author oliverw92
+ */
 public class DataEntry {
 
-    @Id
     private int dataid;
-    
-    @NotNull
+
     private String plugin;
 
-    @NotNull
     private String date;
 
-    @NotNull
     private String player;
 
-	@NotNull
     private int action;
-    
-    @NotNull
+
     private String world;
 
-    @NotNull
     private double x;
 
-    @NotNull
     private double y;
 
-    @NotNull
     private double z;
 
     private String data;
@@ -123,6 +112,14 @@ public class DataEntry {
     	return data;
     }
     
+    /**
+     * Parses the inputted data into the DataEntry instance
+     * @param player
+     * @param instance
+     * @param action
+     * @param loc
+     * @param data
+     */
 	public void setInfo(String player, JavaPlugin instance, int action, Location loc, String data) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	    setDate(sdf.format(Calendar.getInstance().getTime()));

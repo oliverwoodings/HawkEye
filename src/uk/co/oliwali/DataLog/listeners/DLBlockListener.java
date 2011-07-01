@@ -16,8 +16,11 @@ import uk.co.oliwali.DataLog.DataType;
 import uk.co.oliwali.DataLog.database.DataManager;
 import uk.co.oliwali.DataLog.util.BlockUtil;
 import uk.co.oliwali.DataLog.util.Config;
-import uk.co.oliwali.DataLog.util.Util;
 
+/**
+ * Block listener class for DataLog
+ * @author oliverw92
+ */
 public class DLBlockListener extends BlockListener {
 	
 	public DataLog plugin;

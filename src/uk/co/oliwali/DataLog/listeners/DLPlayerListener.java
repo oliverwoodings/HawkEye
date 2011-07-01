@@ -21,6 +21,10 @@ import uk.co.oliwali.DataLog.PlayerSession;
 import uk.co.oliwali.DataLog.database.DataManager;
 import uk.co.oliwali.DataLog.util.Config;
 
+/**
+ * Player listener class for DataLog
+ * @author oliverw92
+ */
 public class DLPlayerListener extends PlayerListener {
 	
 	public DataLog plugin;
@@ -36,6 +40,9 @@ public class DLPlayerListener extends PlayerListener {
 			event.setCancelled(true);
 	}
 	
+	/**
+	 * Contains processing of the command filter in {@link Config}
+	 */
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
 		if (event.isCancelled())
 			return;
@@ -73,6 +80,10 @@ public class DLPlayerListener extends PlayerListener {
 				event.setCancelled(true);
 	}
 	
+	/**
+	 * Handles several actions: 
+	 * OPEN_CHEST, DOOR_INTERACT, LEVER, STONE_BUTTON, FLINT_AND_STEEL, LAVA_BUCKET, WATER_BUCKET
+	 */
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		
 		Player player = event.getPlayer();
@@ -152,6 +163,12 @@ public class DLPlayerListener extends PlayerListener {
 			event.setCancelled(true);
 	}
 	
+	/**
+	 * Returns the distance between two {Location}s
+	 * @param from
+	 * @param to
+	 * @return double
+	 */
 	private double distance(Location from, Location to) {
         return Math.sqrt(Math.pow(from.getX() - to.getX(), 2) + Math.pow(from.getY() - to.getY(), 2) + Math.pow(from.getZ() - to.getZ(), 2));
     }

@@ -9,6 +9,10 @@ import uk.co.oliwali.DataLog.database.DataEntry;
 import uk.co.oliwali.DataLog.util.Permission;
 import uk.co.oliwali.DataLog.util.Util;
 
+/**
+ * Teleports player to location of specified data entry
+ * @author oliverw92
+ */
 public class TptoCommand extends BaseCommand {
 
 	public TptoCommand() {

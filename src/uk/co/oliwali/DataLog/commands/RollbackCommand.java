@@ -12,6 +12,11 @@ import uk.co.oliwali.DataLog.database.SearchQuery;
 import uk.co.oliwali.DataLog.util.Permission;
 import uk.co.oliwali.DataLog.util.Util;
 
+/**
+ * Rolls back actions according to the player's specified input.
+ * Error handling for user input is done using exceptions to keep code neat.
+ * @author oliverw92
+ */
 public class RollbackCommand extends BaseCommand {
 
 	public RollbackCommand() {
@@ -23,6 +28,7 @@ public class RollbackCommand extends BaseCommand {
 	
 	public boolean execute() {
 		
+		//Set up placeholders
 		String[] players = null;
 		Vector loc = null;
 		Integer radius = null;
@@ -33,13 +39,16 @@ public class RollbackCommand extends BaseCommand {
 		String[] filters = null;
 		
 		try {
+			//Loop through all the arguments
 			for (String arg : args) {
 				
+				//Check if argument has a valid prefix
 				String param = arg.substring(0,1).toLowerCase();
 				if (!arg.substring(1,2).equals(":"))
 					throw new Exception();
 				String[] values = arg.substring(2).split(",");
 				
+				//Check different parameters
 				if (param.equals("p")) players = values;
 				else if (param.equals("w")) worlds = values;
 				else if (param.equals("f")) filters = values;
@@ -54,6 +63,7 @@ public class RollbackCommand extends BaseCommand {
 				else if (param.equals("r"))
 					radius = Integer.parseInt(values[0]);
 				else if (param.equals("t")) {
+					//Handler for different time formats
 					int type = 2;
 					for (int i = 0; i < arg.length(); i++) {
 						String c = arg.substring(i, i+1);
@@ -65,6 +75,7 @@ public class RollbackCommand extends BaseCommand {
 						}
 					}
 					
+					//If the time is in the format '0w0d0h0m0s'
 					if (type == 0) {
 						
 						int weeks = 0;
@@ -100,6 +111,7 @@ public class RollbackCommand extends BaseCommand {
 						dateFrom = form.format(cal.getTime());
 						
 					}
+					//If the time is in the format 'yyyy-MM-dd HH:mm:ss'
 					else if (type == 1) {
 						if (values.length == 1) {
 							SimpleDateFormat form = new SimpleDateFormat("yyyy-MM-dd");
@@ -110,6 +122,7 @@ public class RollbackCommand extends BaseCommand {
 						if (values.length == 4)
 							dateTo = values[2] + " " + values[3];
 					}
+					//Invalid time format
 					else if (type == 2)
 						throw new Exception();
 					
@@ -127,12 +140,14 @@ public class RollbackCommand extends BaseCommand {
 			worlds[0] = player.getWorld().getName();
 		}
 		loc = Util.getSimpleLocation(player.getLocation()).toVector();
+		//If no action is specified, add all actions that can be rolled back
 		if (actions.size() == 0) {
 			for (DataType type : DataType.values())
 				if (type.canRollback())
 					actions.add(type.getId());
 		}
 		
+		//Create new SeachQuery with data
 		Thread thread = new SearchQuery(SearchType.ROLLBACK, sender, dateFrom, dateTo, players, actions, loc, radius, worlds, filters, "desc");
 		thread.start();
 		return true;

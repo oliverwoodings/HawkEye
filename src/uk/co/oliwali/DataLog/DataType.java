@@ -4,6 +4,10 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Enumeration class representing all the different actions that DataLog can handle
+ * @author oliverw92
+ */
 public enum DataType {
 	
 	BLOCK_BREAK(0, true, "block-break", true),
@@ -41,6 +45,7 @@ public enum DataType {
 	private static final Map<Integer, DataType> idMapping = new HashMap<Integer, DataType>();
 	
 	static {
+		//Mapping to enable quick finding of DataTypes by name or id
 		for (DataType type : EnumSet.allOf(DataType.class)) {
 			nameMapping.put(type.configName, type);
 		}
@@ -73,26 +78,52 @@ public enum DataType {
 		this.canRollback = canRollback;
 	}
 	
+	/**
+	 * Get the id of the DataType
+	 * @return int id of the DataType
+	 */
 	public int getId() {
 		return id;
 	}
 	
+	/**
+	 * Get the config name of the DataType
+	 * @return String config name
+	 */
 	public String getConfigName() {
 		return configName;
 	}
 	
+	/**
+	 * Get a matching DataType from the supplied config name
+	 * @param name DataType config name to search for
+	 * @return {@link DataType}
+	 */
 	public static DataType fromName(String name) {
 		return nameMapping.get(name);
 	}
 	
+	/**
+	 * Get a matching DataType from the supplied  id
+	 * @param id DataType id to search for
+	 * @return {@link DataType}
+	 */	
 	public static DataType fromId(int id) {
 		return idMapping.get(id);
 	}
 	
+	/**
+	 * Check if the DataType can be rolled back
+	 * @return true if it can be, false if not
+	 */
 	public boolean canRollback() {
 		return canRollback;
 	}
-	
+
+	/**
+	 * Check if the DataType can be used in 'here' searches
+	 * @return true if it can be, false if not
+	 */
 	public boolean canHere() {
 		return canHere;
 	}

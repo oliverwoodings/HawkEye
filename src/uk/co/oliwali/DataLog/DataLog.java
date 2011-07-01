@@ -47,10 +47,17 @@ public class DataLog extends JavaPlugin {
 	public static List<BaseCommand> commands = new ArrayList<BaseCommand>();
 	public static HashMap<CommandSender, PlayerSession> playerSessions = new HashMap<CommandSender, PlayerSession>();
 	
+	/**
+	 * Safely shuts down DataLog
+	 */
 	public void onDisable() {
+		DataManager.close();
 		Util.info("Version " + version + " disabled!");
 	}
 	
+	/**
+	 * Starts up DataLog initiation process
+	 */
 	public void onEnable() {
 		
 		Util.info("Starting DataLog initiation process...");
@@ -115,6 +122,13 @@ public class DataLog extends JavaPlugin {
         
 	}
 	
+	/**
+	 * Command manager for DataLog
+	 * @param sender - {@link CommandSender}
+	 * @param cmd - {@link Command}
+	 * @param commandLabel - String
+	 * @param args[] - String[]
+	 */
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String args[]) {
 		if (cmd.getName().equalsIgnoreCase("datalog")) {
 			if (args.length == 0)

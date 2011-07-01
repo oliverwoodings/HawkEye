@@ -3,6 +3,10 @@ package uk.co.oliwali.DataLog.commands;
 import uk.co.oliwali.DataLog.util.Permission;
 import uk.co.oliwali.DataLog.util.Util;
 
+/**
+ * Displays help information for the {@link RollbackCommand} command
+ * @author oliverw92
+ */
 public class RollbackHelpCommand extends BaseCommand {
 
 	public RollbackHelpCommand() {

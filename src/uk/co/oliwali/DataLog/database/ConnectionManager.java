@@ -8,6 +8,11 @@ import java.util.Vector;
 
 import uk.co.oliwali.DataLog.util.Config;
 
+/**
+ * Manages the MySQL connection pool.
+ * By default 10 connections are maintained at a time
+ * @author oliverw92
+ */
 public class ConnectionManager implements Closeable {
 	
 	private static int poolsize = 10;
@@ -18,6 +23,13 @@ public class ConnectionManager implements Closeable {
 	private String user;
 	private String password;
 
+	/**
+	 * Creates the connection manager and starts the reaper
+	 * @param url url of the database
+	 * @param user username to use
+	 * @param password password for the database
+	 * @throws ClassNotFoundException
+	 */
 	public ConnectionManager(String url, String user, String password) throws ClassNotFoundException {
 		Class.forName("com.mysql.jdbc.Driver");
 		this.url = url;
@@ -29,6 +41,9 @@ public class ConnectionManager implements Closeable {
 		reaper.start();
 	}
 
+	/**
+	 * Closes all connections
+	 */
 	@Override
 	public synchronized void close() {
 		final Enumeration<JDCConnection> conns = connections.elements();
@@ -38,7 +53,12 @@ public class ConnectionManager implements Closeable {
 			conn.terminate();
 		}
 	}
-
+	
+	/**
+	 * Returns a connection from the pool
+	 * @return returns a {JDCConnection}
+	 * @throws SQLException
+	 */
 	public synchronized JDCConnection getConnection() throws SQLException {
 		JDCConnection conn;
 		for (int i = 0; i < connections.size(); i++) {
@@ -59,14 +79,21 @@ public class ConnectionManager implements Closeable {
 		connections.add(conn);
 		return conn;
 	}
-
+	
+	/**
+	 * Loops through connections, reaping old ones
+	 */
 	private synchronized void reapConnections() {
 		final long stale = System.currentTimeMillis() - timeToLive;
 		for (final JDCConnection conn : connections)
 			if (conn.inUse() && stale > conn.getLastUse() && !conn.isValid())
 				connections.remove(conn);
 	}
-
+	
+	/**
+	 * Reaps connections
+	 * @author oliverw92
+	 */
 	private class ConnectionReaper extends Thread
 	{
 		@Override

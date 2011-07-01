@@ -9,6 +9,11 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import uk.co.oliwali.DataLog.database.DataEntry;
 
+/**
+ * Stores data specific to each player on the server.
+ * This class is persistent over play quit and rejoins, but not over server reboots
+ * @author oliverw92
+ */
 public class PlayerSession {
 
 	private CommandSender sender;

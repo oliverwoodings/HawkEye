@@ -3,6 +3,10 @@ package uk.co.oliwali.DataLog.commands;
 import uk.co.oliwali.DataLog.DataLog;
 import uk.co.oliwali.DataLog.util.Util;
 
+/**
+ * Displays the help data for all commands
+ * @author oliverw92
+ */
 public class HelpCommand extends BaseCommand {
 
 	public HelpCommand() {

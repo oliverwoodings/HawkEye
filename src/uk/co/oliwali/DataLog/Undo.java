@@ -8,14 +8,26 @@ import uk.co.oliwali.DataLog.database.DataEntry;
 import uk.co.oliwali.DataLog.database.DataManager;
 import uk.co.oliwali.DataLog.util.Util;
 
+/**
+ * Runnable class for reversing a {@link Rollback}.
+ * This class should always be run in a separate thread to avoid impacting on server performance
+ * @author oliverw92
+ */
 public class Undo implements Runnable {
 	
 	public PlayerSession session = null;
 	
+	/**
+	 * @param session {@link PlayerSession} to retrieve undo results from
+	 */
 	public Undo(PlayerSession session) {
 		this.session = session;
 	}
 	
+	/**
+	 * Run the undo.
+	 * Contains appropriate methods of catching errors and notifying the player
+	 */
 	public void run() {
 		List<BlockState> results = session.getRollbackUndo();
 		if (results == null || results.size() == 0) {

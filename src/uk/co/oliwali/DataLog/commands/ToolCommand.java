@@ -6,6 +6,10 @@ import uk.co.oliwali.DataLog.util.Config;
 import uk.co.oliwali.DataLog.util.Permission;
 import uk.co.oliwali.DataLog.util.Util;
 
+/**
+ * Enables or disables search tool for players
+ * @author oliverw92
+ */
 public class ToolCommand extends BaseCommand {
 
 	public ToolCommand() {

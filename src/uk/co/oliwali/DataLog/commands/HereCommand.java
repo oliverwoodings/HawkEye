@@ -10,6 +10,10 @@ import uk.co.oliwali.DataLog.util.Config;
 import uk.co.oliwali.DataLog.util.Permission;
 import uk.co.oliwali.DataLog.util.Util;
 
+/**
+ * Searches around the player for 'here' {@link DataType}s
+ * @author oliverw92
+ */
 public class HereCommand extends BaseCommand {
 
 	public HereCommand() {
