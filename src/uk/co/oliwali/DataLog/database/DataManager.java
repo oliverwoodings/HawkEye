@@ -89,12 +89,12 @@ public class DataManager extends TimerTask {
 			String warning = rule.warningMsg;
 			
 			//Check events and worlds
-			if (!rule.events.contains(type) && rule.events != null) continue;
-			if (!rule.worlds.contains(entry.getWorld()) && rule.worlds != null) continue;
+			if (!rule.events.contains(type)) continue;
+			if (rule.worlds != null && rule.worlds.size() > 0 && !rule.worlds.contains(entry.getWorld())) continue;
 			
 			//Check groups
 			for (String group : rule.excludeGroups)
-				if (Permission.inGroup(entry.getWorld(), entry.getPlayer(), group) && rule.excludeGroups != null) continue;
+				if (rule.excludeGroups != null && rule.excludeGroups.size() > 0 && Permission.inGroup(entry.getWorld(), entry.getPlayer(), group)) continue;
 			
 			//Check pattern
 			if (!rule.pattern.equals("")) {
@@ -105,26 +105,26 @@ public class DataManager extends TimerTask {
 			}
 			
 			//Replace text
-			notification.replaceAll("%PLAYER%", entry.getPlayer());
-			notification.replaceAll("%WORLD%", entry.getWorld());
-			notification.replaceAll("%MATCH%", matchText);
-			warning.replaceAll("%PLAYER%", entry.getPlayer());
-			warning.replaceAll("%WORLD%", entry.getWorld());
-			warning.replaceAll("%MATCH%", matchText);
+			notification = notification.replaceAll("%PLAYER%", entry.getPlayer());
+			notification = notification.replaceAll("%WORLD%", entry.getWorld());
+			notification = notification.replaceAll("%MATCH%", matchText);
+			warning = warning.replaceAll("%PLAYER%", entry.getPlayer());
+			warning = warning.replaceAll("%WORLD%", entry.getWorld());
+			warning = warning.replaceAll("%MATCH%", matchText);
 			
 			//Execute actions
 			if (rule.notify) {
 				for (Player player : DataLog.server.getOnlinePlayers()) {
 					if (Permission.notify(player))
-						Util.sendMessage(player, rule.notificationMsg);
+						Util.sendMessage(player, notification);
 				}
 			}
 			Player offender = DataLog.server.getPlayer(entry.getPlayer());
 			if (offender != null) {
 				if (rule.kick)
-					offender.kickPlayer(rule.warningMsg);
+					offender.kickPlayer(warning);
 				else if (rule.warn)
-					Util.sendMessage(offender, rule.warningMsg);
+					Util.sendMessage(offender, warning);
 			}
 			if (rule.deny)
 				return true;

@@ -20,6 +20,7 @@ import uk.co.oliwali.DataLog.commands.HelpCommand;
 import uk.co.oliwali.DataLog.commands.HereCommand;
 import uk.co.oliwali.DataLog.commands.PageCommand;
 import uk.co.oliwali.DataLog.commands.RollbackCommand;
+import uk.co.oliwali.DataLog.commands.RollbackHelpCommand;
 import uk.co.oliwali.DataLog.commands.SearchCommand;
 import uk.co.oliwali.DataLog.commands.SearchHelpCommand;
 import uk.co.oliwali.DataLog.commands.ToolCommand;
@@ -80,23 +81,23 @@ public class DataLog extends JavaPlugin {
 		playerSessions.put(sender, new PlayerSession(sender));
         
         // Register events
-        pm.registerEvent(Type.BLOCK_BREAK, blockListener, Event.Priority.Monitor, this);
-        pm.registerEvent(Type.BLOCK_PLACE, blockListener, Event.Priority.Monitor, this);
-        pm.registerEvent(Type.BLOCK_BURN, blockListener, Event.Priority.Monitor, this);
-        pm.registerEvent(Type.BLOCK_PHYSICS, blockListener, Event.Priority.Monitor, this);
-        pm.registerEvent(Type.SNOW_FORM, blockListener, Event.Priority.Monitor, this);
-        pm.registerEvent(Type.SIGN_CHANGE, blockListener, Event.Priority.Monitor, this);
-        pm.registerEvent(Type.PLAYER_COMMAND_PREPROCESS, playerListener, Event.Priority.Monitor, this);
-        pm.registerEvent(Type.PLAYER_CHAT, playerListener, Event.Priority.Monitor, this);
-        pm.registerEvent(Type.PLAYER_JOIN, playerListener, Event.Priority.Monitor, this);
-        pm.registerEvent(Type.PLAYER_QUIT, playerListener, Event.Priority.Monitor, this);
-        pm.registerEvent(Type.PLAYER_TELEPORT, playerListener, Event.Priority.Monitor, this);
-        pm.registerEvent(Type.PLAYER_INTERACT, playerListener, Event.Priority.Monitor, this);
-        pm.registerEvent(Type.PLAYER_DROP_ITEM, playerListener, Event.Priority.Monitor, this);
-        pm.registerEvent(Type.PLAYER_PICKUP_ITEM, playerListener, Event.Priority.Monitor, this);
-        pm.registerEvent(Type.ENTITY_DAMAGE, entityListener, Event.Priority.Monitor, this);
-        pm.registerEvent(Type.ENTITY_DEATH, entityListener, Event.Priority.Monitor, this);
-        pm.registerEvent(Type.ENTITY_EXPLODE, entityListener, Event.Priority.Monitor, this);
+        pm.registerEvent(Type.BLOCK_BREAK, blockListener, Event.Priority.Lowest, this);
+        pm.registerEvent(Type.BLOCK_PLACE, blockListener, Event.Priority.Lowest, this);
+        pm.registerEvent(Type.BLOCK_BURN, blockListener, Event.Priority.Lowest, this);
+        pm.registerEvent(Type.BLOCK_PHYSICS, blockListener, Event.Priority.Lowest, this);
+        pm.registerEvent(Type.SNOW_FORM, blockListener, Event.Priority.Lowest, this);
+        pm.registerEvent(Type.SIGN_CHANGE, blockListener, Event.Priority.Lowest, this);
+        pm.registerEvent(Type.PLAYER_COMMAND_PREPROCESS, playerListener, Event.Priority.Lowest, this);
+        pm.registerEvent(Type.PLAYER_CHAT, playerListener, Event.Priority.Lowest, this);
+        pm.registerEvent(Type.PLAYER_JOIN, playerListener, Event.Priority.Lowest, this);
+        pm.registerEvent(Type.PLAYER_QUIT, playerListener, Event.Priority.Lowest, this);
+        pm.registerEvent(Type.PLAYER_TELEPORT, playerListener, Event.Priority.Lowest, this);
+        pm.registerEvent(Type.PLAYER_INTERACT, playerListener, Event.Priority.Lowest, this);
+        pm.registerEvent(Type.PLAYER_DROP_ITEM, playerListener, Event.Priority.Lowest, this);
+        pm.registerEvent(Type.PLAYER_PICKUP_ITEM, playerListener, Event.Priority.Lowest, this);
+        pm.registerEvent(Type.ENTITY_DAMAGE, entityListener, Event.Priority.Lowest, this);
+        pm.registerEvent(Type.ENTITY_DEATH, entityListener, Event.Priority.Lowest, this);
+        pm.registerEvent(Type.ENTITY_EXPLODE, entityListener, Event.Priority.Lowest, this);
         
         //Add commands
         commands.add(new HelpCommand());
@@ -108,6 +109,7 @@ public class DataLog extends JavaPlugin {
         commands.add(new RollbackCommand());
         commands.add(new UndoCommand());
         commands.add(new ToolCommand());
+        commands.add(new RollbackHelpCommand());
         
         Util.info("Version " + version + " enabled!");
         
