@@ -8,6 +8,7 @@ import org.bukkit.util.config.Configuration;
 
 import uk.co.oliwali.DataLog.DataLog;
 import uk.co.oliwali.DataLog.DataType;
+import uk.co.oliwali.DataLog.Rule;
 
 public class Config {
 	
@@ -20,6 +21,7 @@ public class Config {
 	public static boolean Debug;
 	public static boolean LogIpAddresses;
 	public static boolean DeleteDataOnRollback;
+	public static List<Rule> Rules;
 	public static String DbUrl;
 	public static String DbUser;
 	public static String DbPassword;
@@ -56,7 +58,7 @@ public class Config {
 			Util.info("IMPORTANT: After server has rebooted, stop server and configure plugins/DataLog/config.yml with new info");
 		}
 		//pre v1.2 - move settings around
-		else if (!keys.contains("general")) {
+		if (!keys.contains("general")) {
 			config.setProperty("general.max-lines", config.getInt("max-lines", 0));
 			config.removeProperty("max-lines");
 			config.setProperty("general.max-radius", config.getInt("max-radius", 0));
@@ -69,6 +71,19 @@ public class Config {
 			config.removeProperty("max-connections");
 			config.setProperty("general.debug", config.getBoolean("debug", false));
 			config.removeProperty("debug");
+		}
+		//pre v1.3 - add rules in
+		if (!keys.contains("rules")) {
+			config.setProperty("rules.fireblock.events", Arrays.asList(new String[]{"block-place"}));
+			config.setProperty("rules.fireblock.pattern", "\b51\b");
+			config.setProperty("rules.fireblock.worlds", Arrays.asList(new String[]{"pvp"}));
+			config.setProperty("rules.fireblock.notify-message", "%PLAYER% placed illegal fire block on %WORLD%");
+			config.setProperty("rules.fireblock.warn-message", "You are not allowed to place illegal fire blocks on %WORLD%!");
+			config.setProperty("rules.fireblock.action.notify", true);
+			config.setProperty("rules.fireblock.action.warn", true);
+			config.setProperty("rules.fireblock.action.kick", true);
+			config.setProperty("rules.fireblock.action.deny", true);
+			config.setProperty("rules.fireblock.exclude-groups", Arrays.asList(new String[]{"admins"}));
 		}
 		
 		//Check filters
@@ -144,6 +159,23 @@ public class Config {
 		DbPlayerTable = config.getString("mysql.player-table");
 		DbWorldTable = config.getString("mysql.world-table");
 		PoolSize = config.getInt("mysql.max-connections", 10);
+		
+		//Load rules
+		keys = config.getKeys("rules");
+		outer:
+		for (String name : keys) {
+			List<DataType> events = new ArrayList<DataType>();
+			for (String event : config.getStringList("rules." + name + ".events", null)) {
+				if (DataType.fromName(event) == null) {
+					Util.severe("Invalid event name found in rule '" + name + "': " + event);
+					continue outer;
+				}
+				events.add(DataType.fromName(event));
+			}
+			Rule rule = new Rule(name, events, config.getString("rules." + name + ".pattern", ""), config.getStringList("rules." + name + ".worlds", null), config.getStringList("rules." + name + ".exclude-groups", null), config.getString("rules." + name + ".notify-message", ""), config.getString("rules." + name + ".warn-message", ""), config.getBoolean("rules." + name + ".action.notify", false), config.getBoolean("rules." + name + ".action.warn", false), config.getBoolean("rules." + name + ".action.kick", false), config.getBoolean("rules." + name + ".action.deny", false));
+			Rules.add(rule);
+		}
+		Util.info(Rules.size() + " rule(s) out of " + keys.size() + " loaded from config file");
 	}
 	
 	//Check if a type is logged or not
