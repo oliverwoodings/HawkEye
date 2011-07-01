@@ -16,9 +16,6 @@
       margin: 0 auto;
       width: 700px;
     }
-    .wiki {
-    	text-decoration: none;
-    }
     h1 { font-size: 3.8em; color: #fa2373; margin-bottom: 3px; }
     h1 .small { font-size: 0.4em; }
     h1 a { text-decoration: none }
@@ -27,9 +24,10 @@
     a { color: #fa2373; }
     .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
     .download { float: right; }
-    pre { background: #000; color: #ccc; padding: 15px;}
+    pre { background: #000; color: #ccc; padding: 15px; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px; }
     hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
-    .footer { text-align:center; padding-top:30px; font-style: italic; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px; }
+    .footer { text-align:center; padding-top:30px; font-style: italic; }
+    .footer a { text-decoration: none; }
   </style>
 </head>
 
@@ -52,10 +50,9 @@
 		Datalog is a lightweight and simple logging and rollback plugin. All data is stored in a super-efficient and well designed MySQL schema, which can then be searched with easy-to-use commands. It comes with a PHP/JQuery-based web app for browsing the data that has been logged. The web app has numerous tools such as filtering, block selection etc, allowing you to quickly and easily check up on griefers/thieves on your server.
     </div>
     
-    <h2>Wiki</h2>
+    <h2>Installation, Configuration and Usage</h2>
     <p>
-    	You can find out more information as well as installation and configuration instructions over on the wiki<br />
-    	<a class="wiki" href="https://github.com/oliverw92/DataLog/wiki"><img src="http://i.imgur.com/KDzs5.jpg" /></a>
+    	You can find out more information as well as installation and configuration instructions over on the <a href="https://github.com/oliverw92/DataLog/wiki">wiki</a>
     </p>
 
     <h2>Author</h2>
@@ -77,7 +74,7 @@
     </p>
 
     <div class="footer">
-      get the source code on GitHub : <a href="http://github.com/oliverw92/DataLog">oliverw92/DataLog</a>
+      <a style="margin-right: 10px;" href="http://oliverw92.github.com/DataLog/javadoc/index.html"><img src="http://i.imgur.com/b31Ld.png" style="margin-bottom: 20px;" /></a><a style="margin-right: 10px;" href="https://github.com/oliverw92/DataLog/wiki"><img src="http://i.imgur.com/KDzs5.jpg" /></a><a href="https://github.com/oliverw92/DataLog/"><img style="margin-bottom: 20px;" src="http://i.imgur.com/NOZPK.png" /></a>
     </div>
 
   </div>
