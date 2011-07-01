@@ -17,7 +17,7 @@ public class BlockUtil {
 	/**
 	 * Gets the block in 'string form'. 
 	 * e.g. blockid:datavalue
-	 * @param block {BlockState} of the block you wish to convert
+	 * @param block BlockState of the block you wish to convert
 	 * @return string representing the block
 	 */
 	public static String getBlockString(BlockState block) {
@@ -41,7 +41,7 @@ public class BlockUtil {
 	
 	/**
 	 * Sets the block type and data to the inputted block string
-	 * @param block {Block} to be changed
+	 * @param block Block to be changed
 	 * @param blockData string form of a block
 	 */
 	public static void setBlockString(Block block, String blockData) {

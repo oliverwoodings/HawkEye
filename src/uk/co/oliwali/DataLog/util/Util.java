@@ -7,23 +7,47 @@ import java.util.logging.Logger;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 
+/**
+ * Utility class for DataLog.
+ * All logging and messages should go through this class.
+ * Contains methods for parsing strings, colours etc.
+ * @author oliverw92
+ */
 public class Util {
 	
 	private static final Logger log = Logger.getLogger("Minecraft");
 	private static int maxLength = 105;
 	
+	/**
+	 * Send an info level log message to console
+	 * @param msg message to send
+	 */
 	public static void info(String msg) {
 		log.info("[DataLog] " + msg);
 	}
+	/**
+	 * Send a severe level log message to console
+	 * @param msg message to send
+	 */
 	public static void severe(String msg) {
 		log.severe("[DataLog] " + msg);
 	}
 	
+	/**
+	 * Send an debug message to console if debug is enabled
+	 * @param msg message to send
+	 */
 	public static void debug(String msg) {
 		if (Config.Debug)
 			Util.info("DEBUG: " + msg);
 	}
 	
+	/**
+	 * Send a message to a CommandSender (can be a player or console).
+	 * Has parsing built in for &a colours, as well as `n for new line
+	 * @param player sender to send to
+	 * @param msg message to send
+	 */
 	public static void sendMessage(CommandSender player, String msg) {
 		int i;
 		String part;
@@ -42,6 +66,11 @@ public class Util {
 		}
 	}
 	
+	/**
+	 * Turns supplied location into a simplified (1 decimal point) version
+	 * @param location location to simplify
+	 * @return Location
+	 */
 	public static Location getSimpleLocation(Location location) {
 		location.setX((double)Math.round(location.getX() * 10) / 10);
 		location.setY((double)Math.round(location.getY() * 10) / 10);
@@ -49,6 +78,11 @@ public class Util {
 		return location;
 	}
 	
+	/**
+	 * Checks if inputted string is an integer
+	 * @param str string to check
+	 * @return true if an integer, false if not
+	 */
 	public static boolean isInteger(String str) {
 		try {
 			Integer.parseInt(str);
@@ -57,7 +91,13 @@ public class Util {
 		}
 		return true;
 	}
-	
+	/**
+	 * Java version of PHP's join(array, delimiter)
+	 * Takes any kind of collection (List, HashMap etc)
+	 * @param s collection to be joined
+	 * @param delimiter string delimiter
+	 * @return String
+	 */
 	public static String join(Collection<?> s, String delimiter) {
 	    StringBuffer buffer = new StringBuffer();
 	    Iterator<?> iter = s.iterator();
@@ -69,12 +109,22 @@ public class Util {
 	    return buffer.toString();
 	}
 	
+	/**
+	 * Strips colours from inputted string
+	 * @param str
+	 * @return string without colours
+	 */
 	public static String stripColors(String str) {
 		str = str.replaceAll("(?i)\u00A7[0-F]", "");
 		str = str.replaceAll("(?i)&[0-F]", "");
 		return str;
 	}
 	
+	/**
+	 * Finds the last colour in the string
+	 * @param str
+	 * @return {@link CustomColor}
+	 */
 	public static CustomColor getLastColor(String str) {
 		int i = 0;
 		CustomColor lastColor = CustomColor.WHITE;
@@ -88,12 +138,22 @@ public class Util {
 		return lastColor;
 	}
 	
+	/**
+	 * Replaces custom colours with actual colour values
+	 * @param str input
+	 * @return inputted string with proper colour values
+	 */
     public static String replaceColors(String str) {
     	for (CustomColor color : CustomColor.values())
     		str = str.replace(color.getCustom(), color.getString());
         return str;
     }
     
+    /**
+     * Finds the max length of the inputted string for outputting
+     * @param str
+     * @return the string in its longest possible form
+     */
     private static String getMaxString(String str) {
     	for (int i = 0; i < str.length(); i++) {
     		if (stripColors(str.substring(0, i)).length() == maxLength) {
@@ -106,7 +166,12 @@ public class Util {
     	return str;
     }
     
-    private enum CustomColor {
+    /**
+     * Custom colour class.
+     * Created to allow for easier colouring of text
+     * @author oliverw92
+     */
+    public enum CustomColor {
     	
     	RED("c", 0xC),
     	DARK_RED("4", 0x4),
