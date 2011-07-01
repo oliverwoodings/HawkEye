@@ -8,13 +8,16 @@
   <style type="text/css">
     body {
       margin-top: 1.0em;
-      background-color: #05dc8c;
+      background-color: #fafafa;
       font-family: Helvetica, Arial, FreeSans, san-serif;
-      color: #ffffff;
+      color: #333;
     }
     #container {
       margin: 0 auto;
       width: 700px;
+    }
+    .wiki {
+    	text-decoration: none;
     }
     h1 { font-size: 3.8em; color: #fa2373; margin-bottom: 3px; }
     h1 .small { font-size: 0.4em; }
@@ -24,9 +27,9 @@
     a { color: #fa2373; }
     .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
     .download { float: right; }
-    pre { background: #000; color: #fff; padding: 15px;}
+    pre { background: #000; color: #ccc; padding: 15px;}
     hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
-    .footer { text-align:center; padding-top:30px; font-style: italic; }
+    .footer { text-align:center; padding-top:30px; font-style: italic; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px; }
   </style>
 </head>
 
@@ -36,35 +39,39 @@
   <div id="container">
 
     <div class="download">
-      <a href="http://github.com/oliverw92/DataLog/zipball/master">
+      <a href="https://github.com/downloads/oliverw92/DataLog/DataLog.jar">
+        <img border="0" width="90" src="http://i.imgur.com/MFzCk.png"></a>
+      <a href="https://github.com/oliverw92/DataLog/downloads">
         <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
-      <a href="http://github.com/oliverw92/DataLog/tarball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
     </div>
 
     <h1><a href="http://github.com/oliverw92/DataLog">DataLog</a>
       <span class="small">by <a href="http://github.com/oliverw92">oliverw92</a></span></h1>
 
     <div class="description">
-      HELLO
+		Datalog is a lightweight and simple logging and rollback plugin. All data is stored in a super-efficient and well designed MySQL schema, which can then be searched with easy-to-use commands. It comes with a PHP/JQuery-based web app for browsing the data that has been logged. The web app has numerous tools such as filtering, block selection etc, allowing you to quickly and easily check up on griefers/thieves on your server.
     </div>
+    
+    <h2>Wiki</h2>
+    <p>
+    	You can find out more information as well as installation and configuration instructions over on the wiki<br />
+    	<a class="wiki" href="https://github.com/oliverw92/DataLog/wiki"><img src="http://i.imgur.com/KDzs5.jpg" /></a>
+    </p>
 
-    <h2>Authors</h2>
-<p>Oli (oliverw92@mac.com)
-<br/>
-<br/>      </p>
-<h2>Contact</h2>
-<p> (oliverw92@mac.com)
-<br/>      </p>
-
+    <h2>Author</h2>
+	<p>Oli (oliverw92@mac.com)
+	<br/>
+	<br/>      </p>
 
     <h2>Download</h2>
     <p>
-      You can download this project in either
-      <a href="http://github.com/oliverw92/DataLog/zipball/master">zip</a> or
-      <a href="http://github.com/oliverw92/DataLog/tarball/master">tar</a> formats.
+          You can download the project from the front page of the 
+      <a href="https://github.com/oliverw92/DataLog/wiki">wiki</a>.
     </p>
-    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
+    <p>
+      You can download the source in either 
+      <a href="http://github.com/oliverw92/DataLog/zipball/master">zip</a> or
+      <a href="http://github.com/oliverw92/DataLog/tarball/master">tar</a> formats or clone the project with <a href="http://git-scm.com">Git</a>
       by running:
       <pre>$ git clone git://github.com/oliverw92/DataLog</pre>
     </p>
