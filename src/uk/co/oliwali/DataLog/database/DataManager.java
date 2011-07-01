@@ -12,6 +12,8 @@ import java.util.Map.Entry;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -19,7 +21,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import uk.co.oliwali.DataLog.DataLog;
 import uk.co.oliwali.DataLog.DataType;
+import uk.co.oliwali.DataLog.Rule;
 import uk.co.oliwali.DataLog.util.Config;
+import uk.co.oliwali.DataLog.util.Permission;
 import uk.co.oliwali.DataLog.util.Util;
 import uk.co.oliwali.DataLog.database.JDCConnection;
 import uk.co.oliwali.DataLog.database.SearchQuery.SearchType;
@@ -59,25 +63,77 @@ public class DataManager extends TimerTask {
 		timer.scheduleAtFixedRate(this, 2000, 2000);
 	}
 	
-	public static void addEntry(Player player, DataType dataType, Location loc, String data) {
-		addEntry(player, plugin, dataType, loc, data);
+	public static boolean addEntry(Player player, DataType dataType, Location loc, String data) {
+		return addEntry(player, plugin, dataType, loc, data);
 	}
-	public static void addEntry(String player, DataType dataType, Location loc, String data) {
-		addEntry(player, plugin, dataType, loc, data);
+	public static boolean addEntry(String player, DataType dataType, Location loc, String data) {
+		return addEntry(player, plugin, dataType, loc, data);
 	}
-	public static void addEntry(Player player, JavaPlugin cplugin, DataType dataType, Location loc, String data) {
-		addEntry(player.getName(), cplugin, dataType, loc, data);
+	public static boolean addEntry(Player player, JavaPlugin cplugin, DataType dataType, Location loc, String data) {
+		return addEntry(player.getName(), cplugin, dataType, loc, data);
 	}
-	public static void addEntry(String player, JavaPlugin cplugin, DataType dataType, Location loc, String data) {
-		if (plugin.config.isLogged(dataType)) {
-			DataEntry dataEntry = new DataEntry();
-			loc = Util.getSimpleLocation(loc);
-			dataEntry.setInfo(player, cplugin, dataType.getId(), loc, data);
-			addEntry(dataEntry);
+	public static boolean addEntry(String player, JavaPlugin cplugin, DataType dataType, Location loc, String data) {
+		DataEntry dataEntry = new DataEntry();
+		loc = Util.getSimpleLocation(loc);
+		dataEntry.setInfo(player, cplugin, dataType.getId(), loc, data);
+		return addEntry(dataEntry);
+	}
+	public static boolean addEntry(DataEntry entry) {
+		DataType type = DataType.fromId(entry.getAction());
+		
+		//Check rules
+		for (Rule rule : Config.Rules) {
+			
+			String matchText = "";
+			String notification = rule.notificationMsg;
+			String warning = rule.warningMsg;
+			
+			//Check events and worlds
+			if (!rule.events.contains(type) && rule.events != null) continue;
+			if (!rule.worlds.contains(entry.getWorld()) && rule.worlds != null) continue;
+			
+			//Check groups
+			for (String group : rule.excludeGroups)
+				if (Permission.inGroup(entry.getWorld(), entry.getPlayer(), group) && rule.excludeGroups != null) continue;
+			
+			//Check pattern
+			if (!rule.pattern.equals("")) {
+				Pattern pattern = Pattern.compile(rule.pattern, Pattern.CASE_INSENSITIVE);
+				Matcher matcher = pattern.matcher(entry.getData());
+				if (!matcher.find()) continue;
+				matchText = entry.getData().substring(matcher.start(), matcher.end());
+			}
+			
+			//Replace text
+			notification.replaceAll("%PLAYER%", entry.getPlayer());
+			notification.replaceAll("%WORLD%", entry.getWorld());
+			notification.replaceAll("%MATCH%", matchText);
+			warning.replaceAll("%PLAYER%", entry.getPlayer());
+			warning.replaceAll("%WORLD%", entry.getWorld());
+			warning.replaceAll("%MATCH%", matchText);
+			
+			//Execute actions
+			if (rule.notify) {
+				for (Player player : DataLog.server.getOnlinePlayers()) {
+					if (Permission.notify(player))
+						Util.sendMessage(player, rule.notificationMsg);
+				}
+			}
+			Player offender = DataLog.server.getPlayer(entry.getPlayer());
+			if (offender != null) {
+				if (rule.kick)
+					offender.kickPlayer(rule.warningMsg);
+				else if (rule.warn)
+					Util.sendMessage(offender, rule.warningMsg);
+			}
+			if (rule.deny)
+				return true;
+				
 		}
-	}
-	public static void addEntry(DataEntry entry) {
-		queue.add(entry);
+		
+		if (plugin.config.isLogged(type))
+			queue.add(entry);
+		return false;
 	}
 	
 	public static DataEntry getEntry(int id) {

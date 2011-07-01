@@ -102,7 +102,8 @@ public class DLEntityListener extends EntityListener {
 		if (event.isCancelled())
 			return;
 		for (Block b : event.blockList().toArray(new Block[0]))
-			DataManager.addEntry("Environment", DataType.EXPLOSION, b.getLocation(), Integer.toString(b.getTypeId()));
+			if (DataManager.addEntry("Environment", DataType.EXPLOSION, b.getLocation(), Integer.toString(b.getTypeId())))
+				event.setCancelled(true);
 	}
 
 }

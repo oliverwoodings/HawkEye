@@ -32,7 +32,8 @@ public class DLBlockListener extends BlockListener {
 		Block block   = event.getBlock();
 		Location loc  = block.getLocation();
 		if (!Config.BlockFilter.contains(block.getTypeId()))
-			DataManager.addEntry(player, DataType.BLOCK_BREAK, loc, BlockUtil.getBlockString(block));
+			if (DataManager.addEntry(player, DataType.BLOCK_BREAK, loc, BlockUtil.getBlockString(block)))
+				event.setCancelled(true);
 	}
 	
 	public void onBlockPlace(BlockPlaceEvent event) {
@@ -46,7 +47,8 @@ public class DLBlockListener extends BlockListener {
 			event.setCancelled(true);
 		}
 		else if (!Config.BlockFilter.contains(block.getTypeId()))
-			DataManager.addEntry(player, DataType.BLOCK_PLACE, loc, BlockUtil.getBlockString(event.getBlockReplacedState()) + "-" + BlockUtil.getBlockString(block));
+			if (DataManager.addEntry(player, DataType.BLOCK_PLACE, loc, BlockUtil.getBlockString(event.getBlockReplacedState()) + "-" + BlockUtil.getBlockString(block)))
+				event.setCancelled(true);
 	}
 	
 	public void onSignChange(SignChangeEvent event) {
@@ -58,26 +60,30 @@ public class DLBlockListener extends BlockListener {
         for (String line : event.getLines()) {
             text = text + "|" + line;
         }
-        DataManager.addEntry(player, DataType.SIGN_PLACE, loc, text);
+        if (DataManager.addEntry(player, DataType.SIGN_PLACE, loc, text))
+        	event.setCancelled(true);
 	}
 	
 	public void onSnowForm(SnowFormEvent event) {
 		if (event.isCancelled())
 			return;
-		DataManager.addEntry("Environment", DataType.SNOW_FORM, event.getBlock().getLocation(), "0");
+		if (DataManager.addEntry("Environment", DataType.SNOW_FORM, event.getBlock().getLocation(), "0"))
+			event.setCancelled(true);
 	}
 	
 	public void onBlockBurn(BlockBurnEvent event) {
 		if (event.isCancelled())
 			return;
-		DataManager.addEntry("Environment", DataType.BLOCK_BURN, event.getBlock().getLocation(), Integer.toString(event.getBlock().getTypeId()));
+		if (DataManager.addEntry("Environment", DataType.BLOCK_BURN, event.getBlock().getLocation(), Integer.toString(event.getBlock().getTypeId())))
+			event.setCancelled(true);
 	}
 	
 	public void onBlockPhysics(BlockPhysicsEvent event) {
 		if (event.isCancelled())
 			return;
 		if (event.getChangedTypeId() == 18)
-			DataManager.addEntry("Environment", DataType.LEAF_DECAY, event.getBlock().getLocation(), "18");
+			if (DataManager.addEntry("Environment", DataType.LEAF_DECAY, event.getBlock().getLocation(), "18"))
+				event.setCancelled(true);
 	}
 
 }

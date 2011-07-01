@@ -32,7 +32,8 @@ public class DLPlayerListener extends PlayerListener {
 	public void onPlayerChat(PlayerChatEvent event) {
 		Player player = event.getPlayer();
 		Location loc  = player.getLocation();
-		DataManager.addEntry(player, DataType.CHAT, loc, event.getMessage());
+		if (DataManager.addEntry(player, DataType.CHAT, loc, event.getMessage()))
+			event.setCancelled(true);
 	}
 	
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
@@ -44,7 +45,8 @@ public class DLPlayerListener extends PlayerListener {
 		String command = message.split(" ")[0];
 		//Check if command is in filter list or not
 		if (!Config.CommandFilter.contains(command))
-			DataManager.addEntry(player, DataType.COMMAND, loc, message);
+			if (DataManager.addEntry(player, DataType.COMMAND, loc, message))
+				event.setCancelled(true);
 	}
 	
 	public void onPlayerJoin(PlayerJoinEvent event) {
@@ -67,7 +69,8 @@ public class DLPlayerListener extends PlayerListener {
 		Location from = event.getFrom();
 		Location to   = event.getTo();
 		if (distance(from, to) > 5)
-			DataManager.addEntry(player, DataType.TELEPORT, from, to.getWorld().getName() + ": " + to.getX() + ", " + to.getY() + ", " + to.getZ());
+			if (DataManager.addEntry(player, DataType.TELEPORT, from, to.getWorld().getName() + ": " + to.getX() + ", " + to.getY() + ", " + to.getZ()))
+				event.setCancelled(true);
 	}
 	
 	public void onPlayerInteract(PlayerInteractEvent event) {
@@ -88,29 +91,36 @@ public class DLPlayerListener extends PlayerListener {
 		switch (block.getType()) {
 			case CHEST:
 				if (event.getAction() == Action.RIGHT_CLICK_BLOCK)
-					DataManager.addEntry(player, DataType.OPEN_CHEST, loc, "");
+					if (DataManager.addEntry(player, DataType.OPEN_CHEST, loc, ""))
+						event.setCancelled(true);
 				break;
 			case WOODEN_DOOR:
-				DataManager.addEntry(player, DataType.DOOR_INTERACT, loc, "");
+				if (DataManager.addEntry(player, DataType.DOOR_INTERACT, loc, ""))
+					event.setCancelled(true);
 				break;
 			case LEVER:
-				DataManager.addEntry(player, DataType.LEVER, loc, "");
+				if (DataManager.addEntry(player, DataType.LEVER, loc, ""))
+					event.setCancelled(true);
 				break;
 			case STONE_BUTTON:
-				DataManager.addEntry(player, DataType.STONE_BUTTON, loc, "");
+				if (DataManager.addEntry(player, DataType.STONE_BUTTON, loc, ""))
+					event.setCancelled(true);
 				break;
 		}
 		
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			switch (player.getItemInHand().getType()) {
 				case FLINT_AND_STEEL:
-					DataManager.addEntry(player, DataType.FLINT_AND_STEEL, loc, "");
+					if (DataManager.addEntry(player, DataType.FLINT_AND_STEEL, loc, ""))
+						event.setCancelled(true);
 					break;
 				case LAVA_BUCKET:
-					DataManager.addEntry(player, DataType.LAVA_BUCKET, loc, "");
+					if (DataManager.addEntry(player, DataType.LAVA_BUCKET, loc, ""))
+						event.setCancelled(true);
 					break;
 				case WATER_BUCKET:
-					DataManager.addEntry(player, DataType.WATER_BUCKET, loc, "");
+					if (DataManager.addEntry(player, DataType.WATER_BUCKET, loc, ""))
+						event.setCancelled(true);
 					break;
 			}
 		}
@@ -126,7 +136,8 @@ public class DLPlayerListener extends PlayerListener {
 			data = stack.getAmount() + "x " + stack.getType().name() + " " + stack.getData().getItemType().name();
 		else
 			data = stack.getAmount() + "x " + stack.getType().name();
-		DataManager.addEntry(player, DataType.ITEM_DROP, player.getLocation(), data);
+		if (DataManager.addEntry(player, DataType.ITEM_DROP, player.getLocation(), data))
+			event.setCancelled(true);
 	}
 	
 	public void onPlayerPickupItem(PlayerPickupItemEvent event) {
@@ -137,7 +148,8 @@ public class DLPlayerListener extends PlayerListener {
 			data = stack.getAmount() + "x " + stack.getType().name() + " " + stack.getData().getItemType().name();
 		else
 			data = stack.getAmount() + "x " + stack.getType().name();
-		DataManager.addEntry(player, DataType.ITEM_PICKUP, player.getLocation(), data);
+		if (DataManager.addEntry(player, DataType.ITEM_PICKUP, player.getLocation(), data))
+			event.setCancelled(true);
 	}
 	
 	private double distance(Location from, Location to) {

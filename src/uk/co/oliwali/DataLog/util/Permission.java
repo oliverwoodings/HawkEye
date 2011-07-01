@@ -61,6 +61,18 @@ public class Permission {
 		return hasPermission(player, "datalog.tool");
 	}
 	
+	public static boolean notify(CommandSender player) {
+		return hasPermission(player, "datalog.notify");
+	}
+	
+	public static boolean inGroup(String world, String player, String group) {
+		switch (handler) {
+			case PERMISSIONS:
+				return permissionPlugin.inGroup(world, player, group);
+		}
+		return false;
+	}
+	
 	private enum PermissionPlugin {
 		PERMISSIONS,
 		OP
