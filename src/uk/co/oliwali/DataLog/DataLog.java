@@ -45,7 +45,7 @@ public class DataLog extends JavaPlugin {
 	public DLEntityListener entityListener = new DLEntityListener(this);
 	public DLPlayerListener playerListener = new DLPlayerListener(this);
 	public static List<BaseCommand> commands = new ArrayList<BaseCommand>();
-	public static HashMap<CommandSender, PlayerSession> playerSessions = new HashMap<CommandSender, PlayerSession>();
+	private static HashMap<CommandSender, PlayerSession> playerSessions = new HashMap<CommandSender, PlayerSession>();
 	
 	/**
 	 * Safely shuts down DataLog
@@ -143,6 +143,25 @@ public class DataLog extends JavaPlugin {
 			return help.run(sender, args, commandLabel);
 		}
 		return false;
+	}
+	
+	/**
+	 * Get a PlayerSession from the list
+	 */
+	public static PlayerSession getSession(CommandSender player) {
+		PlayerSession session = playerSessions.get(player);
+		if (session == null)
+			session = addSession(player);
+		return session;
+	}
+	
+	/**
+	 * Adds a PlayerSession to the list
+	 */
+	public static PlayerSession addSession(CommandSender player) {
+		PlayerSession session = new PlayerSession(player);
+		playerSessions.put(player, session);
+		return session;
 	}
 
 }

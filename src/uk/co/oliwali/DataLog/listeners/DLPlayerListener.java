@@ -17,7 +17,6 @@ import org.bukkit.inventory.ItemStack;
 
 import uk.co.oliwali.DataLog.DataLog;
 import uk.co.oliwali.DataLog.DataType;
-import uk.co.oliwali.DataLog.PlayerSession;
 import uk.co.oliwali.DataLog.database.DataManager;
 import uk.co.oliwali.DataLog.util.Config;
 
@@ -58,7 +57,7 @@ public class DLPlayerListener extends PlayerListener {
 	
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		DataLog.playerSessions.put(player, new PlayerSession(player));
+		DataLog.addSession(player);
 		Location loc  = player.getLocation();
 		DataManager.addEntry(player, DataType.JOIN, loc, Config.LogIpAddresses?player.getAddress().getAddress().getHostAddress().toString():"");
 	}
@@ -91,7 +90,7 @@ public class DLPlayerListener extends PlayerListener {
 		Location loc = null;
 		if (block != null) loc = block.getLocation();
 		
-		if (event.getAction() == Action.LEFT_CLICK_BLOCK && player.getItemInHand().getTypeId() == Config.ToolBlock && DataLog.playerSessions.get(player).isUsingTool()) {
+		if (event.getAction() == Action.LEFT_CLICK_BLOCK && player.getItemInHand().getTypeId() == Config.ToolBlock && DataLog.getSession(player).isUsingTool()) {
 			DataManager.toolSearch(player, loc);
 			event.setCancelled(true);
 		}
@@ -144,9 +143,9 @@ public class DLPlayerListener extends PlayerListener {
 		ItemStack stack = event.getItemDrop().getItemStack();
 		String data = null;
 		if (stack.getData() != null)
-			data = stack.getAmount() + "x " + stack.getType().name() + " " + stack.getData().getItemType().name();
+			data = stack.getAmount() + "x " + stack.getTypeId() + ":" + stack.getData().getData();
 		else
-			data = stack.getAmount() + "x " + stack.getType().name();
+			data = stack.getAmount() + "x " + stack.getTypeId();
 		if (DataManager.addEntry(player, DataType.ITEM_DROP, player.getLocation(), data))
 			event.setCancelled(true);
 	}
@@ -156,9 +155,9 @@ public class DLPlayerListener extends PlayerListener {
 		ItemStack stack = event.getItem().getItemStack();
 		String data = null;
 		if (stack.getData() != null)
-			data = stack.getAmount() + "x " + stack.getType().name() + " " + stack.getData().getItemType().name();
+			data = stack.getAmount() + "x " + stack.getTypeId() + ":" + stack.getData().getData();
 		else
-			data = stack.getAmount() + "x " + stack.getType().name();
+			data = stack.getAmount() + "x " + stack.getTypeId();
 		if (DataManager.addEntry(player, DataType.ITEM_PICKUP, player.getLocation(), data))
 			event.setCancelled(true);
 	}

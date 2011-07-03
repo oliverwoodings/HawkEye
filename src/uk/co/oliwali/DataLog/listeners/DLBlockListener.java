@@ -46,7 +46,7 @@ public class DLBlockListener extends BlockListener {
 		Player player = event.getPlayer();
 		Block block   = event.getBlock();
 		Location loc  = block.getLocation();
-		if (block.getTypeId() == Config.ToolBlock && DataLog.playerSessions.get(player).isUsingTool()) {
+		if (block.getTypeId() == Config.ToolBlock && DataLog.getSession(player).isUsingTool()) {
 			DataManager.toolSearch(player, loc);
 			event.setCancelled(true);
 		}

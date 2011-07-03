@@ -40,7 +40,7 @@ public abstract class BaseCommand {
 	 */
 	public boolean run(CommandSender csender, String[] preArgs, String cmd) {
 		sender = csender;
-		session = DataLog.playerSessions.get(sender);
+		session = DataLog.getSession(sender);
 		args.clear();
 		for (String arg : preArgs)
 			args.add(arg);

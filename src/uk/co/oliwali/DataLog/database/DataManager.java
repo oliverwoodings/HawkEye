@@ -117,8 +117,10 @@ public class DataManager extends TimerTask {
 			if (rule.worlds != null && rule.worlds.size() > 0 && !rule.worlds.contains(entry.getWorld())) continue;
 			
 			//Check groups
+			boolean inGroup = false;
 			for (String group : rule.excludeGroups)
-				if (rule.excludeGroups != null && rule.excludeGroups.size() > 0 && Permission.inGroup(entry.getWorld(), entry.getPlayer(), group)) continue;
+				if (Permission.inGroup(entry.getWorld(), entry.getPlayer(), group)) inGroup = true;
+			if (inGroup) continue;
 			
 			//Check pattern
 			if (!rule.pattern.equals("")) {

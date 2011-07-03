@@ -49,50 +49,55 @@ public class Config {
 		List<String> keys = config.getKeys(null);
 		
 		//If there is no config file
-		if (keys.size() == 0)
-			Util.info("No config.yml detected, creating default file. Please make sure bukkit.yml is configured with your MySQL details");
+		if (keys.size() ==  0) {
+			Util.info("No config.yml detected, creating default file");
+			keys = new ArrayList<String>();
+		}
+		else {
 
-
-		//Version checks
-		//v0.1 - remove everything
-		if (keys.contains("driver")) {
-			Util.info("DataLog v0.1 config detected, deleting unused config. MySQL details are now configured in bukkit.yml");
-			for (String key : keys.toArray(new String[0])) {
-				config.removeProperty(key);
+			//Version checks
+			//v0.1 - remove everything
+			if (keys.contains("driver")) {
+				Util.info("DataLog v0.1 config detected, deleting unused config. MySQL details are now configured in bukkit.yml");
+				for (String key : keys.toArray(new String[0])) {
+					config.removeProperty(key);
+				}
 			}
-		}
-		//pre v1.1 - warn about MySQL settings
-		if (!keys.contains("mysql")) {
-			Util.info("Updating config file to v1.1");
-			Util.info("IMPORTANT: After server has rebooted, stop server and configure plugins/DataLog/config.yml with new info");
-		}
-		//pre v1.2 - move settings around
-		if (!keys.contains("general")) {
-			config.setProperty("general.max-lines", config.getInt("max-lines", 0));
-			config.removeProperty("max-lines");
-			config.setProperty("general.max-radius", config.getInt("max-radius", 0));
-			config.removeProperty("max-radius");
-			config.setProperty("general.tool-block", config.getInt("tool-block", 17));
-			config.removeProperty("tool-block");
-			config.setProperty("general.cleanse-age", config.getString("cleanse-age", "0d0h0s"));
-			config.removeProperty("cleanse-age");
-			config.setProperty("mysql.max-connections", config.getInt("max-connections", 10));
-			config.removeProperty("max-connections");
-			config.setProperty("general.debug", config.getBoolean("debug", false));
-			config.removeProperty("debug");
-		}
-		//pre v1.3 - add rules in
-		if (!keys.contains("rules")) {
-			config.setProperty("rules.fireblock.events", Arrays.asList(new String[]{"block-place"}));
-			config.setProperty("rules.fireblock.pattern", "\\b51\\b");
-			config.setProperty("rules.fireblock.worlds", Arrays.asList(new String[]{"pvp"}));
-			config.setProperty("rules.fireblock.notify-message", "%PLAYER% placed illegal fire block on %WORLD%");
-			config.setProperty("rules.fireblock.warn-message", "You are not allowed to place illegal fire blocks on %WORLD%!");
-			config.setProperty("rules.fireblock.action.notify", true);
-			config.setProperty("rules.fireblock.action.warn", true);
-			config.setProperty("rules.fireblock.action.kick", true);
-			config.setProperty("rules.fireblock.action.deny", true);
-			config.setProperty("rules.fireblock.exclude-groups", Arrays.asList(new String[]{"admins"}));
+			//pre v1.1 - warn about MySQL settings
+			if (!keys.contains("mysql")) {
+				Util.info("Updating config file to v1.1");
+				Util.info("IMPORTANT: After server has rebooted, stop server and configure plugins/DataLog/config.yml with new info");
+			}
+			//pre v1.2 - move settings around
+			if (!keys.contains("general")) {
+				Util.info("Updating config file to v1.2");
+				config.setProperty("general.max-lines", config.getInt("max-lines", 0));
+				config.removeProperty("max-lines");
+				config.setProperty("general.max-radius", config.getInt("max-radius", 0));
+				config.removeProperty("max-radius");
+				config.setProperty("general.tool-block", config.getInt("tool-block", 17));
+				config.removeProperty("tool-block");
+				config.setProperty("general.cleanse-age", config.getString("cleanse-age", "0d0h0s"));
+				config.removeProperty("cleanse-age");
+				config.setProperty("mysql.max-connections", config.getInt("max-connections", 10));
+				config.removeProperty("max-connections");
+				config.setProperty("general.debug", config.getBoolean("debug", false));
+				config.removeProperty("debug");
+			}
+			//pre v1.3 - add rules in
+			if (!keys.contains("rules")) {
+				Util.info("Updating config file to v1.3");
+				config.setProperty("rules.fireblock.events", Arrays.asList(new String[]{"block-place"}));
+				config.setProperty("rules.fireblock.pattern", "\\b51\\b");
+				config.setProperty("rules.fireblock.worlds", Arrays.asList(new String[]{"pvp"}));
+				config.setProperty("rules.fireblock.notify-message", "%PLAYER% placed illegal fire block on %WORLD%");
+				config.setProperty("rules.fireblock.warn-message", "You are not allowed to place illegal fire blocks on %WORLD%!");
+				config.setProperty("rules.fireblock.action.notify", true);
+				config.setProperty("rules.fireblock.action.warn", true);
+				config.setProperty("rules.fireblock.action.kick", true);
+				config.setProperty("rules.fireblock.action.deny", true);
+				config.setProperty("rules.fireblock.exclude-groups", Arrays.asList(new String[]{"admins"}));
+			}
 		}
 		
 		//Check filters

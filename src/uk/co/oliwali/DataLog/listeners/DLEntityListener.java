@@ -53,7 +53,7 @@ public class DLEntityListener extends EntityListener {
 		
 		//Store damage details in the PlayerSession
 		Player victim = (Player) event.getEntity();
-		PlayerSession session = DataLog.playerSessions.get(victim);
+		PlayerSession session = DataLog.getSession(victim);
 		session.setLastDamageCause(event.getCause());
 		if (event.getCause() == DamageCause.ENTITY_ATTACK) {
 			EntityDamageByEntityEvent attackEvent = (EntityDamageByEntityEvent) event;
@@ -69,7 +69,7 @@ public class DLEntityListener extends EntityListener {
 		//Only interested if it is a player death
 		if (entity instanceof Player) {
 			Player victim   = (Player) entity;
-			PlayerSession session = DataLog.playerSessions.get(victim);
+			PlayerSession session = DataLog.getSession(victim);
 			Location loc    = victim.getLocation();
 			//Entity attack
 			if (session.getLastDamageCause() == DamageCause.ENTITY_ATTACK) {

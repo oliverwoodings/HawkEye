@@ -155,7 +155,7 @@ public class SearchQuery extends Thread {
 		
 		//Set up some stuff for the search
 		ResultSet res;
-		PlayerSession session = DataLog.playerSessions.get(sender);
+		PlayerSession session = DataLog.getSession(sender);
 		Util.sendMessage(session.getSender(), "&cSearching for matching logs...");
 		List<DataEntry> results = new ArrayList<DataEntry>();
 		JDCConnection conn = DataManager.getConnection();
