@@ -65,20 +65,29 @@ $(document).ready(function(){
 			
 			var dataString = JSON.stringify(filter);
 			$(".results").html('<div class="loading"></div>');
-			$.ajax({
-			  url: "interface.php",
-			  cache: false,
-			  data: "data=" + dataString,
-			  success: function(html) {
-				$(".results").html(html);
-				$(".resultsTable").find("[title]").tooltip({
-					position: "center left",
-					offset: [-2, 10],
-					effect: "fade",
-					opacity: 0.7
+			$.getJSON(
+				"interface.php",
+				filter,
+				function (data) {
+					if (data.error.length > 0)
+						$(".results").html(data.error);
+					else {
+						$(".results").dataTable( {
+							"bJQueryUI": true,
+							"sPaginationType": "full_numbers",
+							"aaData": data.data,
+							"aoColumns": [
+								{ "sTitle": "ID"},
+								{ "sTitle": "Date"},
+								{ "sTitle": "Player"},
+								{ "sTitle": "Action"},
+								{ "sTitle": "World"},
+								{ "sTitle": "XYZ"},
+								{ "sTitle": "Data}
+							] } );
+					}
 				});
-			  }
-			});
+			
 			return false;
 								   
 		});

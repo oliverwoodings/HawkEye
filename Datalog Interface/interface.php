@@ -11,6 +11,12 @@
 	include("config.php");
 	include("langs/" . $config["langFile"]);
 	
+	//Set up output array
+	$output = array(
+		"error" => "",
+		"data" => array()
+	);
+	
 	//If not logged in, throw an error
 	if (!isset($_SESSION["loggedin"]) && $config["password"] != "")
 		return error($lang["messages"]["notLoggedIn"]);
@@ -109,32 +115,16 @@
 	if (!$res)
 		return error(mysql_error());
 	
-	if (mysql_num_rows($res) == 0)
-		return error($lang["messages"]["noResults"]);
-	
-	//Echo table header
-	echo "<table class=\"resultsTable\">
-			<tr>
-				<th>" . $lang["results"]["id"] . "</th>
-				<th>" . $lang["results"]["date"] . "</th>
-				<th>" . $lang["results"]["player"] . "</th>
-				<th>" . $lang["results"]["action"] . "</th>
-				<th>" . $lang["results"]["world"] . "</th>
-				<th>" . $lang["results"]["xyz"] . "</th>
-				<th>" . $lang["results"]["data"] . "</th>
-			</tr>";
-			
-	//Loop through results
 	$items = explode("\n", file_get_contents("items.txt"));
 	$results = array();
+	
+	//Get results from MySQL
 	while ($entry = mysql_fetch_object($res))
 		array_push($results, $entry);
-	if ($data["reverse"] == TRUE)
-		$results = array_reverse($results);
-	foreach ($results as $entry) {
+		
+	foreach ($results as $key => $entry) {
+		$row = array();
 		$fdata = $entry->data;
-		if (strlen($entry->data) > 40)
-			$fdata = substr($fdata, 0, 40) . "...";
 		$action = $entry->action;
 		if ($action == 0) {
 			$fdata = getBlockName($fdata);
@@ -145,19 +135,22 @@
 				$fdata = getBlockName($arr[0]) . " replaced by " . getBlockName($arr[1]);
 			else $fdata = getBlockName($arr[0]);
 		}
+		if ($action == 2) {
+			$fdata = str_replace("|", "<br />", $fdata);
+		}
 		if ($action == 16) {
 			$arr = explode("-", $fdata);
 			if (count($arr) > 0)
 				$action = array_shift($arr);
 			$fdata = join("-", $arr);
 		}
-		if ($action == 2) {
-			$fdata = str_replace("|", "<br />", $fdata);
-		}
 		$action = str_replace(array_reverse(array_keys($lang["actions"])), array_reverse($lang["actions"]), $action);
-		echo '<tr><td>' . $entry->data_id . '</td><td width="155px">' . $entry->date . "</td><td>" . $players[$entry->player_id] . "</td><td>" . $action . "</td><td>" . $worlds[$entry->world_id] . "</td><td>" . round($entry->x, 1).",".round($entry->y, 1).",".round($entry->z, 1) . '</td><td id="dataEntry" title="' . $entry->data . '">' . $fdata . "</td></tr>";
+
+		array_push($row, $entry->data_id, $entry->date, $players[$entry->player_id], $action, $worlds[$entry->world_id], round($entry->x, 1).",".round($entry->y, 1).",".round($entry->z, 1), $fdata);
+		array_push($output["data"], $row);
 	}
-	echo "</table>";
+	
+	return json_encode($output);
 	
 	/*
 	// FUNCTION: getBlockName($string);
@@ -176,7 +169,6 @@
 		}
 		return $string;
 	}
-		
 	
 	/*
 	// FUNCTION: error($message);
@@ -184,12 +176,13 @@
 	*/
 	function error($message) {
 		global $lang;
-		echo '<div class="ui-widget">
+		$output["error"] = '<div class="ui-widget">
 				<div class="ui-state-highlight ui-corner-all searchError"> 
 					<p><span class="ui-icon ui-icon-alert"></span>
 					<strong>' . $lang["messages"]["error"] . '</strong> ' . $message . '</p>
 				</div>
 			  </div>';
+		return json_encode($output);
 	}
 
 ?>
