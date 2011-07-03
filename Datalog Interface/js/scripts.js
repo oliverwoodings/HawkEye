@@ -52,8 +52,7 @@ $(document).ready(function(){
 				worlds: $("[name=worlds]").val().split(","),
 				dateFrom: $("#dateFrom").val() + " " + $("#timeFrom").val(),
 				dateTo: $("#dateTo").val() + " " + $("#timeTo").val(),
-				block: $("#item").val(),
-				reverse: $("[name=reverse]").is(':checked')
+				block: $("#item").val()
 			};
 			
 			if ($("#timeFrom").val() != "")
@@ -66,24 +65,27 @@ $(document).ready(function(){
 			var dataString = JSON.stringify(filter);
 			$(".results").html('<div class="loading"></div>');
 			$.getJSON(
-				"interface.php",
-				filter,
+				"interface.php?data=" + dataString,
 				function (data) {
 					if (data.error.length > 0)
 						$(".results").html(data.error);
 					else {
-						$(".results").dataTable( {
+						$(".results").html('<table class="restable"></table>');
+						$(".restable").dataTable( {
 							"bJQueryUI": true,
 							"sPaginationType": "full_numbers",
 							"aaData": data.data,
+							"aaSorting": [[ 0, "asc" ]],
+							"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+							"bAutoWidth": false,
 							"aoColumns": [
-								{ "sTitle": "ID"},
-								{ "sTitle": "Date"},
-								{ "sTitle": "Player"},
-								{ "sTitle": "Action"},
-								{ "sTitle": "World"},
-								{ "sTitle": "XYZ"},
-								{ "sTitle": "Data}
+								{ "sTitle": "ID" },
+								{ "sTitle": "Date", "sWidth": "160px" },
+								{ "sTitle": "Player", "bSearchable": true },
+								{ "sTitle": "Action", "bSearchable": true },
+								{ "sTitle": "World" },
+								{ "sTitle": "XYZ" },
+								{ "sTitle": "Data", "bSearchable": true }
 							] } );
 					}
 				});

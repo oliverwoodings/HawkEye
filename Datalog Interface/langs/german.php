@@ -21,7 +21,6 @@
 									  "dTo" => "Bis Datum",
 									  "block" => "Block",
 									  "search" => "Suche",
-									  "reverse" => "Umgekehrte Liste",
 									  "exclude" => "Exklusiv-Filter"),
 					
 					"tips" => array("hideFilter" => "Zeige / Verstecke Filter-Optionen",

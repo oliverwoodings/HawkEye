@@ -51,6 +51,8 @@
 87,Netherrack
 25,Note Block
 49,Obsidian
+33,Piston
+34,Piston (Head)
 90,Portal
 27,Powered Rail
 86,Pumpkin
@@ -75,6 +77,7 @@
 19,Sponge
 11,Stationary lava
 09,Stationary water
+29,Sticky Piston
 01,Stone
 77,Stone Button
 70,Stone Pressure Plate 

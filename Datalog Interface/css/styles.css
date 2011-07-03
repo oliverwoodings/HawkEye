@@ -16,6 +16,10 @@ body {
 	font-weight: 100;
 }
 
+td {
+	text-align: center;
+}
+
 input, textarea {  
     padding: 6px;  
     border: solid 1px #999;
@@ -198,6 +202,7 @@ input, textarea {
 
 .results {
 	margin: 20px 20px 0px 20px;
+	padding-bottom: 20px;
 }
 .searchError {
 	width: 500px;
@@ -214,42 +219,12 @@ input, textarea {
 		margin-right: -30px;
 		float: left;
 	}
-
-.results {
-	padding-bottom: 20px;
-}	
-.resultsTable {
-    font-size: 16px;
-    font-weight: bold;
-    line-height: 1.4em;
-    font-style: normal;
-    border-collapse: separate;
-	width: 898px;
+	
+.restable {
+	width: 900px;
 }
-	.resultsTable th {
+	.restable td {
 		padding: 5px;
-		color: #fff;
-		border: 1px solid #666;
-		border-bottom: 3px solid #666;
-		background: #333333 url(custom-theme/images/ui-bg_gloss-wave_25_333333_500x100.png) 50% 50% repeat-x;
-		-webkit-border-top-left-radius: 5px;
-		-webkit-border-top-right-radius: 5px;
-		-moz-border-radius: 5px 5px 0px 0px;
-		border-top-left-radius: 5px;
-		border-top-right-radius: 5px;
-	}
-	.resultsTable td {
-		text-align: center;
-		background-color: #F2F2F2;
-		border: 2px solid #E0E5EF;
-		-moz-border-radius: 2px;
-		-webkit-border-radius: 2px;
-		border-radius: 2px;
-		color: #666;
-		text-shadow: 1px 1px 1px #fff;
-		font-size: 13px;
-		font-weight: 400;
-		text-overflow: ellipsis;
 	}
 
 .loading {

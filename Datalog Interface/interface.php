@@ -150,7 +150,7 @@
 		array_push($output["data"], $row);
 	}
 	
-	return json_encode($output);
+	echo json_encode($output);
 	
 	/*
 	// FUNCTION: getBlockName($string);
@@ -182,7 +182,7 @@
 					<strong>' . $lang["messages"]["error"] . '</strong> ' . $message . '</p>
 				</div>
 			  </div>';
-		return json_encode($output);
+		echo json_encode($output);
 	}
 
 ?>

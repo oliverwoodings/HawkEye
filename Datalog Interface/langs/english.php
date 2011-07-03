@@ -24,7 +24,6 @@
 									  "dTo" => "Date To",
 									  "block" => "Block",
 									  "search" => "Search",
-									  "reverse" => "Reverse Order",
 									  "exclude" => "Exclude Filter"),
 					
 					"tips" => array("hideFilter" => "Show/Hide Filter Options",

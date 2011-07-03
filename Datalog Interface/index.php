@@ -19,12 +19,15 @@
         <script type="text/javascript" src="js/jquery.ui.timepicker.js"></script>
         <script type="text/javascript" src="js/scripts.js"></script>
         <script type="text/javascript" src="js/jquery.uniform.js"></script>
+        <script type="text/javascript" src="js/jquery.dataTables.js"></script>
+        <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 
         <script type="text/javascript" src="http://cdn.jquerytools.org/1.2.5/tiny/jquery.tools.min.js"></script>
         <link rel="stylesheet" type="text/css" href="css/styles.css" />
         <link rel="stylesheet" type="text/css" href="css/jquery-ui-timepicker.css" />
         <link rel="stylesheet" type="text/css" href="css/custom-theme/jquery-ui-1.8.13.custom.css" />
 		<link rel="stylesheet" type="text/css" href="css/uniform.default.css" />
+        <link rel="stylesheet" type="text/css" href="css/demo_table_jui.css" />
         <link rel="icon" type="image/png" href="images/favicon.ico" />
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <title><?php echo $lang["pageTitle"]; ?></title>
@@ -98,7 +101,6 @@
                             </span><br /><br />
                             <div>
                            		<div><button class="searchButton"><?php echo $lang["filter"]["search"]; ?></button></div>
-                            	<div class="orderRadio"><input title="<?php echo $lang["tips"]["reverse"]; ?>" type="checkbox" checked="checked" name="reverse" /> <?php echo $lang["filter"]["reverse"]; ?></div>
                             </div>
                         </div>
                     </form>

@@ -21,7 +21,6 @@
 									  "dTo" => "Date de fin",
 									  "block" => "Block",
 									  "search" => "Rechercher",
-									  "reverse" => "Inverser l'ordre",
 									  "exclude" => "Exclure les filtres"),
 					
 					"tips" => array("hideFilter" => "Afficher / Masquer les options de filtre",
