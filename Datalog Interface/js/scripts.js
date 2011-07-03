@@ -79,13 +79,13 @@ $(document).ready(function(){
 							"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
 							"bAutoWidth": false,
 							"aoColumns": [
-								{ "sTitle": "ID" },
-								{ "sTitle": "Date", "sWidth": "160px" },
-								{ "sTitle": "Player", "bSearchable": true },
-								{ "sTitle": "Action", "bSearchable": true },
-								{ "sTitle": "World" },
-								{ "sTitle": "XYZ" },
-								{ "sTitle": "Data", "bSearchable": true }
+								{ "sTitle": data.columns.id },
+								{ "sTitle": data.columns.date, "sWidth": "160px" },
+								{ "sTitle": data.columns.player, "bSearchable": true },
+								{ "sTitle": data.columns.action, "bSearchable": true },
+								{ "sTitle": data.columns.world },
+								{ "sTitle": data.columns.xyz },
+								{ "sTitle": data.columns.data, "bSearchable": true }
 							] } );
 					}
 				});

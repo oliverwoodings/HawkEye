@@ -14,6 +14,7 @@
 	//Set up output array
 	$output = array(
 		"error" => "",
+		"columns" => $lang["results"],
 		"data" => array()
 	);
 	
