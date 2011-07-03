@@ -105,8 +105,10 @@ public class Config {
 			config.setProperty("command-filter", Arrays.asList(new String[]{"/login", "/restartsrv", "/register"}));
 		if (!keys.contains("block-filter"))
 			config.setProperty("block-filter", Arrays.asList(new Integer[]{33,34}));
+		
 		//Check general settings
 		keys = config.getKeys("general");
+		if (keys == null) keys = new ArrayList<String>();
 		if (!keys.contains("max-lines"))
 			config.setProperty("general.max-lines", 0);
 		if (!keys.contains("max-radius"))
@@ -121,10 +123,10 @@ public class Config {
 			config.setProperty("general.log-ip-addresses", true);
 		if (!keys.contains("delete-data-on-rollback"))
 			config.setProperty("general.delete-data-on-rollback", false);
+		
 		//Check MySQL settings
 		keys = config.getKeys("mysql");
-		if (keys == null)
-			keys = new ArrayList<String>();
+		if (keys == null) keys = new ArrayList<String>();
 		if (!keys.contains("username"))
 			config.setProperty("mysql.username", "root");
 		if (!keys.contains("password"))
