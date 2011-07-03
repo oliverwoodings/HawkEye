@@ -22,6 +22,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import uk.co.oliwali.DataLog.DataLog;
 import uk.co.oliwali.DataLog.DataType;
 import uk.co.oliwali.DataLog.Rule;
+import uk.co.oliwali.DataLog.util.BlockUtil;
 import uk.co.oliwali.DataLog.util.Config;
 import uk.co.oliwali.DataLog.util.Permission;
 import uk.co.oliwali.DataLog.util.Util;
@@ -119,7 +120,7 @@ public class DataManager extends TimerTask {
 			//Check groups
 			boolean inGroup = false;
 			for (String group : rule.excludeGroups)
-				if (Permission.inGroup(entry.getWorld(), entry.getPlayer(), group)) inGroup = true;
+				if (Permission.inSingleGroup(entry.getWorld(), entry.getPlayer(), group)) inGroup = true;
 			if (inGroup) continue;
 			
 			//Check pattern
@@ -137,6 +138,23 @@ public class DataManager extends TimerTask {
 			warning = warning.replaceAll("%PLAYER%", entry.getPlayer());
 			warning = warning.replaceAll("%WORLD%", entry.getWorld());
 			warning = warning.replaceAll("%MATCH%", matchText);
+			
+			//Replace match text for certain items
+			switch (type) {
+				case BLOCK_BREAK:
+					matchText = BlockUtil.getBlockStringName(matchText);
+					break;
+				case BLOCK_PLACE:
+					if (matchText.indexOf("-") == -1)
+						matchText = BlockUtil.getBlockStringName(matchText);
+					else
+						matchText = BlockUtil.getBlockStringName(matchText.substring(matchText.indexOf("-") + 1));
+					break;
+				case ITEM_DROP:
+				case ITEM_PICKUP:
+					matchText = BlockUtil.getBlockStringName(matchText.substring(matchText.indexOf("x") + 2));
+					break;
+			}
 			
 			//Execute actions
 			if (rule.notify) {

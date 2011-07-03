@@ -118,10 +118,10 @@ public class Permission {
 	 * @param group
 	 * @return
 	 */
-	public static boolean inGroup(String world, String player, String group) {
+	public static boolean inSingleGroup(String world, String player, String group) {
 		switch (handler) {
 			case PERMISSIONS:
-				return permissionPlugin.inGroup(world, player, group);
+				return permissionPlugin.inSingleGroup(world, player, group);
 		}
 		return false;
 	}
