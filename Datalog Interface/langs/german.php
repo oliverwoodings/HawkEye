@@ -21,13 +21,13 @@
 									  "dTo" => "Bis Datum",
 									  "block" => "Block",
 									  "search" => "Suche",
-									  "exclude" => "Exklusiv-Filter"),
+									  "exclude" => "Ausschluss-Filter"),
 					
 					"tips" => array("hideFilter" => "Zeige / Verstecke Filter-Optionen",
 									"hideResults" => "Zeige / Verstecke Ergebnisse",
 									"actions" => "Aktionen die du suchen willst. Es muss mind. eine ausgewählt werden.",
 									"password" => "Passwort um die Suche zu benutzen. Wird nur gebraucht wenn gesetzt.",
-									"players" => "(Optional) Liste von Spieler nach denen gesucht werden soll. getrennt durch Kommas",
+									"players" => "(Optional) Liste von Spieler nach denen gesucht werden soll, getrennt durch Kommas.",
 									"xyz" => "(Optional) Koordinaten in dessen Umkreis du suchen willst",
 									"range" => "(Optional) Suchreichweite um die Koordinaten",
 									"keys" => "(Optional) Liste von Stichwörter, getrennt durch Kommas.",
@@ -36,7 +36,7 @@
 									"dTo" => "(Optional) Ende Zeit und Datum für Suchzeitraum",
 									"block" => "(Optional) Block nach dem gesucht wird bei 'Block zerstört' und 'Block plaziert'",
 									"reverse" => "Wenn diese Option aktiviert, wird der Log in chronologischer Reihenfolge angezeigt. Deaktiviere die Option zum Anzeigen von Chat-Protokollen",
-									"exclude" => "(Optional) Liste der Stichworte, um aus den Ergebnissen durch Kommas getrennt auszuschließen"),
+									"exclude" => "(Optional) Liste der Stichwörte die aus der Suche ausgeschlossen werden sollen, getrennt durch Kommas."),
 
 					"actions" => array("Block zerstört",
 									   "Block plaziert",
@@ -58,11 +58,11 @@
 									   "Explosion",
 									   "Feuer",
 									   "Schnee",
-									   "Blätter zerfallen",
+									   "Blätter-Zerfall",
 									   "Tod durch Mob",
-									   "Andere Death",
-									   "Drop Element",
-									   "Abholen Element"),
+									   "Sonstiger Tod",
+									   "Item gedroppt",
+									   "Item aufgehoben"),
 
 					"results" => array("title" => "Ergebnisse",
 									   "id" => "ID",
@@ -76,13 +76,13 @@
 					"login" => array("password" => "Passwort: ",
 									 "login" => "Login"),
 
-					"messages" => array("clickTo" => "Klicke Suche um Ergenisse zu erhalten",
+					"messages" => array("clickTo" => "Klicke auf Suche um Ergenisse zu erhalten",
 										"breakMe" => "Mach mich nicht kaputt!",
 									    "invalidPass" => "Falsches Passwort!",
 									    "noActions" => "Du musst mind. eine Aktion auswählen nach der gesucht werden soll!",
 									    "noResults" => "Keine Ergebnisse gefunden mit dieser Auswahl",
 									    "error" => "Fehler!",
-									    "notLoggedIn" => "Sie sind nicht angemeldet!")
+									    "notLoggedIn" => "Du bist nicht angemeldet!")
 					);
 	
 	//Convert foreign characters to entities
