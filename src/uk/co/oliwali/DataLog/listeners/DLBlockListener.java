@@ -35,9 +35,9 @@ public class DLBlockListener extends BlockListener {
 		Player player = event.getPlayer();
 		Block block   = event.getBlock();
 		Location loc  = block.getLocation();
-		if (!Config.BlockFilter.contains(block.getTypeId()))
-			if (DataManager.addEntry(player, DataType.BLOCK_BREAK, loc, BlockUtil.getBlockString(block)))
-				event.setCancelled(true);
+	
+		if (DataManager.addEntry(player, DataType.BLOCK_BREAK, loc, BlockUtil.getBlockString(block)))
+			event.setCancelled(true);
 	}
 	
 	public void onBlockPlace(BlockPlaceEvent event) {
@@ -50,9 +50,8 @@ public class DLBlockListener extends BlockListener {
 			DataManager.toolSearch(player, loc);
 			event.setCancelled(true);
 		}
-		else if (!Config.BlockFilter.contains(block.getTypeId()))
-			if (DataManager.addEntry(player, DataType.BLOCK_PLACE, loc, BlockUtil.getBlockString(event.getBlockReplacedState()) + "-" + BlockUtil.getBlockString(block)))
-				event.setCancelled(true);
+		else if (DataManager.addEntry(player, DataType.BLOCK_PLACE, loc, BlockUtil.getBlockString(event.getBlockReplacedState()) + "-" + BlockUtil.getBlockString(block)))
+			event.setCancelled(true);
 	}
 	
 	public void onSignChange(SignChangeEvent event) {

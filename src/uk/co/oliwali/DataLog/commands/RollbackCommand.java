@@ -137,11 +137,6 @@ public class RollbackCommand extends BaseCommand {
 			return true;
 		}
 		
-		if (worlds == null) {
-			worlds = new String[1];
-			worlds[0] = player.getWorld().getName();
-		}
-		
 		//If no action is specified, add all actions that can be rolled back
 		if (actions.size() == 0) {
 			for (DataType type : DataType.values())

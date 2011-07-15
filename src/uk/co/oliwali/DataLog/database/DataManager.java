@@ -175,6 +175,22 @@ public class DataManager extends TimerTask {
 				
 		}
 		
+		//Check block filter
+		switch (type) {
+			case BLOCK_BREAK:
+				if (!Config.BlockFilter.contains(BlockUtil.getBlockStringName(entry.getData())))
+					return false;
+				break;
+			case BLOCK_PLACE:
+				String txt = null;
+				if (entry.getData().indexOf("-") == -1)
+					txt = BlockUtil.getBlockStringName(entry.getData());
+				else
+					txt = BlockUtil.getBlockStringName(entry.getData().substring(entry.getData().indexOf("-") + 1));
+				if (!Config.BlockFilter.contains(txt))
+					return false;
+		}
+		
 		if (plugin.config.isLogged(type))
 			queue.add(entry);
 		return false;
