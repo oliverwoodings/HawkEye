@@ -60,8 +60,10 @@ public class RollbackCommand extends BaseCommand {
 						actions.add(DataType.fromName(value).getId());
 					}
 				}
-				else if (param.equals("r"))
+				else if (param.equals("r")) {
+					loc = Util.getSimpleLocation(player.getLocation()).toVector();
 					radius = Integer.parseInt(values[0]);
+				}
 				else if (param.equals("t")) {
 					//Handler for different time formats
 					int type = 2;
@@ -139,7 +141,7 @@ public class RollbackCommand extends BaseCommand {
 			worlds = new String[1];
 			worlds[0] = player.getWorld().getName();
 		}
-		loc = Util.getSimpleLocation(player.getLocation()).toVector();
+		
 		//If no action is specified, add all actions that can be rolled back
 		if (actions.size() == 0) {
 			for (DataType type : DataType.values())
