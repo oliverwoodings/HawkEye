@@ -24,10 +24,13 @@ public class ToolCommand extends BaseCommand {
 			session.setUsingTool(true);
 			if (!player.getInventory().contains(Config.ToolBlock)) {
 				ItemStack stack = new ItemStack(Config.ToolBlock, 1);
-				if (player.getInventory().firstEmpty() == -1)
+				int first = player.getInventory().firstEmpty();
+				if (first == -1)
 					player.getWorld().dropItem(player.getLocation(), stack);
-				else
-					player.getInventory().addItem(stack);
+				else {
+					player.getInventory().setItem(first, player.getInventory().getItemInHand());
+					player.getInventory().setItemInHand(stack);
+				}
 			}
 			Util.sendMessage(sender, "&cDataLog tool enabled! &7Left click a block or place the tool to get infomation");
 		}
