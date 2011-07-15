@@ -27,6 +27,7 @@ public class Config {
 	public static boolean LogIpAddresses;
 	public static boolean DeleteDataOnRollback;
 	public static List<Rule> Rules = new ArrayList<Rule>();
+	public static boolean LogDeathDrops;
 	public static String DbUrl;
 	public static String DbUser;
 	public static String DbPassword;
@@ -123,6 +124,8 @@ public class Config {
 			config.setProperty("general.log-ip-addresses", true);
 		if (!keys.contains("delete-data-on-rollback"))
 			config.setProperty("general.delete-data-on-rollback", false);
+		if (!keys.contains("log-item-drops-on-death"))
+			config.setProperty("general.log-item-drops-on-death", false);
 		
 		//Check MySQL settings
 		keys = config.getKeys("mysql");
@@ -167,6 +170,7 @@ public class Config {
 		Debug = config.getBoolean("general.debug", false);
 		LogIpAddresses = config.getBoolean("general.log-ip-addresses", true);
 		DeleteDataOnRollback = config.getBoolean("general.delete-data-on-rollback", false);
+		LogDeathDrops = config.getBoolean("general.log-item-drops-on-death", false);
 		DbUser = config.getString("mysql.username", "root");
 		DbPassword = config.getString("mysql.password", "");
 		DbUrl = "jdbc:mysql://" + config.getString("mysql.hostname") + ":" + config.getString("mysql.port") + "/" + config.getString("mysql.database");

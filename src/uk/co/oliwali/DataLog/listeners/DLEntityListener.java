@@ -21,11 +21,13 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityListener;
+import org.bukkit.inventory.ItemStack;
 
 import uk.co.oliwali.DataLog.DataLog;
 import uk.co.oliwali.DataLog.DataType;
 import uk.co.oliwali.DataLog.PlayerSession;
 import uk.co.oliwali.DataLog.database.DataManager;
+import uk.co.oliwali.DataLog.util.Config;
 import uk.co.oliwali.DataLog.util.Util;
 
 /**
@@ -112,6 +114,19 @@ public class DLEntityListener extends EntityListener {
 				cause = Util.join(Arrays.asList(words), " ");
 				DataManager.addEntry(victim, DataType.OTHER_DEATH, loc, cause);
 			}
+            
+			//Log item drops - thanks Nibato!
+			if (Config.LogDeathDrops) {
+				String data = null;
+				for (ItemStack stack : event.getDrops()) {
+					if (stack.getData() != null)
+						data = stack.getAmount() + "x " + stack.getTypeId() + ":" + stack.getData().getData();
+				    else
+				    	data = stack.getAmount() + "x " + stack.getTypeId();
+				    DataManager.addEntry(victim, DataType.ITEM_DROP, loc, data);                           
+				}
+			}
+	
 		}
 	}
 	
