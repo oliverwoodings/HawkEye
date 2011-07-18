@@ -46,7 +46,6 @@ public class Config {
 	public Config (DataLog plugin) {
 		
 		config = plugin.getConfiguration();
-		config.load();
 		List<String> keys = config.getKeys(null);
 		
 		//If there is no config file
@@ -105,7 +104,7 @@ public class Config {
 		if (!keys.contains("command-filter"))
 			config.setProperty("command-filter", Arrays.asList(new String[]{"/login", "/restartsrv", "/register"}));
 		if (!keys.contains("block-filter"))
-			config.setProperty("block-filter", Arrays.asList(new Integer[]{33,34}));
+			config.setProperty("block-filter", Arrays.asList(new Integer[]{97,98}));
 		
 		//Check general settings
 		keys = config.getKeys("general");

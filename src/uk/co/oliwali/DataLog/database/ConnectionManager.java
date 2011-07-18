@@ -85,9 +85,22 @@ public class ConnectionManager implements Closeable {
 	 */
 	private synchronized void reapConnections() {
 		final long stale = System.currentTimeMillis() - timeToLive;
-		for (final JDCConnection conn : connections)
+		for (final JDCConnection conn : connections) {
 			if (conn.inUse() && stale > conn.getLastUse() && !conn.isValid())
 				connections.remove(conn);
+		}
+		final Enumeration<JDCConnection> conns = connections.elements();
+		int i = 1;
+		while (conns.hasMoreElements()) {
+			final JDCConnection conn = conns.nextElement();
+			if (conn.inUse() && stale > conn.getLastUse() && !conn.isValid())
+				connections.remove(conn);
+			if (i > poolsize) {
+				connections.remove(conn);
+				conn.close();
+			}
+			i++;
+		}
 	}
 	
 	/**

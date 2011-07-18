@@ -3,7 +3,6 @@ package uk.co.oliwali.DataLog;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.bukkit.Server;
 import org.bukkit.command.Command;
@@ -40,7 +39,6 @@ public class DataLog extends JavaPlugin {
 	public String version;
 	public Config config;
 	public static Server server;
-	public static final Logger log = Logger.getLogger("Minecraft");
 	public DLBlockListener blockListener = new DLBlockListener(this);
 	public DLEntityListener entityListener = new DLEntityListener(this);
 	public DLPlayerListener playerListener = new DLPlayerListener(this);
