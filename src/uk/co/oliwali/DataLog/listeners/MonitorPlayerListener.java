@@ -73,36 +73,39 @@ public class MonitorPlayerListener extends PlayerListener {
 		
 		Player player = event.getPlayer();
 		Block block = event.getClickedBlock();
-		Location loc = null;
-		if (block != null) loc = block.getLocation();
+		if (block != null) {
+			
+			Location loc = block.getLocation();
 
-		switch (block.getType()) {
-			case CHEST:
-				DataManager.addEntry(player, DataType.OPEN_CHEST, loc, "");
-				break;
-			case WOODEN_DOOR:
-				DataManager.addEntry(player, DataType.DOOR_INTERACT, loc, "");
-				break;
-			case LEVER:
-				DataManager.addEntry(player, DataType.LEVER, loc, "");
-				break;
-			case STONE_BUTTON:
-				DataManager.addEntry(player, DataType.STONE_BUTTON, loc, "");
-				break;
-		}
-		
-		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-			switch (player.getItemInHand().getType()) {
-				case FLINT_AND_STEEL:
-					DataManager.addEntry(player, DataType.FLINT_AND_STEEL, loc, "");
+			switch (block.getType()) {
+				case CHEST:
+					DataManager.addEntry(player, DataType.OPEN_CHEST, loc, "");
 					break;
-				case LAVA_BUCKET:
-					DataManager.addEntry(player, DataType.LAVA_BUCKET, loc, "");
+				case WOODEN_DOOR:
+					DataManager.addEntry(player, DataType.DOOR_INTERACT, loc, "");
 					break;
-				case WATER_BUCKET:
-					DataManager.addEntry(player, DataType.WATER_BUCKET, loc, "");
+				case LEVER:
+					DataManager.addEntry(player, DataType.LEVER, loc, "");
+					break;
+				case STONE_BUTTON:
+					DataManager.addEntry(player, DataType.STONE_BUTTON, loc, "");
 					break;
 			}
+			
+			if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+				switch (player.getItemInHand().getType()) {
+					case FLINT_AND_STEEL:
+						DataManager.addEntry(player, DataType.FLINT_AND_STEEL, loc, "");
+						break;
+					case LAVA_BUCKET:
+						DataManager.addEntry(player, DataType.LAVA_BUCKET, loc, "");
+						break;
+					case WATER_BUCKET:
+						DataManager.addEntry(player, DataType.WATER_BUCKET, loc, "");
+						break;
+				}
+			}
+		
 		}
 		
 	}

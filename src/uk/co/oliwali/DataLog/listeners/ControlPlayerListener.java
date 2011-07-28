@@ -49,48 +49,51 @@ public class ControlPlayerListener extends PlayerListener {
 		
 		Player player = event.getPlayer();
 		Block block = event.getClickedBlock();
-		Location loc = null;
-		if (block != null) loc = block.getLocation();
+		if (block != null) {
+			
+			Location loc = block.getLocation();
 		
-		if (event.getAction() == Action.LEFT_CLICK_BLOCK && player.getItemInHand().getTypeId() == Config.ToolBlock && DataLog.getSession(player).isUsingTool()) {
-			DataManager.toolSearch(player, loc);
-			event.setCancelled(true);
-		}
-
-		switch (block.getType()) {
-			case CHEST:
-				if (event.getAction() == Action.RIGHT_CLICK_BLOCK && DataLog.checkRules(player, DataType.OPEN_CHEST, loc, ""))
-					event.setCancelled(true);
-				break;
-			case WOODEN_DOOR:
-				if (DataLog.checkRules(player, DataType.DOOR_INTERACT, loc, ""))
-					event.setCancelled(true);
-				break;
-			case LEVER:
-				if (DataLog.checkRules(player, DataType.LEVER, loc, ""))
-					event.setCancelled(true);
-				break;
-			case STONE_BUTTON:
-				if (DataLog.checkRules(player, DataType.STONE_BUTTON, loc, ""))
-					event.setCancelled(true);
-				break;
-		}
-		
-		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-			switch (player.getItemInHand().getType()) {
-				case FLINT_AND_STEEL:
-					if (DataLog.checkRules(player, DataType.FLINT_AND_STEEL, loc, ""))
+			if (event.getAction() == Action.LEFT_CLICK_BLOCK && player.getItemInHand().getTypeId() == Config.ToolBlock && DataLog.getSession(player).isUsingTool()) {
+				DataManager.toolSearch(player, loc);
+				event.setCancelled(true);
+			}
+	
+			switch (block.getType()) {
+				case CHEST:
+					if (event.getAction() == Action.RIGHT_CLICK_BLOCK && DataLog.checkRules(player, DataType.OPEN_CHEST, loc, ""))
 						event.setCancelled(true);
 					break;
-				case LAVA_BUCKET:
-					if (DataLog.checkRules(player, DataType.LAVA_BUCKET, loc, ""))
+				case WOODEN_DOOR:
+					if (DataLog.checkRules(player, DataType.DOOR_INTERACT, loc, ""))
 						event.setCancelled(true);
 					break;
-				case WATER_BUCKET:
-					if (DataLog.checkRules(player, DataType.WATER_BUCKET, loc, ""))
+				case LEVER:
+					if (DataLog.checkRules(player, DataType.LEVER, loc, ""))
+						event.setCancelled(true);
+					break;
+				case STONE_BUTTON:
+					if (DataLog.checkRules(player, DataType.STONE_BUTTON, loc, ""))
 						event.setCancelled(true);
 					break;
 			}
+			
+			if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+				switch (player.getItemInHand().getType()) {
+					case FLINT_AND_STEEL:
+						if (DataLog.checkRules(player, DataType.FLINT_AND_STEEL, loc, ""))
+							event.setCancelled(true);
+						break;
+					case LAVA_BUCKET:
+						if (DataLog.checkRules(player, DataType.LAVA_BUCKET, loc, ""))
+							event.setCancelled(true);
+						break;
+					case WATER_BUCKET:
+						if (DataLog.checkRules(player, DataType.WATER_BUCKET, loc, ""))
+							event.setCancelled(true);
+						break;
+				}
+			}
+		
 		}
 		
 	}
