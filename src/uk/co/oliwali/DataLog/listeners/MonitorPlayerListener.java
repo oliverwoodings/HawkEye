@@ -24,35 +24,23 @@ import uk.co.oliwali.DataLog.util.Config;
  * Player listener class for DataLog
  * @author oliverw92
  */
-public class DLPlayerListener extends PlayerListener {
+public class MonitorPlayerListener extends PlayerListener {
 	
 	public DataLog plugin;
 
-	public DLPlayerListener(DataLog dataLog) {
+	public MonitorPlayerListener(DataLog dataLog) {
 		plugin = dataLog;	
 	}
 	
 	public void onPlayerChat(PlayerChatEvent event) {
-		Player player = event.getPlayer();
-		Location loc  = player.getLocation();
-		if (DataManager.addEntry(player, DataType.CHAT, loc, event.getMessage()))
-			event.setCancelled(true);
+		if (event.isCancelled()) return;
+		DataManager.addEntry(event.getPlayer(), DataType.CHAT, event.getPlayer().getLocation(), event.getMessage());
 	}
 	
-	/**
-	 * Contains processing of the command filter in {@link Config}
-	 */
+
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-		if (event.isCancelled())
-			return;
-		Player player = event.getPlayer();
-		Location loc  = player.getLocation();
-		String message = event.getMessage();
-		String command = message.split(" ")[0];
-		//Check if command is in filter list or not
-		if (!Config.CommandFilter.contains(command))
-			if (DataManager.addEntry(player, DataType.COMMAND, loc, message))
-				event.setCancelled(true);
+		if (event.isCancelled()) return;
+		DataManager.addEntry(event.getPlayer(), DataType.COMMAND, event.getPlayer().getLocation(), event.getMessage());
 	}
 	
 	public void onPlayerJoin(PlayerJoinEvent event) {
@@ -69,14 +57,10 @@ public class DLPlayerListener extends PlayerListener {
 	}
 	
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
-		if (event.isCancelled())
-			return;
-		Player player = event.getPlayer();
+		if (event.isCancelled()) return;
 		Location from = event.getFrom();
 		Location to   = event.getTo();
-		if (distance(from, to) > 5)
-			if (DataManager.addEntry(player, DataType.TELEPORT, from, to.getWorld().getName() + ": " + to.getX() + ", " + to.getY() + ", " + to.getZ()))
-				event.setCancelled(true);
+		DataManager.addEntry(event.getPlayer(), DataType.TELEPORT, from, to.getWorld().getName() + ": " + to.getX() + ", " + to.getY() + ", " + to.getZ());
 	}
 	
 	/**
@@ -84,57 +68,42 @@ public class DLPlayerListener extends PlayerListener {
 	 * OPEN_CHEST, DOOR_INTERACT, LEVER, STONE_BUTTON, FLINT_AND_STEEL, LAVA_BUCKET, WATER_BUCKET
 	 */
 	public void onPlayerInteract(PlayerInteractEvent event) {
+
+		if (event.isCancelled()) return;
 		
 		Player player = event.getPlayer();
 		Block block = event.getClickedBlock();
 		Location loc = null;
 		if (block != null) loc = block.getLocation();
-		
-		if (event.getAction() == Action.LEFT_CLICK_BLOCK && player.getItemInHand().getTypeId() == Config.ToolBlock && DataLog.getSession(player).isUsingTool()) {
-			DataManager.toolSearch(player, loc);
-			event.setCancelled(true);
-		}
-
-		if (event.isCancelled())
-			return;
 
 		switch (block.getType()) {
 			case CHEST:
-				if (event.getAction() == Action.RIGHT_CLICK_BLOCK)
-					if (DataManager.addEntry(player, DataType.OPEN_CHEST, loc, ""))
-						event.setCancelled(true);
+				DataManager.addEntry(player, DataType.OPEN_CHEST, loc, "");
 				break;
 			case WOODEN_DOOR:
-				if (DataManager.addEntry(player, DataType.DOOR_INTERACT, loc, ""))
-					event.setCancelled(true);
+				DataManager.addEntry(player, DataType.DOOR_INTERACT, loc, "");
 				break;
 			case LEVER:
-				if (DataManager.addEntry(player, DataType.LEVER, loc, ""))
-					event.setCancelled(true);
+				DataManager.addEntry(player, DataType.LEVER, loc, "");
 				break;
 			case STONE_BUTTON:
-				if (DataManager.addEntry(player, DataType.STONE_BUTTON, loc, ""))
-					event.setCancelled(true);
+				DataManager.addEntry(player, DataType.STONE_BUTTON, loc, "");
 				break;
 		}
 		
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			switch (player.getItemInHand().getType()) {
 				case FLINT_AND_STEEL:
-					if (DataManager.addEntry(player, DataType.FLINT_AND_STEEL, loc, ""))
-						event.setCancelled(true);
+					DataManager.addEntry(player, DataType.FLINT_AND_STEEL, loc, "");
 					break;
 				case LAVA_BUCKET:
-					if (DataManager.addEntry(player, DataType.LAVA_BUCKET, loc, ""))
-						event.setCancelled(true);
+					DataManager.addEntry(player, DataType.LAVA_BUCKET, loc, "");
 					break;
 				case WATER_BUCKET:
-					if (DataManager.addEntry(player, DataType.WATER_BUCKET, loc, ""))
-						event.setCancelled(true);
+					DataManager.addEntry(player, DataType.WATER_BUCKET, loc, "");
 					break;
 			}
 		}
-			
 		
 	}
 	
@@ -146,8 +115,7 @@ public class DLPlayerListener extends PlayerListener {
 			data = stack.getAmount() + "x " + stack.getTypeId() + ":" + stack.getData().getData();
 		else
 			data = stack.getAmount() + "x " + stack.getTypeId();
-		if (DataManager.addEntry(player, DataType.ITEM_DROP, player.getLocation(), data))
-			event.setCancelled(true);
+		DataManager.addEntry(player, DataType.ITEM_DROP, player.getLocation(), data);
 	}
 	
 	public void onPlayerPickupItem(PlayerPickupItemEvent event) {
@@ -158,18 +126,7 @@ public class DLPlayerListener extends PlayerListener {
 			data = stack.getAmount() + "x " + stack.getTypeId() + ":" + stack.getData().getData();
 		else
 			data = stack.getAmount() + "x " + stack.getTypeId();
-		if (DataManager.addEntry(player, DataType.ITEM_PICKUP, player.getLocation(), data))
-			event.setCancelled(true);
+		DataManager.addEntry(player, DataType.ITEM_PICKUP, player.getLocation(), data);
 	}
-	
-	/**
-	 * Returns the distance between two {Location}s
-	 * @param from
-	 * @param to
-	 * @return double
-	 */
-	private double distance(Location from, Location to) {
-        return Math.sqrt(Math.pow(from.getX() - to.getX(), 2) + Math.pow(from.getY() - to.getY(), 2) + Math.pow(from.getZ() - to.getZ(), 2));
-    }
 
 }

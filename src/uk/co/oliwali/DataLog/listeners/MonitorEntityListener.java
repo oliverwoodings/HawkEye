@@ -35,11 +35,11 @@ import uk.co.oliwali.DataLog.util.Util;
  * Contains system for managing player deaths
  * @author oliverw92
  */
-public class DLEntityListener extends EntityListener {
+public class MonitorEntityListener extends EntityListener {
 	
 	public DataLog plugin;
 
-	public DLEntityListener(DataLog dataLog) {
+	public MonitorEntityListener(DataLog dataLog) {
 		plugin = dataLog;
 	}
 	
@@ -131,11 +131,9 @@ public class DLEntityListener extends EntityListener {
 	}
 	
 	public void onEntityExplode(EntityExplodeEvent event) {
-		if (event.isCancelled())
-			return;
+		if (event.isCancelled()) return;
 		for (Block b : event.blockList().toArray(new Block[0]))
-			if (DataManager.addEntry("Environment", DataType.EXPLOSION, b.getLocation(), Integer.toString(b.getTypeId())))
-				event.setCancelled(true);
+			DataManager.addEntry("Environment", DataType.EXPLOSION, b.getLocation(), Integer.toString(b.getTypeId()));
 	}
 
 }

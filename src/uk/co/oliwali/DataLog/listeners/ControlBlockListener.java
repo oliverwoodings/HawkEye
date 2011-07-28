@@ -17,76 +17,50 @@ import uk.co.oliwali.DataLog.database.DataManager;
 import uk.co.oliwali.DataLog.util.BlockUtil;
 import uk.co.oliwali.DataLog.util.Config;
 
-/**
- * Block listener class for DataLog
- * @author oliverw92
- */
-public class DLBlockListener extends BlockListener {
-	
-	public DataLog plugin;
-
-	public DLBlockListener(DataLog dataLog) {
-		plugin = dataLog;
-	}
+public class ControlBlockListener extends BlockListener {
 	
 	public void onBlockBreak(BlockBreakEvent event) {
-		if (event.isCancelled())
-			return;
-		Player player = event.getPlayer();
-		Block block   = event.getBlock();
-		Location loc  = block.getLocation();
-	
-		if (DataManager.addEntry(player, DataType.BLOCK_BREAK, loc, BlockUtil.getBlockString(block)))
+		Block block   = event.getBlock();	
+		if (DataLog.checkRules(event.getPlayer(), DataType.BLOCK_BREAK, block.getLocation(), BlockUtil.getBlockString(block)))
 			event.setCancelled(true);
 	}
 	
 	public void onBlockPlace(BlockPlaceEvent event) {
-		if (event.isCancelled())
-			return;
 		Player player = event.getPlayer();
 		Block block   = event.getBlock();
 		Location loc  = block.getLocation();
 		if (block.getTypeId() == Config.ToolBlock && DataLog.getSession(player).isUsingTool()) {
 			DataManager.toolSearch(player, loc);
 			event.setCancelled(true);
+			return;
 		}
-		else if (DataManager.addEntry(player, DataType.BLOCK_PLACE, loc, BlockUtil.getBlockString(event.getBlockReplacedState()) + "-" + BlockUtil.getBlockString(block)))
+		else if (DataLog.checkRules(player, DataType.BLOCK_PLACE, loc, BlockUtil.getBlockString(event.getBlockReplacedState()) + "-" + BlockUtil.getBlockString(block)))
 			event.setCancelled(true);
 	}
 	
 	public void onSignChange(SignChangeEvent event) {
-		if (event.isCancelled())
-			return;
         Player player = event.getPlayer();
     	Location loc  = event.getBlock().getLocation();
         String text = "";
-        for (String line : event.getLines()) {
+        for (String line : event.getLines())
             text = text + "|" + line;
-        }
-        if (DataManager.addEntry(player, DataType.SIGN_PLACE, loc, text))
+        if (DataLog.checkRules(player, DataType.SIGN_PLACE, loc, text))
         	event.setCancelled(true);
 	}
 	
 	public void onSnowForm(SnowFormEvent event) {
-		if (event.isCancelled())
-			return;
-		if (DataManager.addEntry("Environment", DataType.SNOW_FORM, event.getBlock().getLocation(), "0"))
+		if (DataLog.checkRules("Environment", DataType.SNOW_FORM, event.getBlock().getLocation(), "0"))
 			event.setCancelled(true);
 	}
 	
 	public void onBlockBurn(BlockBurnEvent event) {
-		if (event.isCancelled())
-			return;
-		if (DataManager.addEntry("Environment", DataType.BLOCK_BURN, event.getBlock().getLocation(), Integer.toString(event.getBlock().getTypeId())))
+		if (DataLog.checkRules("Environment", DataType.BLOCK_BURN, event.getBlock().getLocation(), Integer.toString(event.getBlock().getTypeId())))
 			event.setCancelled(true);
 	}
 	
 	public void onBlockPhysics(BlockPhysicsEvent event) {
-		if (event.isCancelled())
-			return;
-		if (event.getChangedTypeId() == 18)
-			if (DataManager.addEntry("Environment", DataType.LEAF_DECAY, event.getBlock().getLocation(), "18"))
-				event.setCancelled(true);
+		if (event.getChangedTypeId() == 18 && DataLog.checkRules("Environment", DataType.LEAF_DECAY, event.getBlock().getLocation(), "18"))
+			event.setCancelled(true);
 	}
 
 }
