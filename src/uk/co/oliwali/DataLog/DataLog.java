@@ -100,7 +100,7 @@ public class DataLog extends JavaPlugin {
         pm.registerEvent(Type.BLOCK_PLACE, monitorBlockListener, Event.Priority.Monitor, this);
         pm.registerEvent(Type.BLOCK_BURN, monitorBlockListener, Event.Priority.Monitor, this);
         pm.registerEvent(Type.BLOCK_PHYSICS, monitorBlockListener, Event.Priority.Monitor, this);
-        pm.registerEvent(Type.SNOW_FORM, monitorBlockListener, Event.Priority.Monitor, this);
+        pm.registerEvent(Type.BLOCK_FORM, monitorBlockListener, Event.Priority.Monitor, this);
         pm.registerEvent(Type.SIGN_CHANGE, monitorBlockListener, Event.Priority.Monitor, this);
         pm.registerEvent(Type.PLAYER_COMMAND_PREPROCESS, monitorPlayerListener, Event.Priority.Monitor, this);
         pm.registerEvent(Type.PLAYER_CHAT, monitorPlayerListener, Event.Priority.Monitor, this);
@@ -119,7 +119,7 @@ public class DataLog extends JavaPlugin {
         pm.registerEvent(Type.BLOCK_PLACE, controlBlockListener, Event.Priority.Highest, this);
         pm.registerEvent(Type.BLOCK_BURN, controlBlockListener, Event.Priority.Highest, this);
         pm.registerEvent(Type.BLOCK_PHYSICS, controlBlockListener, Event.Priority.Highest, this);
-        pm.registerEvent(Type.SNOW_FORM, controlBlockListener, Event.Priority.Highest, this);
+        pm.registerEvent(Type.BLOCK_FORM, controlBlockListener, Event.Priority.Highest, this);
         pm.registerEvent(Type.SIGN_CHANGE, controlBlockListener, Event.Priority.Highest, this);
         pm.registerEvent(Type.PLAYER_COMMAND_PREPROCESS, controlPlayerListener, Event.Priority.Highest, this);
         pm.registerEvent(Type.PLAYER_CHAT, controlPlayerListener, Event.Priority.Highest, this);
