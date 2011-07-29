@@ -121,8 +121,8 @@ public class DataLog extends JavaPlugin {
         pm.registerEvent(Type.BLOCK_PHYSICS, controlBlockListener, Event.Priority.Highest, this);
         pm.registerEvent(Type.BLOCK_FORM, controlBlockListener, Event.Priority.Highest, this);
         pm.registerEvent(Type.SIGN_CHANGE, controlBlockListener, Event.Priority.Highest, this);
-        pm.registerEvent(Type.PLAYER_COMMAND_PREPROCESS, controlPlayerListener, Event.Priority.Highest, this);
-        pm.registerEvent(Type.PLAYER_CHAT, controlPlayerListener, Event.Priority.Highest, this);
+        pm.registerEvent(Type.PLAYER_COMMAND_PREPROCESS, controlPlayerListener, Event.Priority.Lowest, this);
+        pm.registerEvent(Type.PLAYER_CHAT, controlPlayerListener, Event.Priority.Lowest, this);
         pm.registerEvent(Type.PLAYER_TELEPORT, controlPlayerListener, Event.Priority.Highest, this);
         pm.registerEvent(Type.PLAYER_INTERACT, controlPlayerListener, Event.Priority.Highest, this);
         pm.registerEvent(Type.PLAYER_DROP_ITEM, controlPlayerListener, Event.Priority.Highest, this);
