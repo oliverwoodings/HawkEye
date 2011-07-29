@@ -28,6 +28,12 @@ public class RollbackCommand extends BaseCommand {
 	
 	public boolean execute() {
 		
+		//Check if player already has a rollback processing
+		if (session.getRollbackResults() != null) {
+			Util.sendMessage(sender, "&cYou already have a rollback command processing!");
+			return true;
+		}
+		
 		//Set up placeholders
 		String[] players = null;
 		Vector loc = null;

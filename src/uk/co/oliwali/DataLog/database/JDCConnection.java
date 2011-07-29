@@ -43,6 +43,7 @@ public class JDCConnection implements Connection
 				conn.setAutoCommit(true);
 		} catch (final SQLException ex) {
 			terminate();
+			ConnectionManager.removeConn(conn);
 		}
 	}
 

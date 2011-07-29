@@ -1,8 +1,10 @@
 package uk.co.oliwali.DataLog;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -23,12 +25,29 @@ import uk.co.oliwali.DataLog.util.Util;
 public class Rollback implements Runnable {
 	
 	public PlayerSession session = null;
+	private Iterator<DataEntry> rollbackQueue;
+	private List<BlockState> undo = new ArrayList<BlockState>();
+	private int timerID;
 	
 	/**
 	 * @param session {@link PlayerSession} to retrieve rollback results from
 	 */
 	public Rollback(PlayerSession session) {
+		
 		this.session = session;
+		rollbackQueue = session.getRollbackResults().iterator();
+		session.setRollbackUndo(null);
+		
+		//Check that we actually have results
+		if (!rollbackQueue.hasNext()) {
+			Util.sendMessage(session.getSender(), "&cNo results found to rollback");
+			return;
+		}
+		
+		//Start rollback
+		Util.sendMessage(session.getSender(), "&cAttempting to rollback &7" + session.getRollbackResults().size() + "&c results");
+		timerID = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Bukkit.getServer().getPluginManager().getPlugin("DataLog"), this, 1, 2);
+		
 	}
 	
 	/**
@@ -37,17 +56,11 @@ public class Rollback implements Runnable {
 	 */
 	public void run() {
 		
-		//Check for results
-		List<DataEntry> results = session.getRollbackResults();
-		if (results == null) {
-			Util.sendMessage(session.getSender(), "&cNo results found to rollback");
-			return;
-		}
-		
 		//Start rollback process
-		Util.sendMessage(session.getSender(), "&cAttempting to rollback &7" + results.size() + "&c results");
-		List<BlockState> undo = new ArrayList<BlockState>();
-		for (DataEntry entry : results.toArray(new DataEntry[0])) {
+		int i = 0;
+		while (i < 200 && rollbackQueue.hasNext()) {
+			
+			DataEntry entry = rollbackQueue.next();
 			
 			//If the action can't be rolled back, skip this entry
 			DataType type = DataType.fromId(entry.getAction());
@@ -88,10 +101,21 @@ public class Rollback implements Runnable {
 				DataManager.deleteEntry(entry.getDataid());
 			
 		}
-		//Store undo results and notify player
-		session.setRollbackUndo(undo);
-		Util.sendMessage(session.getSender(), "&cRollbacked &7" + undo.size() + "&c actions out of &7" + results.size() + "&c attempted");
-		Util.sendMessage(session.getSender(), "&cUndo this rollback using &7/dl undo");
+		
+		//Check if rollback is finished
+		if (!rollbackQueue.hasNext()) {
+			
+			//End timer
+			Bukkit.getServer().getScheduler().cancelTask(timerID);
+			
+			//Store undo results and notify player
+			session.setRollbackUndo(undo);
+			session.setRollbackResults(null);
+			Util.sendMessage(session.getSender(), "&cRollback complete");
+			Util.sendMessage(session.getSender(), "&cUndo this rollback using &7/dl undo");
+			
+		}
+		
 	}
 
 }

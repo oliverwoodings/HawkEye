@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import java.sql.Connection;
+
 import uk.co.oliwali.DataLog.util.Config;
 
 /**
@@ -17,7 +19,7 @@ public class ConnectionManager implements Closeable {
 	
 	private static int poolsize = 10;
 	private static long timeToLive = 300000;
-	private Vector<JDCConnection> connections;
+	private static Vector<JDCConnection> connections;
 	private ConnectionReaper reaper;
 	private String url;
 	private String user;
@@ -74,10 +76,18 @@ public class ConnectionManager implements Closeable {
 		conn.lease();
 		if (!conn.isValid()) {
 			conn.terminate();
-			throw new SQLException("Failed to validate a brand new connection");
+			throw new SQLException("Could not create new connection");
 		}
 		connections.add(conn);
 		return conn;
+	}
+	
+    /**
+     * Removes a connection from the pool
+     * @param {JDCConnection} to remove
+     */
+	public static synchronized void removeConn(Connection conn) {
+		connections.remove(conn);
 	}
 	
 	/**
@@ -85,10 +95,6 @@ public class ConnectionManager implements Closeable {
 	 */
 	private synchronized void reapConnections() {
 		final long stale = System.currentTimeMillis() - timeToLive;
-		for (final JDCConnection conn : connections) {
-			if (conn.inUse() && stale > conn.getLastUse() && !conn.isValid())
-				connections.remove(conn);
-		}
 		final Enumeration<JDCConnection> conns = connections.elements();
 		int i = 1;
 		while (conns.hasMoreElements()) {
