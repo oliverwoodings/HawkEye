@@ -84,20 +84,7 @@ public class Config {
 				config.setProperty("general.debug", config.getBoolean("debug", false));
 				config.removeProperty("debug");
 			}
-			//pre v1.3 - add rules in
-			if (!keys.contains("rules")) {
-				Util.info("Updating config file to v1.3");
-				config.setProperty("rules.fireblock.events", Arrays.asList(new String[]{"block-place"}));
-				config.setProperty("rules.fireblock.pattern", "\\b51\\b");
-				config.setProperty("rules.fireblock.worlds", Arrays.asList(new String[]{"pvp"}));
-				config.setProperty("rules.fireblock.notify-message", "%PLAYER% placed illegal fire block on %WORLD%");
-				config.setProperty("rules.fireblock.warn-message", "You are not allowed to place illegal fire blocks on %WORLD%!");
-				config.setProperty("rules.fireblock.action.notify", true);
-				config.setProperty("rules.fireblock.action.warn", true);
-				config.setProperty("rules.fireblock.action.kick", true);
-				config.setProperty("rules.fireblock.action.deny", true);
-				config.setProperty("rules.fireblock.exclude-groups", Arrays.asList(new String[]{"admins"}));
-			}
+			
 		}
 		
 		//Check filters
@@ -125,6 +112,19 @@ public class Config {
 			config.setProperty("general.delete-data-on-rollback", false);
 		if (!keys.contains("log-item-drops-on-death"))
 			config.setProperty("general.log-item-drops-on-death", false);
+		if (!keys.contains("rules")) {
+			Util.info("Updating config file to v1.3");
+			config.setProperty("rules.fireblock.events", Arrays.asList(new String[]{"block-place"}));
+			config.setProperty("rules.fireblock.pattern", "\\b51\\b");
+			config.setProperty("rules.fireblock.worlds", Arrays.asList(new String[]{"pvp"}));
+			config.setProperty("rules.fireblock.notify-message", "%PLAYER% placed illegal fire block on %WORLD%");
+			config.setProperty("rules.fireblock.warn-message", "You are not allowed to place illegal fire blocks on %WORLD%!");
+			config.setProperty("rules.fireblock.action.notify", true);
+			config.setProperty("rules.fireblock.action.warn", true);
+			config.setProperty("rules.fireblock.action.kick", true);
+			config.setProperty("rules.fireblock.action.deny", true);
+			config.setProperty("rules.fireblock.exclude-groups", Arrays.asList(new String[]{"admins"}));
+		}
 		
 		//Check MySQL settings
 		keys = config.getKeys("mysql");

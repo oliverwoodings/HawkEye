@@ -78,13 +78,14 @@ public class Rollback implements Runnable {
 			undo.add(block.getState());
 			switch (type) {
 				case BLOCK_BREAK:
-				case SNOW_FORM:
 				case BLOCK_BURN:
 				case LEAF_DECAY:
 				case EXPLOSION:
 					BlockUtil.setBlockString(block, entry.getData());
 					break;
 				case BLOCK_PLACE:
+				case BLOCK_FORM:
+				case BLOCK_FADE:
 					if (entry.getData().indexOf("-") == -1)
 						block.setType(Material.AIR);
 					else

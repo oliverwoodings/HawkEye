@@ -1,15 +1,14 @@
 package uk.co.oliwali.DataLog.listeners;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockListener;
-import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.block.SignChangeEvent;
 
 import uk.co.oliwali.DataLog.DataLog;
@@ -50,7 +49,7 @@ public class ControlBlockListener extends BlockListener {
 	}
 	
 	public void onBlockForm(BlockFormEvent event) {
-		if (event.getNewState().getType() == Material.SNOW_BLOCK && DataLog.checkRules("Environment", DataType.SNOW_FORM, event.getBlock().getLocation(), "0"))
+		if (DataLog.checkRules("Environment", DataType.BLOCK_FORM, event.getBlock().getLocation(), "0"))
 			event.setCancelled(true);
 	}
 	
@@ -59,8 +58,8 @@ public class ControlBlockListener extends BlockListener {
 			event.setCancelled(true);
 	}
 	
-	public void onBlockPhysics(BlockPhysicsEvent event) {
-		if (event.getChangedTypeId() == 18 && DataLog.checkRules("Environment", DataType.LEAF_DECAY, event.getBlock().getLocation(), "18"))
+	public void onLeavesDecay(LeavesDecayEvent event) {
+		if (DataLog.checkRules("Environment", DataType.LEAF_DECAY, event.getBlock().getLocation(), "18"))
 			event.setCancelled(true);
 	}
 

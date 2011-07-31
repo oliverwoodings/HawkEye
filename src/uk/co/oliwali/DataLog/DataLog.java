@@ -99,9 +99,10 @@ public class DataLog extends JavaPlugin {
         pm.registerEvent(Type.BLOCK_BREAK, monitorBlockListener, Event.Priority.Monitor, this);
         pm.registerEvent(Type.BLOCK_PLACE, monitorBlockListener, Event.Priority.Monitor, this);
         pm.registerEvent(Type.BLOCK_BURN, monitorBlockListener, Event.Priority.Monitor, this);
-        pm.registerEvent(Type.BLOCK_PHYSICS, monitorBlockListener, Event.Priority.Monitor, this);
+        pm.registerEvent(Type.LEAVES_DECAY, monitorBlockListener, Event.Priority.Monitor, this);
         pm.registerEvent(Type.BLOCK_FORM, monitorBlockListener, Event.Priority.Monitor, this);
         pm.registerEvent(Type.SIGN_CHANGE, monitorBlockListener, Event.Priority.Monitor, this);
+        pm.registerEvent(Type.BLOCK_FADE, monitorBlockListener, Event.Priority.Monitor, this);
         pm.registerEvent(Type.PLAYER_COMMAND_PREPROCESS, monitorPlayerListener, Event.Priority.Monitor, this);
         pm.registerEvent(Type.PLAYER_CHAT, monitorPlayerListener, Event.Priority.Monitor, this);
         pm.registerEvent(Type.PLAYER_JOIN, monitorPlayerListener, Event.Priority.Monitor, this);
@@ -118,8 +119,9 @@ public class DataLog extends JavaPlugin {
         pm.registerEvent(Type.BLOCK_BREAK, controlBlockListener, Event.Priority.Highest, this);
         pm.registerEvent(Type.BLOCK_PLACE, controlBlockListener, Event.Priority.Highest, this);
         pm.registerEvent(Type.BLOCK_BURN, controlBlockListener, Event.Priority.Highest, this);
-        pm.registerEvent(Type.BLOCK_PHYSICS, controlBlockListener, Event.Priority.Highest, this);
+        pm.registerEvent(Type.LEAVES_DECAY, controlBlockListener, Event.Priority.Highest, this);
         pm.registerEvent(Type.BLOCK_FORM, controlBlockListener, Event.Priority.Highest, this);
+        pm.registerEvent(Type.BLOCK_FADE, controlBlockListener, Event.Priority.Highest, this);
         pm.registerEvent(Type.SIGN_CHANGE, controlBlockListener, Event.Priority.Highest, this);
         pm.registerEvent(Type.PLAYER_COMMAND_PREPROCESS, controlPlayerListener, Event.Priority.Lowest, this);
         pm.registerEvent(Type.PLAYER_CHAT, controlPlayerListener, Event.Priority.Lowest, this);

@@ -29,12 +29,14 @@ public enum DataType {
 	OTHER(16, "other"),
 	EXPLOSION(17, "explosion", true),
 	BLOCK_BURN(18, "block-burn", true),
-	SNOW_FORM(19, "snow-form", true),
+	BLOCK_FORM(19, "snow-form", true),
 	LEAF_DECAY(20, "leaf-decay", true),
 	MOB_DEATH(21, "mob-death", true),
 	OTHER_DEATH(22, "other-death"),
 	ITEM_DROP(23, "item-drop"),
-	ITEM_PICKUP(24, "item-pickup");
+	ITEM_PICKUP(24, "item-pickup"),
+	BLOCK_FADE(25, "block-fade");
+	
 	
 	private int id;
 	private boolean canHere;
