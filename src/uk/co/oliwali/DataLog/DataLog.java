@@ -28,6 +28,7 @@ import uk.co.oliwali.DataLog.commands.SearchHelpCommand;
 import uk.co.oliwali.DataLog.commands.ToolCommand;
 import uk.co.oliwali.DataLog.commands.TptoCommand;
 import uk.co.oliwali.DataLog.commands.UndoCommand;
+import uk.co.oliwali.DataLog.commands.WorldEditRollbackCommand;
 import uk.co.oliwali.DataLog.database.DataManager;
 import uk.co.oliwali.DataLog.listeners.MonitorBlockListener;
 import uk.co.oliwali.DataLog.listeners.MonitorEntityListener;
@@ -124,6 +125,7 @@ public class DataLog extends JavaPlugin {
         commands.add(new UndoCommand());
         commands.add(new ToolCommand());
         commands.add(new RollbackHelpCommand());
+        commands.add(new WorldEditRollbackCommand());
         
         Util.info("Version " + version + " enabled!");
         

@@ -75,12 +75,6 @@ public class MonitorPlayerListener extends PlayerListener {
 		if (block != null) {
 			
 			Location loc = block.getLocation();
-			
-			if (event.getAction() == Action.LEFT_CLICK_BLOCK && player.getItemInHand().getTypeId() == Config.ToolBlock && DataLog.getSession(player).isUsingTool()) {
-				DataManager.toolSearch(player, loc);
-				event.setCancelled(true);
-				return;
-			}
 
 			switch (block.getType()) {
 				case CHEST:

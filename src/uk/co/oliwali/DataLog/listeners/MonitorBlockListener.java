@@ -16,7 +16,6 @@ import uk.co.oliwali.DataLog.DataLog;
 import uk.co.oliwali.DataLog.DataType;
 import uk.co.oliwali.DataLog.database.DataManager;
 import uk.co.oliwali.DataLog.util.BlockUtil;
-import uk.co.oliwali.DataLog.util.Config;
 
 /**
  * Block listener class for DataLog
@@ -40,13 +39,7 @@ public class MonitorBlockListener extends BlockListener {
 		if (event.isCancelled()) return;
 		Player player = event.getPlayer();
 		Block block   = event.getBlock();
-		Location loc  = block.getLocation();
-		if (block.getTypeId() == Config.ToolBlock && DataLog.getSession(player).isUsingTool()) {
-			DataManager.toolSearch(player, loc);
-			event.setCancelled(true);
-			return;
-		}
-		DataManager.addEntry(player, DataType.BLOCK_PLACE, loc, BlockUtil.getBlockString(event.getBlockReplacedState()) + "-" + BlockUtil.getBlockString(block));
+		DataManager.addEntry(player, DataType.BLOCK_PLACE, block.getLocation(), BlockUtil.getBlockString(event.getBlockReplacedState()) + "-" + BlockUtil.getBlockString(block));
 	}
 	
 	public void onSignChange(SignChangeEvent event) {
