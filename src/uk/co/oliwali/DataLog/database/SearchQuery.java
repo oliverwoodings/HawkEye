@@ -30,8 +30,10 @@ public class SearchQuery extends Thread {
 	
 	private SearchType searchType;
 	private String[] players;
-	private Vector loc;
-	private Integer radius;
+	private Vector loc = null;
+	private com.sk89q.worldedit.Vector point1 = null;
+	private com.sk89q.worldedit.Vector point2 = null;
+	private Integer radius = null;
 	private List<Integer> actions;
 	private String[] worlds;
 	private String dateFrom;
@@ -40,6 +42,19 @@ public class SearchQuery extends Thread {
 	private CommandSender sender;
 	private String order;
 	
+	public SearchQuery(SearchType searchType, CommandSender sender, String dateFrom, String dateTo, String[] players, List<Integer> actions, com.sk89q.worldedit.Vector vector, com.sk89q.worldedit.Vector vector2, String[] worlds, String[] filters, String order) {
+		this.searchType = searchType;
+		this.sender = sender;
+		this.players = players;
+		this.dateFrom = dateFrom;
+		this.dateTo = dateTo;
+		this.actions = actions;
+		this.point1 = vector;
+		this.point2 = vector2;
+		this.worlds = worlds;
+		this.filters = filters;
+		this.order = order;
+	}
 	public SearchQuery(SearchType searchType, CommandSender sender, String dateFrom, String dateTo, String[] players, List<Integer> actions, Vector loc, Integer radius, String[] worlds, String[] filters, String order) {
 		this.searchType = searchType;
 		this.sender = sender;
@@ -135,6 +150,11 @@ public class SearchQuery extends Thread {
 				args.add("(y BETWEEN " + (loc.getY() - range) + " AND " + (loc.getY() + range) + ")");
 				args.add("(z BETWEEN " + (loc.getZ() - range) + " AND " + (loc.getZ() + range) + ")");
 			}
+		}
+		else {
+			args.add("(x BETWEEN " + point1.getX() + " AND " + point2.getX() + ")");
+			args.add("(y BETWEEN " + point1.getY() + " AND " + point2.getY() + ")");
+			args.add("(z BETWEEN " + point1.getZ() + " AND " + point2.getZ() + ")");
 		}
 		
 		//Build the filters into SQL form

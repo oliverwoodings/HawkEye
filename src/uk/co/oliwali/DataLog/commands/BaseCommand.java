@@ -28,6 +28,7 @@ public abstract class BaseCommand {
 	public Player player;
 	public String usedCommand;
 	public PlayerSession session;
+	public DataLog plugin;
 	
 	/**
 	 * Method called by the command manager in {@link DataLog} to run the command.
@@ -38,7 +39,8 @@ public abstract class BaseCommand {
 	 * @param cmd command being executed
 	 * @return true on success, false if there is an error in the checks or if the extending command returns false
 	 */
-	public boolean run(CommandSender csender, String[] preArgs, String cmd) {
+	public boolean run(DataLog instace, CommandSender csender, String[] preArgs, String cmd) {
+		plugin = instace;
 		sender = csender;
 		session = DataLog.getSession(sender);
 		args.clear();

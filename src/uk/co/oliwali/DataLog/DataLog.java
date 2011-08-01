@@ -11,8 +11,11 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Type;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.sk89q.worldedit.WorldEdit;
 
 import uk.co.oliwali.DataLog.commands.BaseCommand;
 import uk.co.oliwali.DataLog.commands.HelpCommand;
@@ -43,6 +46,7 @@ public class DataLog extends JavaPlugin {
 	public MonitorEntityListener monitorEntityListener = new MonitorEntityListener(this);
 	public MonitorPlayerListener monitorPlayerListener = new MonitorPlayerListener(this);
 	public static List<BaseCommand> commands = new ArrayList<BaseCommand>();
+	public WorldEdit worldEdit = null;
 	private static HashMap<CommandSender, PlayerSession> playerSessions = new HashMap<CommandSender, PlayerSession>();
 	
 	/**
@@ -105,6 +109,10 @@ public class DataLog extends JavaPlugin {
         pm.registerEvent(Type.ENTITY_DEATH, monitorEntityListener, Event.Priority.Monitor, this);
         pm.registerEvent(Type.ENTITY_EXPLODE, monitorEntityListener, Event.Priority.Monitor, this);
         
+        //Check if WorldEdit is loaded
+        Plugin we = pm.getPlugin("WorldEdit");
+        if (we != null) worldEdit = (WorldEdit)we;
+        
         //Add commands
         commands.add(new HelpCommand());
         commands.add(new SearchCommand());
@@ -137,9 +145,9 @@ public class DataLog extends JavaPlugin {
 				if (command.name.equalsIgnoreCase("help"))
 					help = command;
 				if (command.name.equalsIgnoreCase(args[0]))
-					return command.run(sender, args, commandLabel);
+					return command.run(this, sender, args, commandLabel);
 			}
-			return help.run(sender, args, commandLabel);
+			return help.run(this, sender, args, commandLabel);
 		}
 		return false;
 	}
