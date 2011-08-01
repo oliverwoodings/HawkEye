@@ -33,7 +33,6 @@ public class MonitorPlayerListener extends PlayerListener {
 	}
 	
 	public void onPlayerChat(PlayerChatEvent event) {
-		if (event.isCancelled()) return;
 		DataManager.addEntry(event.getPlayer(), DataType.CHAT, event.getPlayer().getLocation(), event.getMessage());
 	}
 	
@@ -76,6 +75,12 @@ public class MonitorPlayerListener extends PlayerListener {
 		if (block != null) {
 			
 			Location loc = block.getLocation();
+			
+			if (event.getAction() == Action.LEFT_CLICK_BLOCK && player.getItemInHand().getTypeId() == Config.ToolBlock && DataLog.getSession(player).isUsingTool()) {
+				DataManager.toolSearch(player, loc);
+				event.setCancelled(true);
+				return;
+			}
 
 			switch (block.getType()) {
 				case CHEST:

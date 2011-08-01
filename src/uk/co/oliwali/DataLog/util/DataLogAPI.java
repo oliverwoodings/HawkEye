@@ -4,7 +4,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import uk.co.oliwali.DataLog.DataLog;
 import uk.co.oliwali.DataLog.DataType;
 import uk.co.oliwali.DataLog.database.DataManager;
 
@@ -25,7 +24,6 @@ public class DataLogAPI {
 	 * @return true if accepted, false if not
 	 */
 	public static boolean addEntry(JavaPlugin plugin, String action, Player player, Location loc, String data) {
-		if (DataLog.checkRules(player, DataType.OTHER, loc, data)) return false;
 		DataManager.addEntry(player, plugin, DataType.OTHER, loc, action + "-" + data);
 		return true;
 	}

@@ -35,8 +35,9 @@ public enum DataType {
 	OTHER_DEATH(22, "other-death"),
 	ITEM_DROP(23, "item-drop"),
 	ITEM_PICKUP(24, "item-pickup"),
-	BLOCK_FADE(25, "block-fade");
-	
+	BLOCK_FADE(25, "block-fade"),
+	LAVA_FLOW(26, "lava-flow"),
+	WATER_FLOW(27, "water-flow");
 	
 	private int id;
 	private boolean canHere;

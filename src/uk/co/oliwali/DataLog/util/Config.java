@@ -8,7 +8,6 @@ import org.bukkit.util.config.Configuration;
 
 import uk.co.oliwali.DataLog.DataLog;
 import uk.co.oliwali.DataLog.DataType;
-import uk.co.oliwali.DataLog.Rule;
 
 /**
  * Configuration manager for DataLog.
@@ -26,7 +25,6 @@ public class Config {
 	public static boolean Debug;
 	public static boolean LogIpAddresses;
 	public static boolean DeleteDataOnRollback;
-	public static List<Rule> Rules = new ArrayList<Rule>();
 	public static boolean LogDeathDrops;
 	public static String DbUrl;
 	public static String DbUser;
@@ -112,19 +110,6 @@ public class Config {
 			config.setProperty("general.delete-data-on-rollback", false);
 		if (!keys.contains("log-item-drops-on-death"))
 			config.setProperty("general.log-item-drops-on-death", false);
-		if (!keys.contains("rules")) {
-			Util.info("Updating config file to v1.3");
-			config.setProperty("rules.fireblock.events", Arrays.asList(new String[]{"block-place"}));
-			config.setProperty("rules.fireblock.pattern", "\\b51\\b");
-			config.setProperty("rules.fireblock.worlds", Arrays.asList(new String[]{"pvp"}));
-			config.setProperty("rules.fireblock.notify-message", "%PLAYER% placed illegal fire block on %WORLD%");
-			config.setProperty("rules.fireblock.warn-message", "You are not allowed to place illegal fire blocks on %WORLD%!");
-			config.setProperty("rules.fireblock.action.notify", true);
-			config.setProperty("rules.fireblock.action.warn", true);
-			config.setProperty("rules.fireblock.action.kick", true);
-			config.setProperty("rules.fireblock.action.deny", true);
-			config.setProperty("rules.fireblock.exclude-groups", Arrays.asList(new String[]{"admins"}));
-		}
 		
 		//Check MySQL settings
 		keys = config.getKeys("mysql");
@@ -179,26 +164,6 @@ public class Config {
 		DbWorldTable = config.getString("mysql.world-table");
 		PoolSize = config.getInt("mysql.max-connections", 10);
 		
-		//Load rules
-		keys = config.getKeys("rules");
-		outer:
-		for (String name : keys) {
-			List<DataType> events = new ArrayList<DataType>();
-			for (String event : config.getStringList("rules." + name + ".events", null)) {
-				if (DataType.fromName(event) == null) {
-					Util.severe("Invalid event name found in rule '" + name + "': " + event);
-					continue outer;
-				}
-				events.add(DataType.fromName(event));
-			}
-			if (events.size() == 0) {
-				Util.severe("No valid events supplied in rule '" + name + "'");
-				continue outer;
-			}
-			Rule rule = new Rule(name, events, config.getString("rules." + name + ".pattern", ""), config.getStringList("rules." + name + ".worlds", null), config.getStringList("rules." + name + ".exclude-groups", null), config.getString("rules." + name + ".notify-message", ""), config.getString("rules." + name + ".warn-message", ""), config.getBoolean("rules." + name + ".action.notify", false), config.getBoolean("rules." + name + ".action.warn", false), config.getBoolean("rules." + name + ".action.kick", false), config.getBoolean("rules." + name + ".action.deny", false));
-			Rules.add(rule);
-		}
-		Util.info(Rules.size() + " rule(s) out of " + keys.size() + " loaded from config file");
 	}
 	
 	/**
