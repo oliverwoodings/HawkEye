@@ -118,7 +118,7 @@ public class DataManager extends TimerTask {
 					return;
 		}
 		
-		if (plugin.config.isLogged(type))
+		if (Config.isLogged(type))
 			queue.add(entry);
 	}
 	

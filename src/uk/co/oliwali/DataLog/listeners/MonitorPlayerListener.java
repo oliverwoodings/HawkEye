@@ -77,8 +77,10 @@ public class MonitorPlayerListener extends PlayerListener {
 			Location loc = block.getLocation();
 
 			switch (block.getType()) {
+				case FURNACE:
+				case DISPENSER:
 				case CHEST:
-					DataManager.addEntry(player, DataType.OPEN_CHEST, loc, "");
+					DataManager.addEntry(player, DataType.OPEN_CONTAINER, loc, "");
 					break;
 				case WOODEN_DOOR:
 					DataManager.addEntry(player, DataType.DOOR_INTERACT, loc, "");

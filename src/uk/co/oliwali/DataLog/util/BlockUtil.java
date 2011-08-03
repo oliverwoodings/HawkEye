@@ -3,6 +3,7 @@ package uk.co.oliwali.DataLog.util;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Contains utilities for manipulating blocks without losing data
@@ -10,20 +11,30 @@ import org.bukkit.block.BlockState;
  */
 public class BlockUtil {
 	
-
-	public static String getBlockString(Block block) {
-		return getBlockString(block.getState());
-	}
 	/**
 	 * Gets the block in 'string form'. 
 	 * e.g. blockid:datavalue
 	 * @param block BlockState of the block you wish to convert
 	 * @return string representing the block
 	 */
+	public static String getBlockString(Block block) {
+		return getBlockString(block.getState());
+	}
 	public static String getBlockString(BlockState block) {
 		if (block.getRawData() != 0)
 			return block.getTypeId() + ":" + block.getRawData();
 		return Integer.toString(block.getTypeId());
+	}
+	
+	/**
+	 * Same as getBlockString() except for ItemStack
+	 * @param stack ItemStack you wish to convert
+	 * @return string representing the item
+	 */
+	public static String getItemString(ItemStack stack) {
+		if (stack.getData().getData() != 0)
+			return stack.getTypeId() + ":" + stack.getData().getData();
+		return Integer.toString(stack.getTypeId());
 	}
 	
 	/**

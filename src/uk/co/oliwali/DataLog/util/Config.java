@@ -35,7 +35,7 @@ public class Config {
 	public static String DbWorldTable;
 	public static int PoolSize;
 	
-	private Configuration config;
+	private static Configuration config;
 	
 	/**
 	 * Loads the config from file and validates the data
@@ -171,7 +171,7 @@ public class Config {
 	 * @param dataType
 	 * @return true or false
 	 */
-	public boolean isLogged(DataType dataType) {
+	public static boolean isLogged(DataType dataType) {
 		if (config.getBoolean(getNode(dataType), false) == true)
 			return true;
 		return false;
@@ -182,7 +182,7 @@ public class Config {
 	 * @param type
 	 * @return string node
 	 */
-	private String getNode(DataType type) {
+	private static String getNode(DataType type) {
 		return "log." + type.getConfigName();
 	}
 }
