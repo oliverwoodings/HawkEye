@@ -26,12 +26,30 @@ public class InventoryUtil {
 	}
 	
 	/**
+	 * Uncompress an inventory back into proper ItemStacks
+	 * @param comp Compressed HashMap inventory
+	 * @return ItemStack array
+	 */
+	public static ItemStack[] uncompressInventory(HashMap<String,Integer> comp) {
+		List<ItemStack> inv = new ArrayList<ItemStack>();
+		for (Entry<String, Integer> item : comp.entrySet()) {
+			int i = item.getValue();
+			while (i > 0) {
+				if (i < 64)	inv.add(BlockUtil.itemStringToStack(item.getKey(), i));
+				else inv.add(BlockUtil.itemStringToStack(item.getKey(), 64));
+				i = i-64;
+			}
+		}
+		return inv.toArray(new ItemStack[0]);
+	}
+	
+	/**
 	 * Takes two compressed inventories and returns a string representation of the difference
 	 * @param before HashMap<String,Integer> of inventory before changes
 	 * @param after HashMap<String,Integer> of inventory after changes
-	 * @return String in the form item:data,amount&item:data,amount@item:data,amount&item:data,amount
+	 * @return String in the form item:data,amount&item:data,amount@item:data,amount&item:data,amount where the first part is additions and second is subtractions
 	 */
-	public static String getDifferenceString(HashMap<String,Integer> before, HashMap<String,Integer> after) {
+	public static String createDifferenceString(HashMap<String,Integer> before, HashMap<String,Integer> after) {
 		List<String> add = new ArrayList<String>();
 		List<String> sub = new ArrayList<String>();
 		for (Entry<String, Integer> item : before.entrySet()) {
@@ -47,6 +65,24 @@ public class InventoryUtil {
 			if (!before.containsKey(item.getKey())) add.add(item.getKey() + "," + item.getValue());
 		}
 		return Util.join(add, "&") + "@" + Util.join(sub, "&");
+	}
+	
+	/**
+	 * Takes an inventory difference string and forms two HashMaps containing the compressed inventory forms of the additions and subtractions
+	 * @param diff The difference string to be processed
+	 * @return a List of two HashMaps containing the additions and subtractions. First list element is adds, second is subs.
+	 */
+	public static List<HashMap<String,Integer>> interpretDifferenceString(String diff) {
+		List<HashMap<String,Integer>> ops = new ArrayList<HashMap<String,Integer>>();
+		for (String changes : diff.split("@")) {
+			HashMap<String,Integer> op = new HashMap<String,Integer>();
+			for (String change : changes.split("&")) {
+				String[] item = change.split(",");
+				op.put(item[0], Integer.parseInt(item[1]));
+			}
+			ops.add(op);
+		}
+		return ops;
 	}
 
 }

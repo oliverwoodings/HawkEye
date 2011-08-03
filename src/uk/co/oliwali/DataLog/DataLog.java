@@ -39,7 +39,7 @@ import uk.co.oliwali.DataLog.commands.UndoCommand;
 import uk.co.oliwali.DataLog.commands.WorldEditRollbackCommand;
 import uk.co.oliwali.DataLog.database.DataManager;
 import uk.co.oliwali.DataLog.listeners.MonitorBlockListener;
-import uk.co.oliwali.DataLog.listeners.MonitorContainerAccessListener;
+import uk.co.oliwali.DataLog.listeners.MonitorInventoryListener;
 import uk.co.oliwali.DataLog.listeners.MonitorEntityListener;
 import uk.co.oliwali.DataLog.listeners.MonitorPlayerListener;
 import uk.co.oliwali.DataLog.listeners.ToolBlockListener;
@@ -153,7 +153,7 @@ public class DataLog extends JavaPlugin {
         
         //Register BukkitContrib events
         if (bukkitContrib != null) {
-        	pm.registerEvent(Type.CUSTOM_EVENT, new MonitorContainerAccessListener(), Event.Priority.Monitor, this);
+        	pm.registerEvent(Type.CUSTOM_EVENT, new MonitorInventoryListener(), Event.Priority.Monitor, this);
         }
         
         //Add commands

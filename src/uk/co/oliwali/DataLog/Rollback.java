@@ -1,6 +1,7 @@
 package uk.co.oliwali.DataLog;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -10,11 +11,15 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.ContainerBlock;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import uk.co.oliwali.DataLog.database.DataEntry;
 import uk.co.oliwali.DataLog.database.DataManager;
 import uk.co.oliwali.DataLog.util.BlockUtil;
 import uk.co.oliwali.DataLog.util.Config;
+import uk.co.oliwali.DataLog.util.InventoryUtil;
 import uk.co.oliwali.DataLog.util.Util;
 
 /**
@@ -94,6 +99,17 @@ public class Rollback implements Runnable {
 				case LAVA_BUCKET:
 				case WATER_BUCKET:
 					block.setType(Material.AIR);
+					break;
+				case CONTAINER_TRANSACTION:
+					if (!(block instanceof ContainerBlock)) continue;
+					Inventory inv = ((ContainerBlock)block).getInventory();
+					List<HashMap<String,Integer>> ops = InventoryUtil.interpretDifferenceString(entry.getData());
+					//Handle the additions
+					for (ItemStack stack : InventoryUtil.uncompressInventory(ops.get(0)))
+						inv.addItem(stack);
+					//Handle subtractions
+					for (ItemStack stack : InventoryUtil.uncompressInventory(ops.get(1)))
+						inv.removeItem(stack);
 					break;
 			}
 			

@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 
 /**
  * Contains utilities for manipulating blocks without losing data
@@ -35,6 +36,20 @@ public class BlockUtil {
 		if (stack.getData().getData() != 0)
 			return stack.getTypeId() + ":" + stack.getData().getData();
 		return Integer.toString(stack.getTypeId());
+	}
+	
+	/**
+	 * Converts an item string into an ItemStack
+	 * @param item item string representing the material and data
+	 * @param amount
+	 * @return an ItemStack
+	 */
+	public static ItemStack itemStringToStack(String item, Integer amount) {
+		String[] itemArr = item.split(":");
+		ItemStack stack = new ItemStack(Integer.parseInt(itemArr[0]), amount);
+		if (itemArr.length > 1)
+			stack.setData(new MaterialData(Integer.parseInt(itemArr[0]), Byte.parseByte(itemArr[1])));
+		return stack;
 	}
 	
 	/**
