@@ -20,7 +20,7 @@ public enum DataType {
     TELEPORT(7, "teleport"),
     LAVA_BUCKET(8, true, "lava-bucket", true),
     WATER_BUCKET(9, true, "water-bucket", true),
-    OPEN_CONTAINER(10, true, "open-chest"),
+    OPEN_CONTAINER(10, true, "open-container"),
     DOOR_INTERACT(11, true, "door-interact"),
     PVP_DEATH(12, "pvp-death"),
 	FLINT_AND_STEEL(13, true, "flint-steel"),
@@ -38,7 +38,7 @@ public enum DataType {
 	BLOCK_FADE(25, "block-fade"),
 	LAVA_FLOW(26, "lava-flow"),
 	WATER_FLOW(27, "water-flow"),
-	CHEST_TRANSACTION(28, "chest-transaction");
+	CONTAINER_TRANSACTION(28, "container-transaction");
 	
 	private int id;
 	private boolean canHere;

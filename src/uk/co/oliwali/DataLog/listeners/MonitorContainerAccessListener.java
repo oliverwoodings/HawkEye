@@ -25,7 +25,7 @@ public class MonitorContainerAccessListener extends InventoryListener {
 		if (event.isCancelled() || !containers.containsKey(player)) return;
 		HashMap<String,Integer> after = InventoryUtil.compressInventory(event.getInventory().getContents());
 		String diff = InventoryUtil.getDifferenceString(containers.get(player), after);
-		DataManager.addEntry(player, DataType.CHEST_TRANSACTION, event.getLocation(), diff);
+		DataManager.addEntry(player, DataType.CONTAINER_TRANSACTION, event.getLocation(), diff);
 		containers.remove(player);
 	}
 	

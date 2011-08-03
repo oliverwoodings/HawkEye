@@ -112,7 +112,7 @@ public class DataLog extends JavaPlugin {
         }
         
         //Check if BukkitContrib is loaded. If not, download and enable it
-	    if (Config.isLogged(DataType.CHEST_TRANSACTION) && pm.getPlugin("BukkitContrib") == null) {
+	    if (Config.isLogged(DataType.CONTAINER_TRANSACTION) && pm.getPlugin("BukkitContrib") == null) {
 	        try {
 	            download(new URL("http://bit.ly/autoupdateBukkitContrib"), new File("plugins" + File.separator + "BukkitContrib.jar"));
 	            pm.loadPlugin(new File("plugins" + File.separator + "BukkitContrib.jar"));
