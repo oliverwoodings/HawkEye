@@ -21,7 +21,7 @@ import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkitcontrib.BukkitContrib;
+import org.getspout.spout.Spout;
 
 import com.sk89q.worldedit.WorldEdit;
 
@@ -61,7 +61,7 @@ public class DataLog extends JavaPlugin {
 	public ToolPlayerListener toolPlayerListener = new ToolPlayerListener();
 	public static List<BaseCommand> commands = new ArrayList<BaseCommand>();
 	public WorldEdit worldEdit = null;
-	public BukkitContrib bukkitContrib = null;
+	public Spout spout = null;
 	private static HashMap<CommandSender, PlayerSession> playerSessions = new HashMap<CommandSender, PlayerSession>();
 	
 	/**
@@ -111,20 +111,20 @@ public class DataLog extends JavaPlugin {
         	Util.info("WorldEdit found, selection rollbacks enabled");
         }
         
-        //Check if BukkitContrib is loaded. If not, download and enable it
-	    if (Config.isLogged(DataType.CONTAINER_TRANSACTION) && pm.getPlugin("BukkitContrib") == null) {
+        //Check if Spout is loaded. If not, download and enable it
+	    if (Config.isLogged(DataType.CONTAINER_TRANSACTION) && pm.getPlugin("Spout") == null) {
 	        try {
-	            download(new URL("http://bit.ly/autoupdateBukkitContrib"), new File("plugins" + File.separator + "BukkitContrib.jar"));
-	            pm.loadPlugin(new File("plugins" + File.separator + "BukkitContrib.jar"));
-	            pm.enablePlugin(pm.getPlugin("BukkitContrib"));
+	            download(new URL("http://dl.dropbox.com/u/49805/Spout.jar"), new File("plugins" + File.separator + "Spout.jar"));
+	            pm.loadPlugin(new File("plugins" + File.separator + "Spout.jar"));
+	            pm.enablePlugin(pm.getPlugin("Spout"));
 	        } catch (final Exception ex) {
-	            Util.info("WARNING! Unable to download and install BukkitContrib. Container logging disabled until BukkitContrib is available");
+	            Util.info("WARNING! Unable to download and install Spout. Container logging disabled until Spout is available");
 	        }
 		}
-	    Plugin bc = pm.getPlugin("BukkitContrib");
+	    Plugin bc = pm.getPlugin("Spout");
 	    if (bc != null) {
-	    	bukkitContrib = (BukkitContrib)bc;
-	    	Util.info("BukkitContrib found, container loggin enabled");
+	    	spout = (Spout)bc;
+	    	Util.info("Spout found, container loggin enabled");
 	    }
         
         // Register monitor events
@@ -151,8 +151,8 @@ public class DataLog extends JavaPlugin {
         pm.registerEvent(Type.BLOCK_PLACE, toolBlockListener, Event.Priority.Highest, this);
         pm.registerEvent(Type.PLAYER_INTERACT, toolPlayerListener, Event.Priority.Highest, this);
         
-        //Register BukkitContrib events
-        if (bukkitContrib != null) {
+        //Register Spout events
+        if (spout != null) {
         	pm.registerEvent(Type.CUSTOM_EVENT, new MonitorInventoryListener(), Event.Priority.Monitor, this);
         }
         

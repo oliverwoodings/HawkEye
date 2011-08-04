@@ -3,9 +3,9 @@ package uk.co.oliwali.DataLog.listeners;
 import java.util.HashMap;
 
 import org.bukkit.entity.Player;
-import org.bukkitcontrib.event.inventory.InventoryCloseEvent;
-import org.bukkitcontrib.event.inventory.InventoryListener;
-import org.bukkitcontrib.event.inventory.InventoryOpenEvent;
+import org.getspout.spoutapi.event.inventory.InventoryCloseEvent;
+import org.getspout.spoutapi.event.inventory.InventoryListener;
+import org.getspout.spoutapi.event.inventory.InventoryOpenEvent;
 
 import uk.co.oliwali.DataLog.DataType;
 import uk.co.oliwali.DataLog.database.DataManager;
