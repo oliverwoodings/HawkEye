@@ -7,6 +7,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.BlockFormEvent;
+import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
@@ -70,6 +71,16 @@ public class MonitorBlockListener extends BlockListener {
 	public void onLeavesDecay(LeavesDecayEvent event) {
 		if (event.isCancelled()) return;
 		DataManager.addEntry("Environment", DataType.LEAF_DECAY, event.getBlock().getLocation(), "18");
+	}
+	
+	public void onBlockFromTo(BlockFromToEvent event) {
+		if (event.isCancelled()) return;
+		Block from = event.getBlock();
+		Block to = event.getToBlock();
+		if (from.getTypeId() == 10 || from.getTypeId() == 11)
+			DataManager.addEntry("Environment", DataType.LAVA_FLOW, event.getToBlock().getLocation(), Integer.toString(to.getTypeId()));
+		else if (from.getTypeId() == 8 || from.getTypeId() == 9)
+			DataManager.addEntry("Environment", DataType.WATER_FLOW, event.getToBlock().getLocation(), Integer.toString(to.getTypeId()));
 	}
 
 }

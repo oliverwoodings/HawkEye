@@ -85,6 +85,8 @@ public class Rollback implements Runnable {
 				case BLOCK_BREAK:
 				case BLOCK_BURN:
 				case LEAF_DECAY:
+				case LAVA_FLOW:
+				case WATER_FLOW:
 				case EXPLOSION:
 					BlockUtil.setBlockString(block, entry.getData());
 					break;
