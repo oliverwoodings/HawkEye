@@ -82,14 +82,21 @@ public class SearchQuery extends Thread {
 		Util.debug("Building players");
 		if (players != null) {
 			List<Integer> pids = new ArrayList<Integer>();
+			List<Integer> npids = new ArrayList<Integer>();
 			for (String player : players) {
 				for (Map.Entry<String, Integer> entry : DataManager.dbPlayers.entrySet()) {
 					if (entry.getKey().toLowerCase().contains(player.toLowerCase()))
 							pids.add(entry.getValue());
+					else if (entry.getKey().toLowerCase().contains(player.replace("!", "").toLowerCase()))
+						npids.add(entry.getValue());
 				}
 			}
+			//Include players
 			if (pids.size() > 0)
 				args.add("player_id IN (" + Util.join(pids, ",") + ")");
+			//Exclude players
+			if (npids.size() > 0)
+				args.add("player_id NOT IN (" + Util.join(npids, ",") + ")");
 			else {
 				Util.sendMessage(sender, "&cNo players found matching your specifications");
 				return;
@@ -100,14 +107,21 @@ public class SearchQuery extends Thread {
 		Util.debug("Building worlds");
 		if (worlds != null) {
 			List<Integer> wids = new ArrayList<Integer>();
+			List<Integer> nwids = new ArrayList<Integer>();
 			for (String world : worlds) {
 				for (Map.Entry<String, Integer> entry : DataManager.dbWorlds.entrySet()) {
 					if (entry.getKey().toLowerCase().contains(world.toLowerCase()))
-							wids.add(entry.getValue());
+						wids.add(entry.getValue());
+					else if (entry.getKey().toLowerCase().contains(world.replace("!", "").toLowerCase()))
+						nwids.add(entry.getValue());
 				}
 			}
+			//Include worlds
 			if (wids.size() > 0)
 				args.add("world_id IN (" + Util.join(wids, ",") + ")");
+			//Exclude worlds
+			if (nwids.size() > 0)
+				args.add("world_id NOT IN (" + Util.join(nwids, ",") + ")");
 			else {
 				Util.sendMessage(sender, "&cNo worlds found matching your specifications");
 				return;
