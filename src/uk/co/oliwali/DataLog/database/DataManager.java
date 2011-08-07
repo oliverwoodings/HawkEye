@@ -5,9 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -19,10 +17,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import uk.co.oliwali.DataLog.DataLog;
 import uk.co.oliwali.DataLog.DataType;
+import uk.co.oliwali.DataLog.SearchParser;
 import uk.co.oliwali.DataLog.util.BlockUtil;
 import uk.co.oliwali.DataLog.util.Config;
 import uk.co.oliwali.DataLog.util.Util;
 import uk.co.oliwali.DataLog.database.JDCConnection;
+import uk.co.oliwali.DataLog.database.SearchQuery.SearchDir;
 import uk.co.oliwali.DataLog.database.SearchQuery.SearchType;
 
 /**
@@ -199,11 +199,13 @@ public class DataManager extends TimerTask {
 	 * @param loc
 	 */
 	public static void toolSearch(Player player, Location loc) {
-		List<Integer> actions = new ArrayList<Integer>();
+		SearchParser parser = new SearchParser(player);
 		for (DataType type : DataType.values())
-			if (type.canHere()) actions.add(type.getId());
+			if (type.canHere()) parser.actions.add(type);
 		loc = Util.getSimpleLocation(loc);
-		Thread thread = new SearchQuery(SearchType.SEARCH, player, null, null, null, actions, loc.toVector(), 0, loc.getWorld().getName().split(","), null, "desc");
+		parser.loc = loc.toVector();
+		parser.worlds = new String[]{ loc.getWorld().getName() };
+		Thread thread = new SearchQuery(SearchType.SEARCH, parser, SearchDir.DESC);
 		thread.start();
 	}
 	

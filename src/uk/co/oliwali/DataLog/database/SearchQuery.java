@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.util.Vector;
 
 import uk.co.oliwali.DataLog.DataLog;
 import uk.co.oliwali.DataLog.DataType;
 import uk.co.oliwali.DataLog.DisplayManager;
 import uk.co.oliwali.DataLog.PlayerSession;
 import uk.co.oliwali.DataLog.Rollback;
+import uk.co.oliwali.DataLog.SearchParser;
 import uk.co.oliwali.DataLog.database.DataManager;
 import uk.co.oliwali.DataLog.util.Config;
 import uk.co.oliwali.DataLog.util.Permission;
@@ -28,45 +28,15 @@ import uk.co.oliwali.DataLog.util.Util;
  */
 public class SearchQuery extends Thread {
 	
-	private SearchType searchType;
-	private String[] players;
-	private Vector loc = null;
-	private com.sk89q.worldedit.Vector point1 = null;
-	private com.sk89q.worldedit.Vector point2 = null;
-	private Integer radius = null;
-	private List<Integer> actions;
-	private String[] worlds;
-	private String dateFrom;
-	private String dateTo;
-	private String[] filters;
+	private SearchParser parser;
 	private CommandSender sender;
-	private String order;
+	private SearchDir dir;
+	private SearchType searchType;
 	
-	public SearchQuery(SearchType searchType, CommandSender sender, String dateFrom, String dateTo, String[] players, List<Integer> actions, com.sk89q.worldedit.Vector vector, com.sk89q.worldedit.Vector vector2, String[] worlds, String[] filters, String order) {
-		this.searchType = searchType;
-		this.sender = sender;
-		this.players = players;
-		this.dateFrom = dateFrom;
-		this.dateTo = dateTo;
-		this.actions = actions;
-		this.point1 = vector;
-		this.point2 = vector2;
-		this.worlds = worlds;
-		this.filters = filters;
-		this.order = order;
-	}
-	public SearchQuery(SearchType searchType, CommandSender sender, String dateFrom, String dateTo, String[] players, List<Integer> actions, Vector loc, Integer radius, String[] worlds, String[] filters, String order) {
-		this.searchType = searchType;
-		this.sender = sender;
-		this.players = players;
-		this.dateFrom = dateFrom;
-		this.dateTo = dateTo;
-		this.actions = actions;
-		this.loc = loc;
-		this.radius = radius;
-		this.worlds = worlds;
-		this.filters = filters;
-		this.order = order;
+	public SearchQuery(SearchType type, SearchParser parser, SearchDir dire) {
+		sender = parser.player;
+		dir = dire;
+		searchType = type;
 	}
 	
 	/**
@@ -80,10 +50,10 @@ public class SearchQuery extends Thread {
 		
 		//Match players from database list
 		Util.debug("Building players");
-		if (players != null) {
+		if (parser.players != null) {
 			List<Integer> pids = new ArrayList<Integer>();
 			List<Integer> npids = new ArrayList<Integer>();
-			for (String player : players) {
+			for (String player : parser.players) {
 				for (Map.Entry<String, Integer> entry : DataManager.dbPlayers.entrySet()) {
 					if (entry.getKey().toLowerCase().contains(player.toLowerCase()))
 							pids.add(entry.getValue());
@@ -105,10 +75,10 @@ public class SearchQuery extends Thread {
 		
 		//Match worlds from database list
 		Util.debug("Building worlds");
-		if (worlds != null) {
+		if (parser.worlds != null) {
 			List<Integer> wids = new ArrayList<Integer>();
 			List<Integer> nwids = new ArrayList<Integer>();
-			for (String world : worlds) {
+			for (String world : parser.worlds) {
 				for (Map.Entry<String, Integer> entry : DataManager.dbWorlds.entrySet()) {
 					if (entry.getKey().toLowerCase().contains(world.toLowerCase()))
 						wids.add(entry.getValue());
@@ -130,53 +100,43 @@ public class SearchQuery extends Thread {
 		
 		//Compile actions into SQL form
 		Util.debug("Building actions");
-		if (actions == null || actions.size() == 0) {
-			actions = new ArrayList<Integer>();
+		if (parser.actions == null || parser.actions.size() == 0) {
+			parser.actions = new ArrayList<DataType>();
 			for (DataType type : DataType.values())
-				actions.add(type.getId());
+				parser.actions.add(type);
 		}
 		List<Integer> acs = new ArrayList<Integer>();
-		for (int act : actions.toArray(new Integer[actions.size()]))
-			if (Permission.searchType(sender, DataType.fromId(act).getConfigName()))
-				acs.add(act);
+		for (DataType act : parser.actions)
+			if (Permission.searchType(sender, act.getConfigName()))
+				acs.add(act.getId());
 		args.add("action IN (" + Util.join(acs, ",") + ")");
 		
 		//Add dates
 		Util.debug("Building dates");
-		if (dateFrom != null)
-			args.add("date >= '" + dateFrom + "'");
-		if (dateTo != null)
-			args.add("date <= '" + dateTo + "'");
+		if (parser.dateFrom != null)
+			args.add("date >= '" + parser.dateFrom + "'");
+		if (parser.dateTo != null)
+			args.add("date <= '" + parser.dateTo + "'");
 		
 		//Check if location is exact or a range
 		Util.debug("Building location");
-		if (loc != null) {
-			if (radius == null || radius == 0) {
-				args.add("x = " + loc.getX());
-				args.add("y = " + loc.getY());
-				args.add("z = " + loc.getZ());
-			}
-			else {
-				int range = 5;
-				if (radius != null)
-					range = radius;
-				args.add("(x BETWEEN " + (loc.getX() - range) + " AND " + (loc.getX() + range) + ")");
-				args.add("(y BETWEEN " + (loc.getY() - range) + " AND " + (loc.getY() + range) + ")");
-				args.add("(z BETWEEN " + (loc.getZ() - range) + " AND " + (loc.getZ() + range) + ")");
-			}
+		if (parser.minLoc != null) {
+			args.add("(x BETWEEN " + parser.minLoc.getX() + " AND " + parser.maxLoc.getX() + ")");
+			args.add("(y BETWEEN " + parser.minLoc.getY() + " AND " + parser.maxLoc.getY() + ")");
+			args.add("(z BETWEEN " + parser.minLoc.getZ() + " AND " + parser.maxLoc.getZ() + ")");
 		}
-		else {
-			args.add("(x BETWEEN " + point1.getX() + " AND " + point2.getX() + ")");
-			args.add("(y BETWEEN " + point1.getY() + " AND " + point2.getY() + ")");
-			args.add("(z BETWEEN " + point1.getZ() + " AND " + point2.getZ() + ")");
+		else if (parser.loc != null) {
+			args.add("x = " + parser.loc.getX());
+			args.add("y = " + parser.loc.getY());
+			args.add("z = " + parser.loc.getZ());
 		}
 		
 		//Build the filters into SQL form
 		Util.debug("Building filters");
-		if (filters != null) {
-			for (int i = 0; i < filters.length; i++)
-				filters[i] = "'%" + filters[i] + "%'";
-			args.add("data LIKE " + Util.join(Arrays.asList(filters), " OR datalog.data LIKE "));
+		if (parser.filters != null) {
+			for (int i = 0; i < parser.filters.length; i++)
+				parser.filters[i] = "'%" + parser.filters[i] + "%'";
+			args.add("data LIKE " + Util.join(Arrays.asList(parser.filters), " OR datalog.data LIKE "));
 		}
 		
 		//Check the limits
@@ -201,7 +161,7 @@ public class SearchQuery extends Thread {
 			res = stmnt.executeQuery(sql);
 			Util.debug("Getting results");
 			//Retrieve results in specified order
-			if (order == "desc") {
+			if (dir == SearchDir.DESC) {
 				res.afterLast();
 				while (res.previous())
 					results.add(DataManager.createEntryFromRes(res));
@@ -247,6 +207,15 @@ public class SearchQuery extends Thread {
 	public enum SearchType {
 		ROLLBACK,
 		SEARCH
+	}
+	
+	/**
+	 * Enumeration for result sorting directions
+	 * @author oliverw92
+	 */
+	public enum SearchDir {
+		ASC,
+		DESC
 	}
 	
 }
