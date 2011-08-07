@@ -85,53 +85,7 @@ public class Config {
 			
 		}
 		
-		//Check filters
-		if (!keys.contains("command-filter"))
-			config.setProperty("command-filter", Arrays.asList(new String[]{"/login", "/restartsrv", "/register"}));
-		if (!keys.contains("block-filter"))
-			config.setProperty("block-filter", Arrays.asList(new Integer[]{97,98}));
-		
-		//Check general settings
-		keys = config.getKeys("general");
-		if (keys == null) keys = new ArrayList<String>();
-		if (!keys.contains("max-lines"))
-			config.setProperty("general.max-lines", 0);
-		if (!keys.contains("max-radius"))
-			config.setProperty("general.max-radius", 100);
-		if (!keys.contains("tool-block"))
-			config.setProperty("general.tool-block", 17);
-		if (!keys.contains("cleanse-age"))
-			config.setProperty("general.cleanse-age", "0d0h0s");
-		if (!keys.contains("debug"))
-			config.setProperty("general.debug", false);
-		if (!keys.contains("log-ip-addresses"))
-			config.setProperty("general.log-ip-addresses", true);
-		if (!keys.contains("delete-data-on-rollback"))
-			config.setProperty("general.delete-data-on-rollback", false);
-		if (!keys.contains("log-item-drops-on-death"))
-			config.setProperty("general.log-item-drops-on-death", false);
-		
-		//Check MySQL settings
-		keys = config.getKeys("mysql");
-		if (keys == null) keys = new ArrayList<String>();
-		if (!keys.contains("username"))
-			config.setProperty("mysql.username", "root");
-		if (!keys.contains("password"))
-			config.setProperty("mysql.password", "");
-		if (!keys.contains("hostname"))
-			config.setProperty("mysql.hostname", "localhost");
-		if (!keys.contains("database"))
-			config.setProperty("mysql.database", "minecraft");
-		if (!keys.contains("port"))
-			config.setProperty("mysql.port", 3306);
-		if (!keys.contains("datalog-table"))
-			config.setProperty("mysql.datalog-table", "datalog");
-		if (!keys.contains("player-table"))
-			config.setProperty("mysql.player-table", "dl_players");
-		if (!keys.contains("world-table"))
-			config.setProperty("mysql.world-table", "dl_worlds");
-		if (!keys.contains("max-connections"))
-			config.setProperty("mysql.max-connections", 10);
+		//Check DataType settings
 		for (DataType type : DataType.values()) {
 			if (config.getProperty(getNode(type)) == null)
 				config.setProperty(getNode(type), true);
@@ -139,14 +93,10 @@ public class Config {
 		
 		//Update version
 		config.setProperty("version", plugin.version);
-		
-		//Attempt a save
-		if (!config.save())
-			Util.severe("Error while writing to config.yml");
 
 		//Load values
-		CommandFilter = config.getStringList("command-filter", null);
-		BlockFilter = config.getIntList("block-filter", null);
+		CommandFilter = config.getStringList("command-filter", Arrays.asList(new String[]{"/login", "/restartsrv", "/register"}));
+		BlockFilter = config.getIntList("block-filter", Arrays.asList(new Integer[]{97,98}));
 		MaxLines = config.getInt("general.max-lines", 0);
 		MaxRadius = config.getInt("general.max-radius", 0);
 		ToolBlock = config.getInt("general.tool-block", 17);
@@ -157,12 +107,16 @@ public class Config {
 		LogDeathDrops = config.getBoolean("general.log-item-drops-on-death", false);
 		DbUser = config.getString("mysql.username", "root");
 		DbPassword = config.getString("mysql.password", "");
-		DbUrl = "jdbc:mysql://" + config.getString("mysql.hostname") + ":" + config.getString("mysql.port") + "/" + config.getString("mysql.database");
-		DbDatabase = config.getString("mysql.database");
-		DbDatalogTable = config.getString("mysql.datalog-table");
-		DbPlayerTable = config.getString("mysql.player-table");
-		DbWorldTable = config.getString("mysql.world-table");
+		DbUrl = "jdbc:mysql://" + config.getString("mysql.hostname", "root") + ":" + config.getInt("mysql.port", 3306) + "/" + config.getString("mysql.database", "minecraft");
+		DbDatabase = config.getString("mysql.database", "minecraft");
+		DbDatalogTable = config.getString("mysql.datalog-table", "datalog");
+		DbPlayerTable = config.getString("mysql.player-table", "dl_players");
+		DbWorldTable = config.getString("mysql.world-table", "dl_worlds");
 		PoolSize = config.getInt("mysql.max-connections", 10);
+		
+		//Attempt a save
+		if (!config.save())
+			Util.severe("Error while writing to config.yml");
 		
 	}
 	
