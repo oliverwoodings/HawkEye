@@ -23,7 +23,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.getspout.spout.Spout;
 
-import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
 import uk.co.oliwali.DataLog.commands.BaseCommand;
 import uk.co.oliwali.DataLog.commands.HelpCommand;
@@ -60,7 +60,7 @@ public class DataLog extends JavaPlugin {
 	public ToolBlockListener toolBlockListener = new ToolBlockListener();
 	public ToolPlayerListener toolPlayerListener = new ToolPlayerListener();
 	public static List<BaseCommand> commands = new ArrayList<BaseCommand>();
-	public WorldEdit worldEdit = null;
+	public WorldEditPlugin worldEdit = null;
 	public Spout spout = null;
 	private static HashMap<CommandSender, PlayerSession> playerSessions = new HashMap<CommandSender, PlayerSession>();
 	
@@ -107,7 +107,7 @@ public class DataLog extends JavaPlugin {
         //Check if WorldEdit is loaded
         Plugin we = pm.getPlugin("WorldEdit");
         if (we != null) {
-        	worldEdit = (WorldEdit)we;
+        	worldEdit = (WorldEditPlugin)we;
         	Util.info("WorldEdit found, selection rollbacks enabled");
         }
         
@@ -124,7 +124,7 @@ public class DataLog extends JavaPlugin {
 	    Plugin bc = pm.getPlugin("Spout");
 	    if (bc != null) {
 	    	spout = (Spout)bc;
-	    	Util.info("Spout found, container loggin enabled");
+	    	Util.info("Spout found, container logging enabled");
 	    }
         
         // Register monitor events

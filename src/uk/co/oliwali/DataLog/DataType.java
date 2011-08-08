@@ -27,18 +27,18 @@ public enum DataType {
 	LEVER(14, true, "lever"),
 	STONE_BUTTON(15, true, "button"),
 	OTHER(16, "other"),
-	EXPLOSION(17, "explosion", true),
-	BLOCK_BURN(18, "block-burn", true),
-	BLOCK_FORM(19, "snow-form", true),
-	LEAF_DECAY(20, "leaf-decay", true),
-	MOB_DEATH(21, "mob-death", true),
+	EXPLOSION(17, true, "explosion", true),
+	BLOCK_BURN(18, true, "block-burn", true),
+	BLOCK_FORM(19, true, "block-form", true),
+	LEAF_DECAY(20, true, "leaf-decay", true),
+	MOB_DEATH(21, "mob-death"),
 	OTHER_DEATH(22, "other-death"),
 	ITEM_DROP(23, "item-drop"),
 	ITEM_PICKUP(24, "item-pickup"),
-	BLOCK_FADE(25, "block-fade"),
-	LAVA_FLOW(26, "lava-flow"),
-	WATER_FLOW(27, "water-flow"),
-	CONTAINER_TRANSACTION(28, "container-transaction");
+	BLOCK_FADE(25, "block-fade", true),
+	LAVA_FLOW(26, true, "lava-flow", true),
+	WATER_FLOW(27, true, "water-flow", true),
+	CONTAINER_TRANSACTION(28, true, "container-transaction", true);
 	
 	private int id;
 	private boolean canHere;

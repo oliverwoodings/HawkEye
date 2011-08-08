@@ -25,7 +25,7 @@ public class RollbackCommand extends BaseCommand {
 	public boolean execute() {
 		
 		//Check if player already has a rollback processing
-		if (session.getRollbackResults() != null) {
+		if (session.getRollbackResults() != null && session.getRollbackResults().size() > 0) {
 			Util.sendMessage(sender, "&cYou already have a rollback command processing!");
 			return true;
 		}
@@ -54,7 +54,7 @@ public class RollbackCommand extends BaseCommand {
 		}
 		
 		//Create new SearchQuery with data
-		Thread thread = new SearchQuery(SearchType.SEARCH, parser, SearchDir.ASC);
+		Thread thread = new SearchQuery(SearchType.ROLLBACK, parser, SearchDir.DESC);
 		thread.start();
 		return true;
 		

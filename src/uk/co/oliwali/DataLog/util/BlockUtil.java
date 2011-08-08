@@ -33,7 +33,7 @@ public class BlockUtil {
 	 * @return string representing the item
 	 */
 	public static String getItemString(ItemStack stack) {
-		if (stack.getData().getData() != 0)
+		if (stack.getData() != null && stack.getData().getData() != 0)
 			return stack.getTypeId() + ":" + stack.getData().getData();
 		return Integer.toString(stack.getTypeId());
 	}

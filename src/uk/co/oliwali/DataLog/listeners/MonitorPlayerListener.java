@@ -19,6 +19,7 @@ import uk.co.oliwali.DataLog.DataLog;
 import uk.co.oliwali.DataLog.DataType;
 import uk.co.oliwali.DataLog.database.DataManager;
 import uk.co.oliwali.DataLog.util.Config;
+import uk.co.oliwali.DataLog.util.Util;
 
 /**
  * Player listener class for DataLog
@@ -59,7 +60,8 @@ public class MonitorPlayerListener extends PlayerListener {
 		if (event.isCancelled()) return;
 		Location from = event.getFrom();
 		Location to   = event.getTo();
-		DataManager.addEntry(event.getPlayer(), DataType.TELEPORT, from, to.getWorld().getName() + ": " + to.getX() + ", " + to.getY() + ", " + to.getZ());
+		if (Util.distance(from, to) > 5)
+			DataManager.addEntry(event.getPlayer(), DataType.TELEPORT, from, to.getWorld().getName() + ": " + to.getX() + ", " + to.getY() + ", " + to.getZ());
 	}
 	
 	/**
@@ -80,7 +82,7 @@ public class MonitorPlayerListener extends PlayerListener {
 				case FURNACE:
 				case DISPENSER:
 				case CHEST:
-					DataManager.addEntry(player, DataType.OPEN_CONTAINER, loc, "");
+					DataManager.addEntry(player, DataType.OPEN_CONTAINER, loc, Integer.toString(block.getTypeId()));
 					break;
 				case WOODEN_DOOR:
 					DataManager.addEntry(player, DataType.DOOR_INTERACT, loc, "");

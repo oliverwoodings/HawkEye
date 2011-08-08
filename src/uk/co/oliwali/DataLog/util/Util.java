@@ -110,6 +110,16 @@ public class Util {
 	}
 	
 	/**
+	* Returns the distance between two {Location}s
+	* @param from
+	* @param to
+	* @return double
+	**/
+	public static double distance(Location from, Location to) {
+	    return Math.sqrt(Math.pow(from.getX() - to.getX(), 2) + Math.pow(from.getY() - to.getY(), 2) + Math.pow(from.getZ() - to.getZ(), 2));
+	} 
+	
+	/**
 	 * Strips colours from inputted string
 	 * @param str
 	 * @return string without colours

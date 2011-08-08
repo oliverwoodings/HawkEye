@@ -43,19 +43,28 @@ public class DisplayManager {
 				break;
 			DataEntry entry = results.get(i);
 			String data = entry.getData();
-			if (entry.getAction() == 0)
-				data = BlockUtil.getBlockStringName(data);
-			if (entry.getAction() == 1) {
-				if (data.indexOf("-") == -1)
+			String action = entry.getType().getConfigName();
+			
+			//Modify output according to DataType
+			switch (entry.getType()) {
+				case BLOCK_BREAK:
+				case OPEN_CONTAINER:
 					data = BlockUtil.getBlockStringName(data);
-				else
-					data = BlockUtil.getBlockStringName(data.substring(0, data.indexOf("-"))) + " changed to " + BlockUtil.getBlockStringName(data.substring(data.indexOf("-") + 1));
+					break;
+				case BLOCK_PLACE:
+				case BLOCK_FORM:
+				case BLOCK_FADE:
+					if (data.indexOf("-") == -1)
+						data = BlockUtil.getBlockStringName(data);
+					else
+						data = BlockUtil.getBlockStringName(data.substring(0, data.indexOf("-"))) + " changed to " + BlockUtil.getBlockStringName(data.substring(data.indexOf("-") + 1));
+					break;
+				case OTHER:
+					action = data.substring(0, data.indexOf("-"));
+					data = data.substring(data.indexOf("-") + 1);
+					break;
 			}
-			String action = DataType.fromId(entry.getAction()).getConfigName();
-			if (entry.getAction() == 16) {
-				action = data.substring(0, data.indexOf("-"));
-				data = data.substring(data.indexOf("-") + 1);
-			}
+
 			sendLine(session.getSender(), "&cid:" + entry.getDataid() + " &7" + entry.getDate().substring(5) + " &c" + entry.getPlayer() + " &7" + action);
 			sendLine(session.getSender(), "   &cLoc: &7" + entry.getWorld() + "-" + entry.getX() + "," + entry.getY() + "," + entry.getZ() + " &cData: &7" + data);
 		}

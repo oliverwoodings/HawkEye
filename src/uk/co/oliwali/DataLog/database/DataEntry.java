@@ -6,6 +6,8 @@ import java.util.Calendar;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import uk.co.oliwali.DataLog.DataType;
+
 /**
  * Represents a DataLog entry entity
  * @author oliverw92
@@ -20,7 +22,7 @@ public class DataEntry {
 
     private String player;
 
-    private int action;
+    private DataType type;
 
     private String world;
 
@@ -64,12 +66,12 @@ public class DataEntry {
         return player;
     }
     
-    public void setAction(int action) {
-    	this.action = action;
+    public void setType(DataType type) {
+    	this.type = type;
     }
     
-    public int getAction() {
-    	return action;
+    public DataType getType() {
+    	return type;
     }
 
     public void setWorld(String world) {
@@ -116,16 +118,16 @@ public class DataEntry {
      * Parses the inputted data into the DataEntry instance
      * @param player
      * @param instance
-     * @param action
+     * @param type
      * @param loc
      * @param data
      */
-	public void setInfo(String player, JavaPlugin instance, int action, Location loc, String data) {
+	public void setInfo(String player, JavaPlugin instance, DataType type, Location loc, String data) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	    setDate(sdf.format(Calendar.getInstance().getTime()));
 	    setPlugin(instance.getDescription().getName());
 		setPlayer(player);
-		setAction(action);
+		setType(type);
 		setWorld(loc.getWorld().getName());
 		setX(loc.getX());
 		setY(loc.getY());

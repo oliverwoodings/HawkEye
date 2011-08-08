@@ -33,6 +33,7 @@ public class Rollback implements Runnable {
 	private Iterator<DataEntry> rollbackQueue;
 	private List<BlockState> undo = new ArrayList<BlockState>();
 	private int timerID;
+	private int counter = 0;
 	
 	/**
 	 * @param session {@link PlayerSession} to retrieve rollback results from
@@ -48,6 +49,8 @@ public class Rollback implements Runnable {
 			Util.sendMessage(session.getSender(), "&cNo results found to rollback");
 			return;
 		}
+		
+		Util.debug("Starting rollback of " + session.getRollbackResults().size() + " results");
 		
 		//Start rollback
 		Util.sendMessage(session.getSender(), "&cAttempting to rollback &7" + session.getRollbackResults().size() + "&c results");
@@ -68,8 +71,7 @@ public class Rollback implements Runnable {
 			DataEntry entry = rollbackQueue.next();
 			
 			//If the action can't be rolled back, skip this entry
-			DataType type = DataType.fromId(entry.getAction());
-			if (type == null || !type.canRollback())
+			if (entry.getType() == null || !entry.getType().canRollback())
 				continue;
 			
 			//If the world doesn't exist, skip this entry
@@ -81,7 +83,7 @@ public class Rollback implements Runnable {
 			Location loc = new Location(world, entry.getX(), entry.getY(), entry.getZ());
 			Block block = world.getBlockAt(loc);
 			undo.add(block.getState());
-			switch (type) {
+			switch (entry.getType()) {
 				case BLOCK_BREAK:
 				case BLOCK_BURN:
 				case LEAF_DECAY:
@@ -103,21 +105,27 @@ public class Rollback implements Runnable {
 					block.setType(Material.AIR);
 					break;
 				case CONTAINER_TRANSACTION:
-					if (!(block instanceof ContainerBlock)) continue;
-					Inventory inv = ((ContainerBlock)block).getInventory();
+					if (block.getType() != Material.CHEST) continue;
+					Inventory inv = ((ContainerBlock)block.getState()).getInventory();
 					List<HashMap<String,Integer>> ops = InventoryUtil.interpretDifferenceString(entry.getData());
 					//Handle the additions
-					for (ItemStack stack : InventoryUtil.uncompressInventory(ops.get(0)))
-						inv.addItem(stack);
+					if (ops.size() > 0) {
+						for (ItemStack stack : InventoryUtil.uncompressInventory(ops.get(0)))
+							inv.removeItem(stack);
+					}
 					//Handle subtractions
-					for (ItemStack stack : InventoryUtil.uncompressInventory(ops.get(1)))
-						inv.removeItem(stack);
+					if (ops.size() > 1) {
+						for (ItemStack stack : InventoryUtil.uncompressInventory(ops.get(1)))
+							inv.addItem(stack);
+					}
 					break;
 			}
 			
 			//Delete data if told to
 			if (Config.DeleteDataOnRollback)
 				DataManager.deleteEntry(entry.getDataid());
+			
+			counter++;
 			
 		}
 		
@@ -130,8 +138,10 @@ public class Rollback implements Runnable {
 			//Store undo results and notify player
 			session.setRollbackUndo(undo);
 			session.setRollbackResults(null);
-			Util.sendMessage(session.getSender(), "&cRollback complete");
+			Util.sendMessage(session.getSender(), "&cRollback complete, &7" + counter + "&c edits performed");
 			Util.sendMessage(session.getSender(), "&cUndo this rollback using &7/dl undo");
+			
+			Util.debug("Rollback complete, " + counter + " edits performed");
 			
 		}
 		

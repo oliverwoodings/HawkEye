@@ -4,6 +4,7 @@ import org.bukkit.util.Vector;
 
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.LocalPlayer;
+import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldedit.regions.Region;
 
 import uk.co.oliwali.DataLog.DataType;
@@ -31,7 +32,7 @@ public class WorldEditRollbackCommand extends BaseCommand {
 	public boolean execute() {
 		
 		//Check if player already has a rollback processing
-		if (session.getRollbackResults() != null) {
+		if (session.getRollbackResults() != null && session.getRollbackResults().size() == 0) {
 			Util.sendMessage(sender, "&cYou already have a rollback command processing!");
 			return true;
 		}
@@ -45,7 +46,8 @@ public class WorldEditRollbackCommand extends BaseCommand {
 		//Check if the WorldEdit selection is complete
 		Region region = null;
 		try {
-			region = plugin.worldEdit.getSession((LocalPlayer)player).getRegionSelector().getRegion();
+			LocalPlayer lp = new BukkitPlayer(plugin.worldEdit, plugin.worldEdit.getWorldEdit().getServer(), player);
+			region = plugin.worldEdit.getWorldEdit().getSession(lp).getRegionSelector().getRegion();
 		} catch (IncompleteRegionException e) {
 			Util.sendMessage(sender, "&cPlease complete your selection before doing a &7WorldEdit&c rollback!");
 			return true;
@@ -78,7 +80,7 @@ public class WorldEditRollbackCommand extends BaseCommand {
 		parser.maxLoc = new Vector(region.getMaximumPoint().getX(), region.getMaximumPoint().getY(), region.getMaximumPoint().getZ());
 		
 		//Create new SearchQuery with data
-		Thread thread = new SearchQuery(SearchType.SEARCH, parser, SearchDir.ASC);
+		Thread thread = new SearchQuery(SearchType.ROLLBACK, parser, SearchDir.DESC);
 		thread.start();
 		return true;
 		

@@ -100,14 +100,14 @@ public class Config {
 		MaxLines = config.getInt("general.max-lines", 0);
 		MaxRadius = config.getInt("general.max-radius", 0);
 		ToolBlock = config.getInt("general.tool-block", 17);
-		CleanseAge = config.getString("general.cleanse-age");
+		CleanseAge = config.getString("general.cleanse-age", "0");
 		Debug = config.getBoolean("general.debug", false);
 		LogIpAddresses = config.getBoolean("general.log-ip-addresses", true);
 		DeleteDataOnRollback = config.getBoolean("general.delete-data-on-rollback", false);
 		LogDeathDrops = config.getBoolean("general.log-item-drops-on-death", false);
 		DbUser = config.getString("mysql.username", "root");
 		DbPassword = config.getString("mysql.password", "");
-		DbUrl = "jdbc:mysql://" + config.getString("mysql.hostname", "root") + ":" + config.getInt("mysql.port", 3306) + "/" + config.getString("mysql.database", "minecraft");
+		DbUrl = "jdbc:mysql://" + config.getString("mysql.hostname", "localhost") + ":" + config.getInt("mysql.port", 3306) + "/" + config.getString("mysql.database", "minecraft");
 		DbDatabase = config.getString("mysql.database", "minecraft");
 		DbDatalogTable = config.getString("mysql.datalog-table", "datalog");
 		DbPlayerTable = config.getString("mysql.player-table", "dl_players");

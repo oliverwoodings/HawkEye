@@ -33,7 +33,8 @@ public class SearchQuery extends Thread {
 	private SearchDir dir;
 	private SearchType searchType;
 	
-	public SearchQuery(SearchType type, SearchParser parser, SearchDir dire) {
+	public SearchQuery(SearchType type, SearchParser sparser, SearchDir dire) {
+		parser = sparser;
 		sender = parser.player;
 		dir = dire;
 		searchType = type;
@@ -67,7 +68,7 @@ public class SearchQuery extends Thread {
 			//Exclude players
 			if (npids.size() > 0)
 				args.add("player_id NOT IN (" + Util.join(npids, ",") + ")");
-			else {
+			if (npids.size() + pids.size() < 1) {
 				Util.sendMessage(sender, "&cNo players found matching your specifications");
 				return;
 			}
@@ -92,7 +93,7 @@ public class SearchQuery extends Thread {
 			//Exclude worlds
 			if (nwids.size() > 0)
 				args.add("world_id NOT IN (" + Util.join(nwids, ",") + ")");
-			else {
+			if (nwids.size() + wids.size() < 1) {
 				Util.sendMessage(sender, "&cNo worlds found matching your specifications");
 				return;
 			}
@@ -184,6 +185,8 @@ public class SearchQuery extends Thread {
 			}
 				
 		}
+		
+		Util.debug(results.size() + " results found");
 		
 		//Perform actions dependent on the type of search
 		switch (searchType) {

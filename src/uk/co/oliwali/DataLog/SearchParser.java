@@ -35,6 +35,7 @@ public class SearchParser {
 	public SearchParser(Player player, int radius) {
 		this.player = player;
 		this.radius = radius;
+		parseLocations();
 	}
 	
 	public SearchParser(Player player, List<String> args) throws IllegalArgumentException {
@@ -156,8 +157,8 @@ public class SearchParser {
 			if (worlds == null) worlds = new String[]{ player.getWorld().getName() };
 			
 			//Format min and max
-			minLoc = new Vector(loc.getX() - radius, loc.getY(), loc.getZ() - radius);
-			maxLoc = new Vector(loc.getX() + radius, loc.getY(), loc.getZ() + radius);
+			minLoc = new Vector(loc.getX() - radius, loc.getY() - radius, loc.getZ() - radius);
+			maxLoc = new Vector(loc.getX() + radius, loc.getY() + radius, loc.getZ() + radius);
 			
 		}
 		

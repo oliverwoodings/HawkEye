@@ -90,7 +90,7 @@ public class DataManager extends TimerTask {
 	public static void addEntry(String player, JavaPlugin cplugin, DataType dataType, Location loc, String data) {
 		DataEntry dataEntry = new DataEntry();
 		loc = Util.getSimpleLocation(loc);
-		dataEntry.setInfo(player, cplugin, dataType.getId(), loc, data);
+		dataEntry.setInfo(player, cplugin, dataType, loc, data);
 		addEntry(dataEntry);
 	}
 	/**
@@ -100,10 +100,9 @@ public class DataManager extends TimerTask {
 	 * @return
 	 */
 	public static void addEntry(DataEntry entry) {
-		DataType type = DataType.fromId(entry.getAction());
 		
 		//Check block filter
-		switch (type) {
+		switch (entry.getType()) {
 			case BLOCK_BREAK:
 				if (Config.BlockFilter.contains(BlockUtil.getBlockStringName(entry.getData())))
 					return;
@@ -118,7 +117,7 @@ public class DataManager extends TimerTask {
 					return;
 		}
 		
-		if (Config.isLogged(type))
+		if (Config.isLogged(entry.getType()))
 			queue.add(entry);
 	}
 	
@@ -137,7 +136,7 @@ public class DataManager extends TimerTask {
 			entry.setDataid(res.getInt("data_id"));
 			entry.setDate(res.getString("date"));
 			entry.setPlayer(DataManager.getPlayer(res.getInt("player_id")));
-			entry.setAction(res.getInt("action"));
+			entry.setType(DataType.fromId(res.getInt("action")));
 			entry.setData(res.getString("data"));
 			entry.setPlugin(res.getString("plugin"));
 			entry.setWorld(DataManager.getWorld(res.getInt("world_id")));
@@ -233,7 +232,7 @@ public class DataManager extends TimerTask {
 		entry.setPlayer(DataManager.getPlayer(res.getInt("player_id")));
 		entry.setDate(res.getString("date"));
 		entry.setDataid(res.getInt("data_id"));
-		entry.setAction(res.getInt("action"));
+		entry.setType(DataType.fromId(res.getInt("action")));
 		entry.setData(res.getString("data"));
 		entry.setPlugin(res.getString("plugin"));
 		entry.setWorld(DataManager.getWorld(res.getInt("world_id")));
@@ -392,7 +391,7 @@ public class DataManager extends TimerTask {
 					stmnt = conn.prepareStatement("INSERT into `" + Config.DbDatalogTable + "` (date, player_id, action, world_id, x, y, z, data, plugin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);");
 				stmnt.setString(1, entry.getDate());
 				stmnt.setInt(2, dbPlayers.get(entry.getPlayer()));
-				stmnt.setInt(3, entry.getAction());
+				stmnt.setInt(3, entry.getType().getId());
 				stmnt.setInt(4, dbWorlds.get(entry.getWorld()));
 				stmnt.setDouble(5, entry.getX());
 				stmnt.setDouble(6, entry.getY());

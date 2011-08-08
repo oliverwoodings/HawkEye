@@ -18,6 +18,7 @@ public class InventoryUtil {
 	public static HashMap<String,Integer> compressInventory(ItemStack[] inventory) {
 		HashMap<String,Integer> items = new HashMap<String,Integer>();
 		for (ItemStack item : inventory) {
+			if (item == null) continue;
 			String iString = BlockUtil.getItemString(item);
 			if (items.containsKey(iString)) items.put(iString, items.get(iString) + item.getAmount());
 			else items.put(iString, item.getAmount());
@@ -60,7 +61,7 @@ public class InventoryUtil {
 		    //If the item is larger after changes
 		    else if (item.getValue() < after.get(item.getKey())) add.add(item.getKey() + "," + (after.get(item.getKey()) - item.getValue()));
 		}
-		for (Entry<String, Integer> item : before.entrySet()) {
+		for (Entry<String, Integer> item : after.entrySet()) {
 			//If the item does not appear before changes
 			if (!before.containsKey(item.getKey())) add.add(item.getKey() + "," + item.getValue());
 		}
