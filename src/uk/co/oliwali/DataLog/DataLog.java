@@ -1,15 +1,20 @@
 package uk.co.oliwali.DataLog;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.bukkit.Server;
 import org.bukkit.command.Command;
@@ -86,6 +91,38 @@ public class DataLog extends JavaPlugin {
         version = this.getDescription().getVersion();
         config = new Config(this);
         new Permission(this);
+        
+        //Perform version check
+        Util.info("Performing update check...");
+        try {
+        	
+        	//Get version file
+        	URLConnection yc = new URL("http://cloud.github.com/downloads/oliverw92/DataLog/version.txt").openConnection();
+    		BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
+    		
+    		//Sort out version numbers
+    		int updateVer = Integer.parseInt(in.readLine().replace(".", ""));
+    		int curVer = Integer.parseInt(version.replace(".", ""));
+    		
+    		//Extract Bukkit build from server versions
+    		Pattern pattern = Pattern.compile("-b(\\d*?)jnks", Pattern.CASE_INSENSITIVE);
+			Matcher matcher = pattern.matcher(server.getVersion());
+			if (!matcher.find() || matcher.group(1) == null) throw new Exception();
+			int curBuild = Integer.parseInt(matcher.group(1));
+    		int updateBuild = Integer.parseInt(in.readLine());
+    		
+    		//Check versions
+    		if (updateVer > curVer) {
+				Util.warning("New version of HawkEye available: " + updateVer);
+    			if (updateBuild > curBuild)	Util.warning("Update recommended of CraftBukkit from build " + curBuild + " to " + updateBuild + " to ensure compatibility");
+    			else Util.warning("Compatible with your current version of CraftBukkit");
+    		}
+    		else Util.info("No updates available for HawkEye");
+    		in.close();
+    		
+		} catch (Exception e) {
+			Util.warning("Unable to perform update check!");
+		}
         
         //Create player sessions
         for (Player player : server.getOnlinePlayers())

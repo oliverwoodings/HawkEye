@@ -26,6 +26,13 @@ public class Util {
 		log.info("[DataLog] " + msg);
 	}
 	/**
+	 * Send a warn level log message to console
+	 * @param msg message to send
+	 */
+	public static void warning(String msg) {
+		log.warning("[DataLog] " + msg);
+	}
+	/**
 	 * Send a severe level log message to console
 	 * @param msg message to send
 	 */
