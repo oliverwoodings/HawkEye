@@ -97,11 +97,12 @@ public class DataLog extends JavaPlugin {
         try {
         	
         	//Get version file
-        	URLConnection yc = new URL("http://cloud.github.com/downloads/oliverw92/DataLog/version.txt").openConnection();
+        	URLConnection yc = new URL("https://raw.github.com/oliverw92/DataLog/dev/version.txt").openConnection();
     		BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
     		
     		//Sort out version numbers
-    		int updateVer = Integer.parseInt(in.readLine().replace(".", ""));
+    		String updateVersion = in.readLine();
+    		int updateVer = Integer.parseInt(updateVersion.replace(".", ""));
     		int curVer = Integer.parseInt(version.replace(".", ""));
     		
     		//Extract Bukkit build from server versions
@@ -113,7 +114,7 @@ public class DataLog extends JavaPlugin {
     		
     		//Check versions
     		if (updateVer > curVer) {
-				Util.warning("New version of HawkEye available: " + updateVer);
+				Util.warning("New version of HawkEye available: " + updateVersion);
     			if (updateBuild > curBuild)	Util.warning("Update recommended of CraftBukkit from build " + curBuild + " to " + updateBuild + " to ensure compatibility");
     			else Util.warning("Compatible with your current version of CraftBukkit");
     		}
