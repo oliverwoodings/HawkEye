@@ -35,6 +35,8 @@ public class DataManager extends TimerTask {
 	private static HawkEye plugin;
 	private static LinkedBlockingQueue<DataEntry> queue = new LinkedBlockingQueue<DataEntry>();
 	private static ConnectionManager connections;
+	private static Timer loggingTimer = null;
+	private static Timer cleanseTimer = null;
 	public static HashMap<String, Integer> dbPlayers = new HashMap<String, Integer>();
 	public static HashMap<String, Integer> dbWorlds = new HashMap<String, Integer>();
 
@@ -59,16 +61,16 @@ public class DataManager extends TimerTask {
 		try {
 			CleanseUtil util = new CleanseUtil();
 			if (util.date != null) {
-				Timer cleanse = new Timer();
-				cleanse.scheduleAtFixedRate(util, 0, 1200000);
+				cleanseTimer = new Timer();
+				cleanseTimer.scheduleAtFixedRate(util, 0, 1200000);
 			}
 		} catch (Exception e) {
 			Util.severe("Unable to start cleansing utility - check your cleanse age");
 		}
 
 		//Start logging timer
-		Timer timer = new Timer();
-		timer.scheduleAtFixedRate(this, 2000, 2000);
+		loggingTimer = new Timer();
+		loggingTimer.scheduleAtFixedRate(this, 2000, 2000);
 	}
 	
 	/**
@@ -76,6 +78,8 @@ public class DataManager extends TimerTask {
 	 */
 	public static void close() {
 		connections.close();
+		if (cleanseTimer != null) cleanseTimer.cancel();
+		if (loggingTimer != null) loggingTimer.cancel();
 	}
 	
 	public static void addEntry(Player player, DataType dataType, Location loc, String data) {
