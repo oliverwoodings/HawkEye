@@ -54,8 +54,7 @@ public class RollbackCommand extends BaseCommand {
 		}
 		
 		//Create new SearchQuery with data
-		Thread thread = new SearchQuery(new RollbackCallback(), parser, SearchDir.DESC);
-		thread.start();
+		new SearchQuery(new RollbackCallback(), parser, SearchDir.DESC);
 		return true;
 		
 	}

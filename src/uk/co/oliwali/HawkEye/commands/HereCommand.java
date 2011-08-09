@@ -53,8 +53,7 @@ public class HereCommand extends BaseCommand {
 		}
 		
 		//Run the search query
-		Thread thread = new SearchQuery(new SearchCallback(), parser, SearchDir.DESC);
-		thread.start();
+		new SearchQuery(new SearchCallback(), parser, SearchDir.DESC);
 		return true;
 		
 	}

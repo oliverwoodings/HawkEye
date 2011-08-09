@@ -33,8 +33,7 @@ public class SearchCommand extends BaseCommand {
 		}
 		
 		//Create new SeachQuery with data
-		Thread thread = new SearchQuery(new SearchCallback(), parser, SearchDir.DESC);
-		thread.start();
+		new SearchQuery(new SearchCallback(), parser, SearchDir.DESC);
 		return true;
 		
 	}

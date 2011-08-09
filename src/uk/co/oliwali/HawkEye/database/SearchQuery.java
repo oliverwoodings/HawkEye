@@ -30,6 +30,9 @@ public class SearchQuery extends Thread {
 		this.callBack = callBack;
 		this.parser = parser;
 		this.dir = dir;
+		
+		//Start thread
+		this.start();
 	}
 	
 	/**
