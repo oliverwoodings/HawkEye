@@ -25,6 +25,38 @@ public class CleanseUtil extends TimerTask {
 	 * @throws Exception
 	 */
 	public CleanseUtil() throws Exception {
+		ageToDate();
+		Util.info("Starting database cleanse thread");
+	}
+	
+	/**
+	 * Runs the cleansing utility
+	 */
+	public void run() {
+		
+		try {
+			ageToDate();
+		} catch (Exception e) {
+			Util.severe("Error converting cleanse age to date string, aborting cleanse utility");
+			this.cancel();
+		}
+		
+		Util.info("Running cleanse utility for logs older than " + date);
+		try {
+			JDCConnection conn = DataManager.getConnection();
+			Statement stmnt = conn.createStatement();
+			int affected = stmnt.executeUpdate("DELETE FROM `" + Config.DbHawkEyeTable + "` WHERE `date` < '" + date + "'");
+			Util.info("Deleted " + affected + " row(s) from database");
+		} catch (SQLException ex) {
+			Util.severe("Unable to execute cleanse utility: " + ex);
+		}
+		
+	}
+	
+	/**
+	 * Converts the cleanse age into date string
+	 */
+	private void ageToDate() throws Exception {
 		
 		if (Config.CleanseAge.equalsIgnoreCase("0") || Config.CleanseAge.equalsIgnoreCase("0d0h0s"))
 			return;
@@ -60,24 +92,6 @@ public class CleanseUtil extends TimerTask {
 		cal.add(Calendar.SECOND, -1 * secs);
 		SimpleDateFormat form = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date = form.format(cal.getTime());
-		
-		Util.info("Started cleanse thread for logs older than " + date);
-	}
-	
-	/**
-	 * Runs the cleansing utility
-	 */
-	public void run() {
-		
-		Util.info("Running cleanse utility...");
-		try {
-			JDCConnection conn = DataManager.getConnection();
-			Statement stmnt = conn.createStatement();
-			int affected = stmnt.executeUpdate("DELETE FROM `HawkEye` WHERE `date` < '" + date + "'");
-			Util.info("Deleted " + affected + " row(s) from database");
-		} catch (SQLException ex) {
-			Util.severe("Unable to execute cleanse utility: " + ex);
-		}
 		
 	}
 

@@ -137,6 +137,12 @@ public class SearchQuery extends Thread {
 		if (Config.MaxLines > 0)
 			sql += " LIMIT " + Config.MaxLines;
 		
+		//Add order by
+		Util.debug("Ordering by data_id");
+		sql += " ORDER BY `data_id` ";
+		if (dir == SearchDir.DESC) sql += "DESC";
+		else sql+= "ASC";
+		
 		Util.debug("Searching: " + sql);
 		
 		//Set up some stuff for the search
@@ -150,16 +156,9 @@ public class SearchQuery extends Thread {
 			stmnt = conn.createStatement();
 			res = stmnt.executeQuery(sql);
 			Util.debug("Getting results");
-			//Retrieve results in specified order
-			if (dir == SearchDir.DESC) {
-				res.afterLast();
-				while (res.previous())
-					results.add(DataManager.createEntryFromRes(res));
-			}
-			else {
-				while (res.next())
-					results.add(DataManager.createEntryFromRes(res));
-			}
+			//Retrieve results
+			while (res.next())
+				results.add(DataManager.createEntryFromRes(res));
 		} catch (SQLException ex) {
 			Util.severe("Error executing MySQL query: " + ex);
 			callBack.error(SearchError.MYSQL_ERROR, "Error executing MySQL query: " + ex);
