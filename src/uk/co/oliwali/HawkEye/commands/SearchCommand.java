@@ -33,7 +33,7 @@ public class SearchCommand extends BaseCommand {
 		}
 		
 		//Create new SeachQuery with data
-		new SearchQuery(new SearchCallback(), parser, SearchDir.DESC);
+		new SearchQuery(new SearchCallback(session), parser, SearchDir.DESC);
 		return true;
 		
 	}

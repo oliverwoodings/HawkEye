@@ -80,7 +80,7 @@ public class WorldEditRollbackCommand extends BaseCommand {
 		parser.maxLoc = new Vector(region.getMaximumPoint().getX(), region.getMaximumPoint().getY(), region.getMaximumPoint().getZ());
 		
 		//Create new SearchQuery with data
-		new SearchQuery(new RollbackCallback(), parser, SearchDir.DESC);
+		new SearchQuery(new RollbackCallback(session), parser, SearchDir.DESC);
 		return true;
 		
 	}

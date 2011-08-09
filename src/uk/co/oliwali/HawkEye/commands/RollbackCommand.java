@@ -54,7 +54,7 @@ public class RollbackCommand extends BaseCommand {
 		}
 		
 		//Create new SearchQuery with data
-		new SearchQuery(new RollbackCallback(), parser, SearchDir.DESC);
+		new SearchQuery(new RollbackCallback(session), parser, SearchDir.DESC);
 		return true;
 		
 	}

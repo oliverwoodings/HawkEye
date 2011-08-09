@@ -1,5 +1,6 @@
 package uk.co.oliwali.HawkEye.util;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.logging.Logger;
@@ -48,6 +49,22 @@ public class Util {
 		if (Config.Debug)
 			Util.info("DEBUG: " + msg);
 	}
+	
+	/**
+	 * Deletes a file or directory
+	 * @param dir File to delete
+	 * @return true on success
+	 */
+	public static boolean deleteFile(File file) {
+		
+		if (file.isDirectory()) {
+			String[] children = file.list();
+			for (int i=0; i<children.length; i++)
+				if (!deleteFile(new File(file, children[i])))	return false;
+		}
+		return file.delete();
+		
+	} 
 	
 	/**
 	 * Send a message to a CommandSender (can be a player or console).

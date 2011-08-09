@@ -1,5 +1,7 @@
 package uk.co.oliwali.HawkEye.callbacks;
 
+import org.bukkit.command.CommandSender;
+
 import uk.co.oliwali.HawkEye.PlayerSession;
 import uk.co.oliwali.HawkEye.Rollback;
 import uk.co.oliwali.HawkEye.database.SearchQuery.SearchError;
@@ -12,11 +14,12 @@ import uk.co.oliwali.HawkEye.util.Util;
 public class RollbackCallback extends BaseCallback {
 	
 	private PlayerSession session;
-	
-	public RollbackCallback() { }
+	private CommandSender sender;
 	
 	public RollbackCallback(PlayerSession session) {
 		this.session = session;
+		sender = session.getSender();
+		Util.sendMessage(sender, "&cSearching for matching results to rollback...");
 	}
 
 	public void execute() {

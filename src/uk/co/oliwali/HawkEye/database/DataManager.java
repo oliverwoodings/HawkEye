@@ -204,8 +204,7 @@ public class DataManager extends TimerTask {
 		loc = Util.getSimpleLocation(loc);
 		parser.loc = loc.toVector();
 		parser.worlds = new String[]{ loc.getWorld().getName() };
-		Thread thread = new SearchQuery(new SearchCallback(), parser, SearchDir.DESC);
-		thread.start();
+		new SearchQuery(new SearchCallback(HawkEye.getSession(player)), parser, SearchDir.DESC);
 	}
 	
 	/**

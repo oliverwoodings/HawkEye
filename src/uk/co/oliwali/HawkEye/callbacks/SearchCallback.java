@@ -1,5 +1,7 @@
 package uk.co.oliwali.HawkEye.callbacks;
 
+import org.bukkit.command.CommandSender;
+
 import uk.co.oliwali.HawkEye.DisplayManager;
 import uk.co.oliwali.HawkEye.PlayerSession;
 import uk.co.oliwali.HawkEye.database.SearchQuery.SearchError;
@@ -12,11 +14,12 @@ import uk.co.oliwali.HawkEye.util.Util;
 public class SearchCallback extends BaseCallback {
 	
 	private PlayerSession session;
-	
-	public SearchCallback() { }
+	private CommandSender sender;
 	
 	public SearchCallback(PlayerSession session) {
 		this.session = session;
+		sender = session.getSender();
+		Util.sendMessage(sender, "&cSearching for matching results...");
 	}
 
 	public void execute() {
@@ -25,7 +28,7 @@ public class SearchCallback extends BaseCallback {
 	}
 	
 	public void error(SearchError error, String message) {
-		Util.sendMessage(session.getSender(), message);
+		Util.sendMessage(sender, message);
 	}
 
 }

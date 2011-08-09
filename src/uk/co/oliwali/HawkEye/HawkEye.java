@@ -132,15 +132,11 @@ public class HawkEye extends JavaPlugin {
         //Check if we need to update from DataLog
         Plugin dl = pm.getPlugin("DataLog");
         if (dl != null) {
-        	Util.warning("DataLog found, transferring configuration and removing");
+        	Util.warning("DataLog found, disabling it. Please remove DataLog.jar!");
+        	Util.info("Importing DataLog configuration");
         	Config.importOldConfig(dl.getConfiguration());
-        	pm.disablePlugin(dl);
-        	File dataLog = new File("plugins" + File.separator + "DataLog.jar");
-        	dataLog.deleteOnExit();
-        	File dataLogFolder = new File("plugins" + File.separator + "DataLog" + File.separator);
-        	dataLogFolder.deleteOnExit();
         	config = new Config(this);
-        	Util.info("DataLog files marked for removal, config files updated");
+        	pm.disablePlugin(dl);
         }
         
 	}
