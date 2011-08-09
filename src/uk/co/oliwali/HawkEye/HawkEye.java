@@ -92,12 +92,71 @@ public class HawkEye extends JavaPlugin {
         config = new Config(this);
         new Permission(this);
         
+        datalogCheck(pm);
+        
+        versionCheck();
+        
+        //Create player sessions
+        for (Player player : server.getOnlinePlayers())
+        	playerSessions.put(player, new PlayerSession(player));
+        
+        //Initiate database connection
+        try {
+			new DataManager(this);
+		} catch (Exception e) {
+			Util.severe("Error initiating HawkEye database connection, disabling plugin");
+			pm.disablePlugin(this);
+			return;
+		}
+		
+		//Add console session
+		ConsoleCommandSender sender = new ConsoleCommandSender(getServer());
+		playerSessions.put(sender, new PlayerSession(sender));
+		
+		checkDependencies(pm);
+        
+	    registerListeners(pm);
+        
+	    registerCommands();
+        
+        Util.info("Version " + version + " enabled!");
+        
+	}
+	
+	/**
+	 * Checks if HawkEye needs to update config files from existing DataLog installation
+	 * @param pm PluginManager
+	 */
+	private void datalogCheck(PluginManager pm) {
+		
+        //Check if we need to update from DataLog
+        Plugin dl = pm.getPlugin("DataLog");
+        if (dl != null) {
+        	Util.warning("DataLog found, transferring configuration and removing");
+        	Config.importOldConfig(dl.getConfiguration());
+        	pm.disablePlugin(dl);
+        	File dataLog = new File("plugins" + File.separator + "DataLog.jar");
+        	if (dataLog.exists()) dataLog.delete();
+        	File dataLogFolder = new File("plugins" + File.separator + "DataLog" + File.separator);
+        	if (dataLogFolder.exists()) dataLogFolder.delete();
+        	config = new Config(this);
+        	Util.warning("DataLog removed, config files updated");
+        }
+        
+	}
+	
+	/**
+	 * Checks if any updates are available for HawkEye
+	 * Outputs console warning if updates are needed
+	 */
+	private void versionCheck() {
+		
         //Perform version check
         Util.info("Performing update check...");
         try {
         	
         	//Get version file
-        	URLConnection yc = new URL("https://raw.github.com/oliverw92/HawkEye/dev/version.txt").openConnection();
+        	URLConnection yc = new URL("https://raw.github.com/oliverw92/HawkEye/master/version.txt").openConnection();
     		BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
     		
     		//Sort out version numbers
@@ -124,23 +183,13 @@ public class HawkEye extends JavaPlugin {
 		} catch (Exception e) {
 			Util.warning("Unable to perform update check!");
 		}
-        
-        //Create player sessions
-        for (Player player : server.getOnlinePlayers())
-        	playerSessions.put(player, new PlayerSession(player));
-        
-        //Initiate database connection
-        try {
-			new DataManager(this);
-		} catch (Exception e) {
-			Util.severe("Error initiating HawkEye database connection, disabling plugin");
-			pm.disablePlugin(this);
-			return;
-		}
-		
-		//Add console session
-		ConsoleCommandSender sender = new ConsoleCommandSender(getServer());
-		playerSessions.put(sender, new PlayerSession(sender));
+	}
+	
+	/**
+	 * Checks if required plugins are loaded
+	 * @param pm PluginManager
+	 */
+	private void checkDependencies(PluginManager pm) {
 		
         //Check if WorldEdit is loaded
         Plugin we = pm.getPlugin("WorldEdit");
@@ -164,7 +213,15 @@ public class HawkEye extends JavaPlugin {
 	    	spout = (Spout)bc;
 	    	Util.info("Spout found, container logging enabled");
 	    }
-        
+	    
+	}
+	
+	/**
+	 * Registers event listeners
+	 * @param pm PluginManager
+	 */
+	private void registerListeners(PluginManager pm) {
+		
         // Register monitor events
         if (Config.isLogged(DataType.BLOCK_BREAK)) pm.registerEvent(Type.BLOCK_BREAK, monitorBlockListener, Event.Priority.Monitor, this);
         if (Config.isLogged(DataType.BLOCK_PLACE)) pm.registerEvent(Type.BLOCK_PLACE, monitorBlockListener, Event.Priority.Monitor, this);
@@ -193,7 +250,14 @@ public class HawkEye extends JavaPlugin {
         if (spout != null) {
         	pm.registerEvent(Type.CUSTOM_EVENT, new MonitorInventoryListener(), Event.Priority.Monitor, this);
         }
-        
+		
+	}
+	
+	/**
+	 * Registers commands for use by the command manager
+	 */
+	private void registerCommands() {
+		
         //Add commands
         commands.add(new HelpCommand());
         commands.add(new SearchCommand());
@@ -206,8 +270,6 @@ public class HawkEye extends JavaPlugin {
         commands.add(new ToolCommand());
         commands.add(new RollbackHelpCommand());
         commands.add(new WorldEditRollbackCommand());
-        
-        Util.info("Version " + version + " enabled!");
         
 	}
 	

@@ -54,34 +54,6 @@ public class Config {
 		else {
 
 			//Version checks
-			//v0.1 - remove everything
-			if (keys.contains("driver")) {
-				Util.info("HawkEye v0.1 config detected, deleting unused config. MySQL details are now configured in bukkit.yml");
-				for (String key : keys.toArray(new String[0])) {
-					config.removeProperty(key);
-				}
-			}
-			//pre v1.1 - warn about MySQL settings
-			if (!keys.contains("mysql")) {
-				Util.info("Updating config file to v1.1");
-				Util.info("IMPORTANT: After server has rebooted, stop server and configure plugins/HawkEye/config.yml with new info");
-			}
-			//pre v1.2 - move settings around
-			if (!keys.contains("general")) {
-				Util.info("Updating config file to v1.2");
-				config.setProperty("general.max-lines", config.getInt("max-lines", 0));
-				config.removeProperty("max-lines");
-				config.setProperty("general.max-radius", config.getInt("max-radius", 0));
-				config.removeProperty("max-radius");
-				config.setProperty("general.tool-block", config.getInt("tool-block", 17));
-				config.removeProperty("tool-block");
-				config.setProperty("general.cleanse-age", config.getString("cleanse-age", "0d0h0s"));
-				config.removeProperty("cleanse-age");
-				config.setProperty("mysql.max-connections", config.getInt("max-connections", 10));
-				config.removeProperty("max-connections");
-				config.setProperty("general.debug", config.getBoolean("debug", false));
-				config.removeProperty("debug");
-			}
 			
 		}
 		
@@ -109,14 +81,13 @@ public class Config {
 		DbPassword = config.getString("mysql.password", "");
 		DbUrl = "jdbc:mysql://" + config.getString("mysql.hostname", "localhost") + ":" + config.getInt("mysql.port", 3306) + "/" + config.getString("mysql.database", "minecraft");
 		DbDatabase = config.getString("mysql.database", "minecraft");
-		DbHawkEyeTable = config.getString("mysql.HawkEye-table", "HawkEye");
+		DbHawkEyeTable = config.getString("mysql.hawkeye-table", "hawkeye");
 		DbPlayerTable = config.getString("mysql.player-table", "dl_players");
 		DbWorldTable = config.getString("mysql.world-table", "dl_worlds");
 		PoolSize = config.getInt("mysql.max-connections", 10);
 		
 		//Attempt a save
-		if (!config.save())
-			Util.severe("Error while writing to config.yml");
+		if (!config.save()) Util.severe("Error while writing to config.yml");
 		
 	}
 	
@@ -138,5 +109,41 @@ public class Config {
 	 */
 	private static String getNode(DataType type) {
 		return "log." + type.getConfigName();
+	}
+	
+	/**
+	 * Imports an old configuration file 
+	 * @param oldConf DataLog config file to update from
+	 */
+	public static void importOldConfig(Configuration oldConf) {
+		
+		//Import type settings
+		for (DataType type : DataType.values())
+			config.setProperty(getNode(type), oldConf.getBoolean(getNode(type), true));
+		
+		//Import old settings
+		config.setProperty("command-filter", oldConf.getStringList("command-filter", Arrays.asList(new String[]{"/login", "/restartsrv", "/register"})));
+		config.setProperty("block-filter", oldConf.getIntList("block-filter", Arrays.asList(new Integer[]{97,98})));
+		config.setProperty("general.max-lines", oldConf.getInt("general.max-lines", 0));
+		config.setProperty("general.max-radius", oldConf.getInt("general.max-radius", 0));
+		config.setProperty("general.tool-block", oldConf.getInt("general.tool-block", 17));
+		config.setProperty("general.cleanse-age", oldConf.getString("general.cleanse-age", "0"));
+		config.setProperty("general.debug", oldConf.getBoolean("general.debug", false));
+		config.setProperty("general.log-ip-addresses", oldConf.getBoolean("general.log-ip-addresses", true));
+		config.setProperty("general.delete-data-on-rollback", oldConf.getBoolean("general.delete-data-on-rollback", false));
+		config.setProperty("general.log-item-drops-on-death", oldConf.getBoolean("general.log-item-drops-on-death", false));
+		config.setProperty("mysql.username", oldConf.getString("mysql.username", "root"));
+		config.setProperty("mysql.password", oldConf.getString("mysql.password", ""));
+		config.setProperty("mysql.hostname", oldConf.getString("mysql.hostname", "localhost"));
+		config.setProperty("mysql.port", oldConf.getInt("mysql.port", 3306));
+		config.setProperty("mysql.database", oldConf.getString("mysql.database", "minecraft"));
+		config.setProperty("mysql.hawkeye-table", oldConf.getString("mysql.datalog-table", "hawkeye"));
+		config.setProperty("mysql.player-table", oldConf.getString("mysql.player-table", "dl_players"));
+		config.setProperty("mysql.world-table", oldConf.getString("mysql.world-table", "dl_worlds"));
+		config.setProperty("mysql.max-connections", oldConf.getInt("mysql.max-connections", 10));
+		
+		//Attempt a save
+		if (!config.save()) Util.severe("Error while writing to config.yml");
+		
 	}
 }

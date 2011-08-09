@@ -317,12 +317,14 @@ public class DataManager extends TimerTask {
 	 * @return true on success, false on failure
 	 */
 	private boolean checkTables() {
+		
 		JDCConnection conn = null;
 		Statement stmnt = null;
 		try {
 			conn = getConnection();
 			stmnt = conn.createStatement();
 			DatabaseMetaData dbm = conn.getMetaData();
+	        
 			//Check if tables exist
 			if (!JDBCUtil.tableExists(dbm, Config.DbPlayerTable)) {
 				Util.info("Table `" + Config.DbPlayerTable + "` not found, creating...");
@@ -336,19 +338,7 @@ public class DataManager extends TimerTask {
 				Util.info("Table `" + Config.DbHawkEyeTable + "` not found, creating...");
 				stmnt.execute("CREATE TABLE IF NOT EXISTS `" + Config.DbHawkEyeTable + "` (`data_id` int(11) NOT NULL AUTO_INCREMENT, `date` varchar(255) NOT NULL, `player_id` int(11) NOT NULL, `action` int(11) NOT NULL, `world_id` varchar(255) NOT NULL, `x` double NOT NULL, `y` double NOT NULL, `z` double NOT NULL, `data` varchar(255) DEFAULT NULL, `plugin` varchar(255) DEFAULT 'HawkEye', PRIMARY KEY (`data_id`), KEY `player_action_world` (`player_id`,`action`,`world_id`), KEY `x_y_z` (`x`,`y`,`z` )) ENGINE=MyISAM;");
 			}
-			//Update to post v1.1.0 database
-			else if (!JDBCUtil.columnExists(dbm, Config.DbHawkEyeTable, "player_id")) {
-				Util.info("Pre-v1.1.0 database detected, performing legacy database update please wait...");
-				stmnt.execute("CREATE TABLE IF NOT EXISTS `" + Config.DbHawkEyeTable + "2` (`data_id` int(11) NOT NULL AUTO_INCREMENT, `date` varchar(255) NOT NULL, `player_id` int(11) NOT NULL, `action` int(11) NOT NULL, `world_id` varchar(255) NOT NULL, `x` double NOT NULL, `y` double NOT NULL, `z` double NOT NULL, `data` varchar(255) DEFAULT NULL, `plugin` varchar(255) DEFAULT 'HawkEye', PRIMARY KEY (`data_id`), KEY `player_action_world` (`player_id`,`action`,`world_id`), KEY `x_y_z` (`x`,`y`,`z` )) ENGINE=MyISAM;");
-				stmnt.execute("INSERT INTO `" + Config.DbPlayerTable + "` (player) SELECT DISTINCT `player` FROM `" + Config.DbHawkEyeTable + "`");
-				stmnt.execute("INSERT INTO `" + Config.DbWorldTable + "` (world) SELECT DISTINCT `world` FROM `" + Config.DbHawkEyeTable + "`");
-				Util.info("Players and worlds imported into new structure. Importing main data please wait...");
-				stmnt.execute("INSERT INTO `" + Config.DbHawkEyeTable + "2` (date, player_id, action, world_id, x, y, z, data, plugin) SELECT " + Config.DbHawkEyeTable + ".date, " + Config.DbPlayerTable + ".player_id, " + Config.DbHawkEyeTable + ".action, " + Config.DbWorldTable + ".world_id, " + Config.DbHawkEyeTable + ".x, " + Config.DbHawkEyeTable + ".y, " + Config.DbHawkEyeTable + ".z, " + Config.DbHawkEyeTable + ".data, " + Config.DbHawkEyeTable + ".plugin FROM `" + Config.DbHawkEyeTable + "`, `" + Config.DbPlayerTable + "`, `" + Config.DbWorldTable + "` WHERE " + Config.DbPlayerTable + ".player = " + Config.DbHawkEyeTable + ".player AND " + Config.DbWorldTable + ".world = " + Config.DbHawkEyeTable + ".world");
-				Util.info("Import complete, cleaning up old table and renaming new...");
-				stmnt.execute("DROP TABLE `" + Config.DbHawkEyeTable + "`;");
-				stmnt.execute("RENAME TABLE `" + Config.DbHawkEyeTable + "2` TO `" + Config.DbHawkEyeTable + "`");
-				Util.info("Legacy database update complete");
-			}
+			
 		} catch (SQLException ex) {
 			Util.severe("Error checking HawkEye tables: " + ex);
 			return false;
@@ -363,6 +353,7 @@ public class DataManager extends TimerTask {
 				
 		}
 		return true;
+		
 	}
 	
 	/**
