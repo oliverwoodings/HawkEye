@@ -8,17 +8,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.command.CommandSender;
-
-import uk.co.oliwali.HawkEye.HawkEye;
 import uk.co.oliwali.HawkEye.DataType;
-import uk.co.oliwali.HawkEye.DisplayManager;
-import uk.co.oliwali.HawkEye.PlayerSession;
-import uk.co.oliwali.HawkEye.Rollback;
 import uk.co.oliwali.HawkEye.SearchParser;
+import uk.co.oliwali.HawkEye.callbacks.BaseCallback;
 import uk.co.oliwali.HawkEye.database.DataManager;
 import uk.co.oliwali.HawkEye.util.Config;
-import uk.co.oliwali.HawkEye.util.Permission;
 import uk.co.oliwali.HawkEye.util.Util;
 
 /**
@@ -29,15 +23,13 @@ import uk.co.oliwali.HawkEye.util.Util;
 public class SearchQuery extends Thread {
 	
 	private SearchParser parser;
-	private CommandSender sender;
 	private SearchDir dir;
-	private SearchType searchType;
+	private BaseCallback callBack;
 	
-	public SearchQuery(SearchType type, SearchParser sparser, SearchDir dire) {
-		parser = sparser;
-		sender = parser.player;
-		dir = dire;
-		searchType = type;
+	public SearchQuery(BaseCallback callBack, SearchParser parser, SearchDir dir) {
+		this.callBack = callBack;
+		this.parser = parser;
+		this.dir = dir;
 	}
 	
 	/**
@@ -69,7 +61,7 @@ public class SearchQuery extends Thread {
 			if (npids.size() > 0)
 				args.add("player_id NOT IN (" + Util.join(npids, ",") + ")");
 			if (npids.size() + pids.size() < 1) {
-				Util.sendMessage(sender, "&cNo players found matching your specifications");
+				callBack.error(SearchError.NO_PLAYERS, "No players found matching your specifications");
 				return;
 			}
 		}
@@ -94,23 +86,19 @@ public class SearchQuery extends Thread {
 			if (nwids.size() > 0)
 				args.add("world_id NOT IN (" + Util.join(nwids, ",") + ")");
 			if (nwids.size() + wids.size() < 1) {
-				Util.sendMessage(sender, "&cNo worlds found matching your specifications");
+				callBack.error(SearchError.NO_WORLDS, "No worlds found matching your specifications");
 				return;
 			}
 		}
 		
 		//Compile actions into SQL form
 		Util.debug("Building actions");
-		if (parser.actions == null || parser.actions.size() == 0) {
-			parser.actions = new ArrayList<DataType>();
-			for (DataType type : DataType.values())
-				parser.actions.add(type);
-		}
-		List<Integer> acs = new ArrayList<Integer>();
-		for (DataType act : parser.actions)
-			if (Permission.searchType(sender, act.getConfigName()))
+		if (parser.actions != null && parser.actions.size() > 0) {
+			List<Integer> acs = new ArrayList<Integer>();
+			for (DataType act : parser.actions)
 				acs.add(act.getId());
-		args.add("action IN (" + Util.join(acs, ",") + ")");
+			args.add("action IN (" + Util.join(acs, ",") + ")");
+		}
 		
 		//Add dates
 		Util.debug("Building dates");
@@ -150,8 +138,6 @@ public class SearchQuery extends Thread {
 		
 		//Set up some stuff for the search
 		ResultSet res;
-		PlayerSession session = HawkEye.getSession(sender);
-		Util.sendMessage(session.getSender(), "&cSearching for matching logs...");
 		List<DataEntry> results = new ArrayList<DataEntry>();
 		JDCConnection conn = DataManager.getConnection();
 		Statement stmnt = null;
@@ -173,7 +159,7 @@ public class SearchQuery extends Thread {
 			}
 		} catch (SQLException ex) {
 			Util.severe("Error executing MySQL query: " + ex);
-			Util.sendMessage(sender, "&cError executing MySQL query, search aborted");
+			callBack.error(SearchError.MYSQL_ERROR, "Error executing MySQL query: " + ex);
 			return;
 		} finally {
 			try {
@@ -182,34 +168,18 @@ public class SearchQuery extends Thread {
 				conn.close();
 			} catch (SQLException ex) {
 				Util.severe("Unable to close SQL connection: " + ex);
+				callBack.error(SearchError.MYSQL_ERROR, "Unable to close SQL connection: " + ex);
 			}
 				
 		}
 		
 		Util.debug(results.size() + " results found");
 		
-		//Perform actions dependent on the type of search
-		switch (searchType) {
-			case ROLLBACK:
-				session.setRollbackResults(results);
-				new Rollback(session);
-				break;
-			case SEARCH:
-				session.setSearchResults(results);
-				DisplayManager.displayPage(session, 1);
-				break;
-		}
+		//Run callback
+		callBack.execute();
+		
 		Util.debug("Search complete");
 		
-	}
-	
-	/**
-	 * Enumeration for the different types of searching
-	 * @author oliverw92
-	 */
-	public enum SearchType {
-		ROLLBACK,
-		SEARCH
 	}
 	
 	/**
@@ -219,6 +189,15 @@ public class SearchQuery extends Thread {
 	public enum SearchDir {
 		ASC,
 		DESC
+	}
+	
+	/**
+	 * Enumeration for query errors
+	 */
+	public enum SearchError {
+		NO_PLAYERS,
+		NO_WORLDS,
+		MYSQL_ERROR
 	}
 	
 }

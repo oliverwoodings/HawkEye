@@ -8,6 +8,7 @@ import java.util.List;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
+import uk.co.oliwali.HawkEye.util.Permission;
 import uk.co.oliwali.HawkEye.util.Util;
 
 /**
@@ -55,8 +56,10 @@ public class SearchParser {
 			else if (param.equals("f")) filters = values;
 			else if (param.equals("a")) {
 				for (String value : values) {
-					if (DataType.fromName(value) == null) throw new IllegalArgumentException("Invalid action supplied: &7" + value);
-					actions.add(DataType.fromName(value));
+					DataType type = DataType.fromName(value);
+					if (type == null) throw new IllegalArgumentException("Invalid action supplied: &7" + value);
+					if (!Permission.searchType(player, type.getConfigName())) throw new IllegalArgumentException("You do not have permission to search for: &7" + type.getConfigName());
+					actions.add(type);
 				}
 			}
 			else if (param.equals("l")) {

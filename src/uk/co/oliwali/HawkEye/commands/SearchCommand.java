@@ -1,8 +1,8 @@
 package uk.co.oliwali.HawkEye.commands;
 
 import uk.co.oliwali.HawkEye.SearchParser;
+import uk.co.oliwali.HawkEye.callbacks.SearchCallback;
 import uk.co.oliwali.HawkEye.database.SearchQuery.SearchDir;
-import uk.co.oliwali.HawkEye.database.SearchQuery.SearchType;
 import uk.co.oliwali.HawkEye.database.SearchQuery;
 import uk.co.oliwali.HawkEye.util.Permission;
 import uk.co.oliwali.HawkEye.util.Util;
@@ -33,7 +33,7 @@ public class SearchCommand extends BaseCommand {
 		}
 		
 		//Create new SeachQuery with data
-		Thread thread = new SearchQuery(SearchType.SEARCH, parser, SearchDir.ASC);
+		Thread thread = new SearchQuery(new SearchCallback(), parser, SearchDir.DESC);
 		thread.start();
 		return true;
 		

@@ -21,9 +21,9 @@ import uk.co.oliwali.HawkEye.SearchParser;
 import uk.co.oliwali.HawkEye.util.BlockUtil;
 import uk.co.oliwali.HawkEye.util.Config;
 import uk.co.oliwali.HawkEye.util.Util;
+import uk.co.oliwali.HawkEye.callbacks.SearchCallback;
 import uk.co.oliwali.HawkEye.database.JDCConnection;
 import uk.co.oliwali.HawkEye.database.SearchQuery.SearchDir;
-import uk.co.oliwali.HawkEye.database.SearchQuery.SearchType;
 
 /**
  * Handler for everything to do with the database.
@@ -204,7 +204,7 @@ public class DataManager extends TimerTask {
 		loc = Util.getSimpleLocation(loc);
 		parser.loc = loc.toVector();
 		parser.worlds = new String[]{ loc.getWorld().getName() };
-		Thread thread = new SearchQuery(SearchType.SEARCH, parser, SearchDir.DESC);
+		Thread thread = new SearchQuery(new SearchCallback(), parser, SearchDir.DESC);
 		thread.start();
 	}
 	
