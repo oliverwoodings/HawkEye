@@ -1,7 +1,11 @@
 package uk.co.oliwali.HawkEye.util;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
+
+import ru.tehkode.permissions.PermissionManager;
+import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 import uk.co.oliwali.HawkEye.HawkEye;
 
@@ -16,8 +20,9 @@ import com.nijikokun.bukkit.Permissions.Permissions;
 public class Permission {
 	
 	private HawkEye plugin;
-	private static PermissionPlugin handler = PermissionPlugin.OP;
+	private static PermissionPlugin handler = PermissionPlugin.BUKKITPERMS;
 	private static PermissionHandler permissionPlugin;
+	private static PermissionManager permissionsEx;
 	
 	/**
 	 * Check permissions plugins, deciding which one to use
@@ -25,10 +30,13 @@ public class Permission {
 	 */
 	public Permission(HawkEye instance) {
 		plugin = instance;
-        Plugin permissions = plugin.getServer().getPluginManager().getPlugin("Permissions");
-        
-        if (permissions != null) {
-        	permissionPlugin = ((Permissions)permissions).getHandler();
+		if (Bukkit.getServer().getPluginManager().isPluginEnabled("PermissionsEx")) {
+        	handler = PermissionPlugin.PERMISSIONSEX;
+        	permissionsEx = PermissionsEx.getPermissionManager();
+        	Util.info("Using PermissionsEx for user permissions");
+		}
+        else if (Bukkit.getServer().getPluginManager().isPluginEnabled("PermissionsEx")) {
+        	permissionPlugin = ((Permissions)plugin.getServer().getPluginManager().getPlugin("Permissions")).getHandler();
         	handler = PermissionPlugin.PERMISSIONS;
         	Util.info("Using Permissions for user permissions");
         }
@@ -49,10 +57,12 @@ public class Permission {
 			return true;
 		Player player = (Player)sender;
 		switch (handler) {
+			case PERMISSIONSEX:
+				return permissionsEx.has(player, node);
 			case PERMISSIONS:
 				return permissionPlugin.has(player, node);
-			case OP:
-				return player.isOp();
+			case BUKKITPERMS:
+				return player.hasPermission(node);
 		}
 		return false;
 	}
@@ -118,10 +128,15 @@ public class Permission {
 	 * @param group
 	 * @return
 	 */
-	public static boolean inSingleGroup(String world, String player, String group) {
+	public static boolean inGroup(World world, Player player, String group) {
+		return inGroup(world.getName(), player.getName(), group);
+	}
+	public static boolean inGroup(String world, String player, String group) {
 		switch (handler) {
+			case PERMISSIONSEX:
+				return permissionsEx.getUser(player).inGroup(group);
 			case PERMISSIONS:
-				return permissionPlugin.inSingleGroup(world, player, group);
+				return permissionPlugin.inGroup(world, player, group);
 		}
 		return false;
 	}
@@ -131,8 +146,9 @@ public class Permission {
 	 * @author oliverw92
 	 */
 	private enum PermissionPlugin {
+		PERMISSIONSEX,
 		PERMISSIONS,
-		OP
+		BUKKITPERMS
 	}
 
 }
