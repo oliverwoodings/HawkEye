@@ -276,7 +276,7 @@ public class HawkEye extends JavaPlugin {
 	 * @param args[] - String[]
 	 */
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String args[]) {
-		if (cmd.getName().equalsIgnoreCase("HawkEye")) {
+		if (cmd.getName().equalsIgnoreCase("hawk")) {
 			if (args.length == 0)
 				args = new String[]{"help"};
 			BaseCommand help = null;

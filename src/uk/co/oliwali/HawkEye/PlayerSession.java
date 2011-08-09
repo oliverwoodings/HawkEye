@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.bukkit.block.BlockState;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import uk.co.oliwali.HawkEye.database.DataEntry;
 
@@ -21,8 +19,7 @@ public class PlayerSession {
 	private List<DataEntry> rollbackResults  = null;
 	private List<BlockState> rollbackUndo = null;
 	private boolean usingTool = false;
-	private DamageCause lastDamageCause = null;
-	private Entity lastAttacker = null;
+	private boolean doingRollback = false;
 	
 	public PlayerSession(CommandSender sender) {
 		this.sender = sender;
@@ -63,18 +60,11 @@ public class PlayerSession {
 		this.usingTool = usingTool;
 	}
 	
-	public DamageCause getLastDamageCause() {
-		return lastDamageCause;
+	public boolean doingRollback() {
+		return doingRollback;
 	}
-	public void setLastDamageCause(DamageCause lastDamageCause) {
-		this.lastDamageCause = lastDamageCause;
-	}
-	
-	public Entity getLastAttacker() {
-		return lastAttacker;
-	}
-	public void setLastAttacker(Entity lastAttacker) {
-		this.lastAttacker = lastAttacker;
+	public void setDoingRollback(boolean doingRollback) {
+		this.doingRollback = doingRollback;
 	}
 
 }

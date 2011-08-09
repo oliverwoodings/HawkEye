@@ -57,8 +57,10 @@ public abstract class BaseCommand {
 			return false;
 		if (sender instanceof Player)
 			player = (Player)sender;
-		if (!permission())
+		if (!permission()) {
+			Util.sendMessage(sender, "&cYou do not have permission to do that!");
 			return false;
+		}
 		return execute();
 	}
 	

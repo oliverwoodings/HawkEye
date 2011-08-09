@@ -19,13 +19,13 @@ public class RollbackCommand extends BaseCommand {
 		name = "rollback";
 		argLength = 1;
 		bePlayer = true;
-		usage = "<parameters> <- rollback actions. Type &c/dl rollbackhelp&7 for more info";
+		usage = "<parameters> <- rollback actions according to parameters";
 	}
 	
 	public boolean execute() {
 		
 		//Check if player already has a rollback processing
-		if (session.getRollbackResults() != null && session.getRollbackResults().size() > 0) {
+		if (session.doingRollback()) {
 			Util.sendMessage(sender, "&cYou already have a rollback command processing!");
 			return true;
 		}

@@ -183,7 +183,7 @@ public class Util {
 				if (str.substring(i, i+2).equalsIgnoreCase(color.getCustom()))
 					lastColor = color;
 			}
-			i = i+2;
+			i = i+1;
 		}
 		return lastColor;
 	}

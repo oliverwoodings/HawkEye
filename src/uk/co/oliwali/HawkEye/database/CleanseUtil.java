@@ -42,13 +42,23 @@ public class CleanseUtil extends TimerTask {
 		}
 		
 		Util.info("Running cleanse utility for logs older than " + date);
+		JDCConnection conn = null;
+		Statement stmnt = null;
 		try {
-			JDCConnection conn = DataManager.getConnection();
-			Statement stmnt = conn.createStatement();
+			conn = DataManager.getConnection();
+			stmnt = conn.createStatement();
 			int affected = stmnt.executeUpdate("DELETE FROM `" + Config.DbHawkEyeTable + "` WHERE `date` < '" + date + "'");
 			Util.info("Deleted " + affected + " row(s) from database");
 		} catch (SQLException ex) {
 			Util.severe("Unable to execute cleanse utility: " + ex);
+		}
+		finally {
+			try {
+				stmnt.close();
+			} catch (SQLException e) {
+				Util.severe("Error closing SQL statement!");
+			}
+			conn.close();
 		}
 		
 	}

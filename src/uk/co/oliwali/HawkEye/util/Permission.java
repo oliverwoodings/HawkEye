@@ -35,7 +35,7 @@ public class Permission {
         	permissionsEx = PermissionsEx.getPermissionManager();
         	Util.info("Using PermissionsEx for user permissions");
 		}
-        else if (Bukkit.getServer().getPluginManager().isPluginEnabled("PermissionsEx")) {
+        else if (Bukkit.getServer().getPluginManager().isPluginEnabled("Permissions")) {
         	permissionPlugin = ((Permissions)plugin.getServer().getPluginManager().getPlugin("Permissions")).getHandler();
         	handler = PermissionPlugin.PERMISSIONS;
         	Util.info("Using Permissions for user permissions");
@@ -73,7 +73,7 @@ public class Permission {
 	 * @return
 	 */
 	public static boolean search(CommandSender player) {
-		return hasPermission(player, "HawkEye.search");
+		return hasPermission(player, "hawkeye.search");
 	}
 	
 	/**
@@ -82,7 +82,7 @@ public class Permission {
 	 * @return
 	 */
 	public static boolean searchType(CommandSender player, String type) {
-		return hasPermission(player, "HawkEye.search." + type.toLowerCase());
+		return hasPermission(player, "hawkeye.search." + type.toLowerCase());
 	}
 	
 	/**
@@ -91,7 +91,7 @@ public class Permission {
 	 * @return
 	 */
 	public static boolean tpTo(CommandSender player) {
-		return hasPermission(player, "HawkEye.tpto");
+		return hasPermission(player, "hawkeye.tpto");
 	}
 	
 	/**
@@ -100,16 +100,16 @@ public class Permission {
 	 * @return
 	 */
 	public static boolean rollback(CommandSender player) {
-		return hasPermission(player, "HawkEye.rollback");
+		return hasPermission(player, "hawkeye.rollback");
 	}
 	
 	/**
-	 * Permission to the HawkEye tool
+	 * Permission to the hawkeye tool
 	 * @param player
 	 * @return
 	 */
 	public static boolean tool(CommandSender player) {
-		return hasPermission(player, "HawkEye.tool");
+		return hasPermission(player, "hawkeye.tool");
 	}
 	
 	/**
@@ -118,7 +118,7 @@ public class Permission {
 	 * @return
 	 */
 	public static boolean notify(CommandSender player) {
-		return hasPermission(player, "HawkEye.notify");
+		return hasPermission(player, "hawkeye.notify");
 	}
 	
 	/**
@@ -134,7 +134,7 @@ public class Permission {
 	public static boolean inGroup(String world, String player, String group) {
 		switch (handler) {
 			case PERMISSIONSEX:
-				return permissionsEx.getUser(player).inGroup(group);
+				return permissionsEx.getUser(player).inGroup(group, true);
 			case PERMISSIONS:
 				return permissionPlugin.inGroup(world, player, group);
 		}

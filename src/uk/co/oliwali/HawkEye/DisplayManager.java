@@ -6,7 +6,9 @@ import org.bukkit.command.CommandSender;
 
 import uk.co.oliwali.HawkEye.database.DataEntry;
 import uk.co.oliwali.HawkEye.util.BlockUtil;
+import uk.co.oliwali.HawkEye.util.InventoryUtil;
 import uk.co.oliwali.HawkEye.util.Util;
+import uk.co.oliwali.HawkEye.util.Util.CustomColor;
 
 /**
  * Manages displaying of search results. Includes utilities for handling pages of results
@@ -63,6 +65,9 @@ public class DisplayManager {
 					action = data.substring(0, data.indexOf("-"));
 					data = data.substring(data.indexOf("-") + 1);
 					break;
+				case CONTAINER_TRANSACTION:
+					data = InventoryUtil.createChangeString(InventoryUtil.interpretDifferenceString(data));
+					break;
 			}
 
 			sendLine(session.getSender(), "&cid:" + entry.getDataid() + " &7" + entry.getDate().substring(5) + " &c" + entry.getPlayer() + " &7" + action);
@@ -81,9 +86,14 @@ public class DisplayManager {
 		int len = 68;
 		if (line.length() < len)
 			Util.sendMessage(sender, "&8| " + line);
-		else
-			for (int i = 0; i < line.length(); i+=len)
-				Util.sendMessage(sender, "&8| &c" + (i+len>line.length()?line.substring(i):line.substring(i, i+len)));
+		else {
+			CustomColor lastColor = CustomColor.WHITE;
+			for (int i = 0; i < line.length(); i+=len) {
+				String str = (i+len>line.length()?line.substring(i):line.substring(i, i+len));
+				Util.sendMessage(sender, "&8| " + lastColor.getCustom() + str);
+				lastColor = Util.getLastColor(str);
+			}
+		}
 	}
 	
 }

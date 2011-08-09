@@ -12,7 +12,7 @@ public class PageCommand extends BaseCommand {
 	public PageCommand() {
 		name = "page";
 		argLength = 1;
-		usage = "<page> <- display a page from your last search results";
+		usage = "<page> <- display a page from your last search";
 	}
 	
 	public boolean execute() {

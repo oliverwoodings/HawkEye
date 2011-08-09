@@ -53,6 +53,7 @@ public class Rollback implements Runnable {
 		Util.debug("Starting rollback of " + session.getRollbackResults().size() + " results");
 		
 		//Start rollback
+		session.setDoingRollback(true);
 		Util.sendMessage(session.getSender(), "&cAttempting to rollback &7" + session.getRollbackResults().size() + "&c results");
 		timerID = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Bukkit.getServer().getPluginManager().getPlugin("HawkEye"), this, 1, 2);
 		
@@ -137,7 +138,7 @@ public class Rollback implements Runnable {
 			
 			//Store undo results and notify player
 			session.setRollbackUndo(undo);
-			session.setRollbackResults(null);
+			session.setDoingRollback(false);
 			Util.sendMessage(session.getSender(), "&cRollback complete, &7" + counter + "&c edits performed");
 			Util.sendMessage(session.getSender(), "&cUndo this rollback using &7/dl undo");
 			

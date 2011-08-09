@@ -78,12 +78,34 @@ public class InventoryUtil {
 		for (String changes : diff.split("@")) {
 			HashMap<String,Integer> op = new HashMap<String,Integer>();
 			for (String change : changes.split("&")) {
+				if (change.length() == 0) continue;
 				String[] item = change.split(",");
 				op.put(item[0], Integer.parseInt(item[1]));
 			}
 			ops.add(op);
 		}
+		if (ops.size() == 1) ops.add(new HashMap<String,Integer>());
 		return ops;
+	}
+	
+	public static String createChangeString(List<HashMap<String,Integer>> ops) {
+		
+		String changeString = "";
+		
+		//Loop through ops
+		List<String> add = new ArrayList<String>();
+		for (Entry<String, Integer> item : ops.get(0).entrySet())
+			add.add(item.getValue() + "x " + BlockUtil.getBlockStringName(item.getKey()));
+		List<String> sub = new ArrayList<String>();
+		for (Entry<String, Integer> item : ops.get(1).entrySet())
+			sub.add(item.getValue() + "x " + BlockUtil.getBlockStringName(item.getKey()));
+		
+		//Build string
+		if (add.size() > 0) changeString += "&a+(" + Util.join(add, ", ") + ")";
+		if (sub.size() > 0) changeString += "&4-(" + Util.join(sub, ", ") + ")";
+		
+		return changeString;
+		
 	}
 
 }
