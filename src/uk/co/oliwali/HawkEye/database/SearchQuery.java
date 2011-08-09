@@ -179,6 +179,7 @@ public class SearchQuery extends Thread {
 		Util.debug(results.size() + " results found");
 		
 		//Run callback
+		callBack.results = results;
 		callBack.execute();
 		
 		Util.debug("Search complete");

@@ -5,6 +5,10 @@ import uk.co.oliwali.HawkEye.Rollback;
 import uk.co.oliwali.HawkEye.database.SearchQuery.SearchError;
 import uk.co.oliwali.HawkEye.util.Util;
 
+/**
+ * Implementation of BaseCallback for use in rollback commands
+ * @author oliverw92
+ */
 public class RollbackCallback extends BaseCallback {
 	
 	private PlayerSession session;
