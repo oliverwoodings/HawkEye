@@ -26,7 +26,7 @@ public class WorldEditRollbackCommand extends BaseCommand {
 		name = "werollback";
 		argLength = 1;
 		bePlayer = true;
-		usage = "<parameters> <- rollback actions in WorldEdit selection";
+		usage = "<parameters> <- rollback in WorldEdit selection";
 	}
 	
 	public boolean execute() {

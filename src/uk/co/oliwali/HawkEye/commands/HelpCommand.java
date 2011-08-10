@@ -19,7 +19,7 @@ public class HelpCommand extends BaseCommand {
 		Util.sendMessage(sender, "&c---------------------- &7HawkEye &c----------------------");
 		for (BaseCommand cmd : HawkEye.commands.toArray(new BaseCommand[0]))
 			if (cmd.permission())
-				Util.sendMessage(sender, "&7- /"+usedCommand+" &c" + cmd.name + " &7" + cmd.usage);
+				Util.sendMessage(sender, "&8-&7 /"+usedCommand+" &c" + cmd.name + " &7" + cmd.usage);
 		return true;
 	}
 	

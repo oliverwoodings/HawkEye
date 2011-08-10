@@ -13,7 +13,7 @@ public class RollbackHelpCommand extends BaseCommand {
 		name = "rollbackhelp";
 		argLength = 0;
 		bePlayer = false;
-		usage = " <- displays information about the rollback command";
+		usage = " <- info about the rollback command";
 	}
 	
 	public boolean execute() {

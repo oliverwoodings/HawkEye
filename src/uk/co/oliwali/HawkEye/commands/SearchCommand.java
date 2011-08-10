@@ -18,7 +18,7 @@ public class SearchCommand extends BaseCommand {
 		bePlayer = true;
 		name = "search";
 		argLength = 1;
-		usage = "<parameters> <- search the HawkEye database";
+		usage = "<parameters> <- search HawkEye database";
 	}
 	
 	public boolean execute() {

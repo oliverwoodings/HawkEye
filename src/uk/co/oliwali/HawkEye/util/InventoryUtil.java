@@ -84,10 +84,14 @@ public class InventoryUtil {
 			}
 			ops.add(op);
 		}
-		if (ops.size() == 1) ops.add(new HashMap<String,Integer>());
 		return ops;
 	}
 	
+	/**
+	 * Creates a readable string representing the changes of a difference string
+	 * @param ops additions and subtractions as supplied by interpretDifferenceString
+	 * @return
+	 */
 	public static String createChangeString(List<HashMap<String,Integer>> ops) {
 		
 		String changeString = "";

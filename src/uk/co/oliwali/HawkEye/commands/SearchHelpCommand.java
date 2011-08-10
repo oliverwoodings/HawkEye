@@ -13,7 +13,7 @@ public class SearchHelpCommand extends BaseCommand {
 		name = "searchhelp";
 		argLength = 0;
 		bePlayer = false;
-		usage = " <- displays help information about the search command";
+		usage = " <- info about the search command";
 	}
 	
 	public boolean execute() {

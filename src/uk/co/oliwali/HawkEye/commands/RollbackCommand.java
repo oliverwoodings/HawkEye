@@ -19,7 +19,7 @@ public class RollbackCommand extends BaseCommand {
 		name = "rollback";
 		argLength = 1;
 		bePlayer = true;
-		usage = "<parameters> <- rollback actions according to parameters";
+		usage = "<parameters> <- rollback changes";
 	}
 	
 	public boolean execute() {
