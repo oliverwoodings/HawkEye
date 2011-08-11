@@ -15,9 +15,9 @@
 					"dbDbase" => "minecraft",
 					"dbUser"  => "root",
 					"dbPass"  => "",
-					"dbTable" => "datalog",
-					"dbPlayerTable" => "dl_players",
-					"dbWorldTable" => "dl_worlds",
+					"dbTable" => "hawkeye",
+					"dbPlayerTable" => "hawk_players",
+					"dbWorldTable" => "hawk_worlds",
 					
 					//Set this to the password you want people to have to use to access the interface
 					//Leave blank for no password
@@ -33,7 +33,7 @@
 					//Language pack - default is english.php
 					//You can create your own based off the english.php file,
 					//then change the name below to your language file name
-					"langFile" => "german.php",
+					"langFile" => "english.php",
 					
 					//Log queries to log.txt
 					//Useful to keep track of who is querying what
