@@ -1,96 +1,202 @@
 00,Air
+262,Arrow
 26,Bed
+355,Bed
 07,Bedrock
+333,Boat
+352,Bone
+340,Book
 47,Bookshelf
+261,Bow
+281,Bowl
+297,Bread
 45,Brick Block
 39,Brown Mushroom
+325,Bucket
 62,Burning Furnace
 81,Cactus
+354,Cake
 92,Cake Block
+305,Chain Boots
+303,Chain Chestplate
+302,Chain Helmet
+304,Chain Leggings
 54,Chest
+337,Clay
 82,Clay Block
+336,Clay Brick
+347,Clock
+263,Coal D
 16,Coal Ore
 04,Cobblestone
 67,Cobblestone Stairs
 30,Cobweb
+345,Compass
+350,Cooked Fish
+320,Cooked Porkchop
+357,Cookie
 58,Crafting Table
 37,Dandelion
 32,Dead Shrubs
 28,Detector Rail
+264,Diamond
+279,Diamond Axe
 57,Diamond Block
+313,Diamond Boots
+311,Diamond Chestplate
+310,Diamond Helmet
+293,Diamond Hoe
+312,Diamond Leggings
 56,Diamond Ore
+278,Diamond Pickaxe
+277,Diamond Shovel
+276,Diamond Sword
 03,Dirt
 23,Dispenser
 43,Double Slabs
+351,Dye D
+344,Egg
 60,Farmland
+288,Feather
 85,Fence
 51,Fire
+346,Fishing Rod
+318,Flint
+259,Flint and Steel
 61,Furnace
 20,Glass
 74,Glowing Redstone Ore
 89,Glowstone Block
+348,Glowstone Dust
+286,Gold Axe
 41,Gold Block
+317,Gold Boots
+315,Gold Chestplate
+314,Gold Helmet
+294,Gold Hoe
+266,Gold Ingot
+316,Gold Leggings
+2256,Gold Music Disc
 14,Gold Ore
+285,Gold Pickaxe
+284,Gold Shovel
+283,Gold Sword
+322,Golden Apple
 02,Grass
 13,Gravel
+289,Gunpowder
 79,Ice
+258,Iron Axe
 42,Iron Block
+309,Iron Boots
+307,Iron Chestplate
 71,Iron Door
+306,Iron Helmet
+292,Iron Hoe
+265,Iron Ingot
+308,Iron Leggings
 15,Iron Ore
+257,Iron Pickaxe
+256,Iron Shovel
+267,Iron Sword
+330,Iron door
 91,Jack-O-Lantern
 84,Jukebox
 65,Ladders
 22,Lapis Lazuli Block
 21,Lapis Lazuli Ore
 10,Lava
+327,Lava bucket
+334,Leather
+301,Leather Boots
+298,Leather Cap
+300,Leather Pants
+299,Leather Tunic
 18,Leaves
 69,Lever
 95,Locked Chest
+358,Map
+335,Milk
+328,Minecart
 52,Monster Spawner
 48,Moss Stone
+282,Mushroom Soup
+2257,Music Disc
 87,Netherrack
 25,Note Block
 49,Obsidian
-33,Piston
+321,Paintings
+339,Paper
 34,Piston (Head)
+33,Piston
 90,Portal
+343,Powered Minecart
 27,Powered Rail
 86,Pumpkin
 66,Rails
+349,Raw Fish
+319,Raw Porkchop
+260,Red Apple
 40,Red Mushroom
+331,Redstone
 73,Redstone Ore
 93,Redstone Repeater ("off" state)
 94,Redstone Repeater ("on" state)
+356,Redstone Repeater
 75,Redstone Torch ("off" state)
 76,Redstone Torch ("on" state)
 55,Redstone Wire
 38,Rose
+329,Saddle
 12,Sand
 24,Sandstone
 06,Sapling
 59,Seeds
+295,Seeds
+359,Shears
+323,Sign
 63,Sign Post
 44,Slabs
+341,Slimeball
 78,Snow
 80,Snow Block
+332,Snowball
 88,Soul Sand
 19,Sponge
 11,Stationary lava
 09,Stationary water
+280,Stick
 29,Sticky Piston
 01,Stone
+275,Stone Axe
 77,Stone Button
+291,Stone Hoe
+274,Stone Pickaxe
 70,Stone Pressure Plate 
+273,Stone Shovel
+272,Stone Sword
+342,Storage Minecart
+287,String
+353,Sugar
 83,Sugar Cane
+338,Sugar Cane
 46,TNT
 31,Tall Grass
 50,Torch 
 96,Trapdoor 
 68,Wall Sign
 08,Water
+326,Water bucket
+296,Wheat
 17,Wood
+271,Wooden Axe
 64,Wooden Door
+290,Wooden Hoe
+270,Wooden Pickaxe
 05,Wooden Plank
 72,Wooden Pressure Plate
+269,Wooden Shovel
 53,Wooden Stairs
+268,Wooden Sword
+324,Wooden door
 35,Wool

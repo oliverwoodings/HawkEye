@@ -100,7 +100,11 @@ input, textarea {
 	float: left;
 }
 .headerText {
-	margin-left: 344px;
+	margin-left: 320px;
+	margin-top: 15px;
+	background-image: url(../images/logo.png);
+	width: 313px;
+	height: 55px;
 }
 .logout {
 	font-size: 12px;
@@ -152,13 +156,20 @@ input, textarea {
 	}
 
 .actions {
-	margin-left: 40px;
-	margin-top: -15px;
-	width: 280px;
+    border: 1px solid #999999;
 	font-size: 13px;
+    border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+    height: 205px;
+    margin-left: 40px;
+    margin-top: -15px;
+    overflow: auto;
+    padding: 10px;
+    width: 280px;
 }
 	.actions div {
-		width: 140px;
+		width: 120px;
 	}
 
 .parameters1 {

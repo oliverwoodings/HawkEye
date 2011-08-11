@@ -29,7 +29,7 @@
 		
 	//Get players
 	$players = array();
-	$res = mysql_query("SELECT * FROM dl_players");
+	$res = mysql_query("SELECT * FROM `" . $config["dbPlayerTable"] . "`");
 	if (!$res)
 		return error(mysql_error());
 	if (mysql_num_rows($res) == 0)
@@ -39,7 +39,7 @@
 	
 	//Get worlds
 	$worlds = array();
-	$res = mysql_query("SELECT * FROM dl_worlds");
+	$res = mysql_query("SELECT * FROM dl_worlds `" . $config["dbWorldTable"] . "`");
 	if (!$res)
 		return error(mysql_error());
 	if (mysql_num_rows($res) == 0)
@@ -47,7 +47,7 @@
 	while ($world = mysql_fetch_object($res))
 		$worlds[$world->world_id] = $world->world;
 	
-	$sql = "SELECT * FROM `HawkEye` WHERE ";
+	$sql = "SELECT * FROM `" . $config["dbTable"] . "` WHERE ";
 	$args = array();
 	
 	if ($data["players"][0] != "") {
@@ -108,11 +108,17 @@
 		array_push($args, "`data` NOT LIKE " . join(" OR `data` LIKE ", $data["exclude"]));
 	}
 	
+	//Compile SQL statement
 	$sql .= join(" AND ", $args);
 	if ($config["maxResults"] > 0)
 		$sql .= " LIMIT " . $config["maxResults"];
+		
+	//Log query
+	if ($config["logQueries"] == true)
+		file_put_contents("log.txt", date("m.d.y G:i:s") . " - " . $_SERVER["REMOTE_ADDR"] . " - " . $sql, FILE_APPEND);
+		
+	//Run query
 	$res = mysql_query($sql);
-	
 	if (!$res)
 		return error(mysql_error());
 	
@@ -127,26 +133,51 @@
 		$row = array();
 		$fdata = $entry->data;
 		$action = $entry->action;
-		if ($action == 0) {
-			$fdata = getBlockName($fdata);
+		
+		//Manipulate data according to action
+		switch ($action) {
+			case 0:
+			case 10:
+				$fdata = getBlockName($fdata);
+				break;
+			case 1:
+			case 19:
+			case 25:
+				$arr = explode("-", $fdata);
+				if (count($arr) > 1)
+					$fdata = getBlockName($arr[0]) . " replaced by " . getBlockName($arr[1]);
+				else $fdata = getBlockName($arr[0]);
+				break;
+			case 2:
+				$fdata = str_replace("|", "<br />", $fdata);
+				break;
+			case 16:
+				$arr = explode("-", $fdata);
+				if (count($arr) > 0)
+					$action = array_shift($arr);
+				$fdata = join("-", $arr);
+				break;
+			case 28:
+				$changeString = "";
+				$i = 0;
+				foreach (explode("@", $fdata) as $op) {
+					$changes = array();
+					foreach (explode("&", $op) as $change) {
+						if ($change == "") continue;
+						$item = explode(",", $change);
+						$changes[] = $item[1] . "x " . getBlockName($item[0]);
+					}
+					if ($i == 0 && count($changes) > 0) $changeString .= '<span style="color: green">+(' . trim(implode(", ", $changes)) . ')</span>';
+					if ($i == 1 && count($changes) > 0) $changeString .= '<span style="color: red">-(' . trim(implode(", ", $changes)) . ')</span>';
+					$i++;
+				}
+				$fdata = $changeString;
+				break;
 		}
-		if ($action == 1) {
-			$arr = explode("-", $fdata);
-			if (count($arr) > 1)
-				$fdata = getBlockName($arr[0]) . " replaced by " . getBlockName($arr[1]);
-			else $fdata = getBlockName($arr[0]);
-		}
-		if ($action == 2) {
-			$fdata = str_replace("|", "<br />", $fdata);
-		}
-		if ($action == 16) {
-			$arr = explode("-", $fdata);
-			if (count($arr) > 0)
-				$action = array_shift($arr);
-			$fdata = join("-", $arr);
-		}
+		
 		$action = str_replace(array_reverse(array_keys($lang["actions"])), array_reverse($lang["actions"]), $action);
-
+	
+		//Add to output row
 		array_push($row, $entry->data_id, $entry->date, $players[$entry->player_id], $action, $worlds[$entry->world_id], round($entry->x, 1).",".round($entry->y, 1).",".round($entry->z, 1), $fdata);
 		array_push($output["data"], $row);
 	}
