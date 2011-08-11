@@ -82,8 +82,8 @@ public class Config {
 		DbUrl = "jdbc:mysql://" + config.getString("mysql.hostname", "localhost") + ":" + config.getInt("mysql.port", 3306) + "/" + config.getString("mysql.database", "minecraft");
 		DbDatabase = config.getString("mysql.database", "minecraft");
 		DbHawkEyeTable = config.getString("mysql.hawkeye-table", "hawkeye");
-		DbPlayerTable = config.getString("mysql.player-table", "dl_players");
-		DbWorldTable = config.getString("mysql.world-table", "dl_worlds");
+		DbPlayerTable = config.getString("mysql.player-table", "hawk_players");
+		DbWorldTable = config.getString("mysql.world-table", "hawk_worlds");
 		PoolSize = config.getInt("mysql.max-connections", 10);
 		
 		//Attempt a save
