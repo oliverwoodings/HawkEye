@@ -1,4 +1,4 @@
-package uk.co.oliwali.actions;
+package uk.co.oliwali.HawkEye.actions;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
