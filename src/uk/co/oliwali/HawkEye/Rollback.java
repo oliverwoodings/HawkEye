@@ -101,6 +101,7 @@ public class Rollback implements Runnable {
 					else
 						BlockUtil.setBlockString(block, entry.getData().substring(0, entry.getData().indexOf("-")));
 					break;
+				case SIGN_PLACE:
 				case LAVA_BUCKET:
 				case WATER_BUCKET:
 					block.setType(Material.AIR);

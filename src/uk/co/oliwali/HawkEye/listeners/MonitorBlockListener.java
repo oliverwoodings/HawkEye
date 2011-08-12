@@ -1,6 +1,7 @@
 package uk.co.oliwali.HawkEye.listeners;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -33,6 +34,7 @@ public class MonitorBlockListener extends BlockListener {
 	public void onBlockBreak(BlockBreakEvent event) {
 		if (event.isCancelled()) return;
 		Block block   = event.getBlock();
+		if (block.getType() == Material.SIGN || block.getType() == Material.SIGN_POST) return;
 		DataManager.addEntry(event.getPlayer(), DataType.BLOCK_BREAK, block.getLocation(), BlockUtil.getBlockString(block));
 	}
 	
@@ -40,6 +42,7 @@ public class MonitorBlockListener extends BlockListener {
 		if (event.isCancelled()) return;
 		Player player = event.getPlayer();
 		Block block   = event.getBlock();
+		if (block.getType() == Material.SIGN || block.getType() == Material.SIGN_POST) return;
 		DataManager.addEntry(player, DataType.BLOCK_PLACE, block.getLocation(), BlockUtil.getBlockString(event.getBlockReplacedState()) + "-" + BlockUtil.getBlockString(block));
 	}
 	
