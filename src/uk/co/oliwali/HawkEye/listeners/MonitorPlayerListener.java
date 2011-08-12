@@ -40,6 +40,8 @@ public class MonitorPlayerListener extends PlayerListener {
 
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
 		if (event.isCancelled()) return;
+		//Check command filter
+		if (Config.CommandFilter.contains(event.getMessage().split(" ")[0])) return;
 		DataManager.addEntry(event.getPlayer(), DataType.COMMAND, event.getPlayer().getLocation(), event.getMessage());
 	}
 	
