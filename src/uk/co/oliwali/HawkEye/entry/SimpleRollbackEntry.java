@@ -9,6 +9,8 @@ import uk.co.oliwali.HawkEye.DataType;
 
 public class SimpleRollbackEntry extends DataEntry {
 	
+	public SimpleRollbackEntry() { }
+	
 	public SimpleRollbackEntry(Player player, DataType type, Location loc, String data) {
 		setInfo(player, type, loc);
 		this.data = data;

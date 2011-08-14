@@ -1,7 +1,9 @@
 package uk.co.oliwali.HawkEye.entry;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -20,11 +22,16 @@ public class SignEntry extends DataEntry {
 	private boolean wallSign;
 	private String[] lines = new String[4];
 	
+	public SignEntry() { }
+	
 	public SignEntry(Player player, DataType type, Block block) {
+		Sign sign = (Sign)(block.getState());
+		org.bukkit.material.Sign signData = ((org.bukkit.material.Sign)sign.getData());
 		setInfo(player, type, block.getLocation());
-		this.facing = ((org.bukkit.material.Sign)block).getFacing();
-		this.wallSign = ((org.bukkit.material.Sign)block).isWallSign();
-		this.lines = ((Sign)block).getLines();
+		if (signData.isWallSign()) this.facing = signData.getAttachedFace();
+		else this.facing = signData.getFacing();
+		this.wallSign = signData.isWallSign();
+		this.lines = sign.getLines();
 	}
 	
 	@Override
@@ -35,9 +42,9 @@ public class SignEntry extends DataEntry {
 	@Override
 	public String getSqlData() {
 		BASE64Encoder encoder = new BASE64Encoder();
-		String[] encoded = new String[4];
-		for (int i = 0; i < 4; i++) encoded[i] = encoder.encode(lines[i].getBytes());
-		return wallSign + "@" + facing + "@" + Util.join(Arrays.asList(encoded), ",");
+		List<String> encoded = new ArrayList<String>();
+		for (int i = 0; i < 4; i++) if (lines[i] != null && lines[i].length() > 0) encoded.add(encoder.encode(lines[i].getBytes()));
+		return wallSign + "@" + facing + "@" + Util.join(encoded, ",");
 	}
 
 	@Override
@@ -50,8 +57,11 @@ public class SignEntry extends DataEntry {
 		else {
 			if (wallSign) block.setType(Material.WALL_SIGN);
 			else block.setType(Material.SIGN_POST);
-			for (int i = 0; i < 4; i++) ((org.bukkit.block.Sign)block).setLine(i, lines[i]);
-			((org.bukkit.material.Sign)block).setFacingDirection(facing);
+			Sign sign = (Sign)(block.getState());
+			for (int i = 0; i < lines.length; i++) if (lines[i] != null) sign.setLine(i, lines[i]);
+			if (wallSign) ((org.bukkit.material.Sign)sign.getData()).setFacingDirection(facing.getOppositeFace());
+			else ((org.bukkit.material.Sign)sign.getData()).setFacingDirection(facing);
+			sign.update();
 		}
 		
 		return true;
@@ -71,15 +81,18 @@ public class SignEntry extends DataEntry {
 			if (face.toString().equalsIgnoreCase(arr[1])) facing = face;
 		
 		//Parse lines
+		if (arr.length != 3) return;
 		BASE64Decoder decoder = new BASE64Decoder();
+		List<String> decoded = new ArrayList<String>();
 		String[] encLines = arr[2].split(",");
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < encLines.length; i++) {
 			try {
-				lines[i] = new String(decoder.decodeBuffer(encLines[i]));
+				decoded.add(new String(decoder.decodeBuffer(encLines[i])));
 			} catch (IOException e) {
 				Util.severe("Unable to decode sign data from database");
 			}
 		}
+		lines = decoded.toArray(new String[0]);
 		
 	}
 

@@ -2,7 +2,6 @@ package uk.co.oliwali.HawkEye.listeners;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockFadeEvent;
@@ -43,10 +42,9 @@ public class MonitorBlockListener extends BlockListener {
 	
 	public void onBlockPlace(BlockPlaceEvent event) {
 		if (event.isCancelled()) return;
-		Player player = event.getPlayer();
-		Block block   = event.getBlock();
+		Block block = event.getBlock();
 		if (block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST) return;
-		DataManager.addEntry(new BlockChangeEntry(player, DataType.BLOCK_PLACE, event.getBlockReplacedState(), block.getState()));
+		DataManager.addEntry(new BlockChangeEntry(event.getPlayer(), DataType.BLOCK_PLACE, block.getLocation(), event.getBlockReplacedState(), block.getState()));
 	}
 	
 	public void onSignChange(SignChangeEvent event) {
@@ -56,12 +54,12 @@ public class MonitorBlockListener extends BlockListener {
 	
 	public void onBlockForm(BlockFormEvent event) {
 		if (event.isCancelled()) return;
-		DataManager.addEntry(new BlockChangeEntry("Environment", DataType.BLOCK_FORM, event.getBlock().getState(), event.getNewState()));
+		DataManager.addEntry(new BlockChangeEntry("Environment", DataType.BLOCK_FORM, event.getBlock().getLocation(), event.getBlock().getState(), event.getNewState()));
 	}
 	
 	public void onBlockFade(BlockFadeEvent event) {
 		if (event.isCancelled()) return;
-		DataManager.addEntry(new BlockChangeEntry("Environment", DataType.BLOCK_FADE, event.getBlock().getState(), event.getNewState()));
+		DataManager.addEntry(new BlockChangeEntry("Environment", DataType.BLOCK_FADE, event.getBlock().getLocation(), event.getBlock().getState(), event.getNewState()));
 	}
 	
 	public void onBlockBurn(BlockBurnEvent event) {

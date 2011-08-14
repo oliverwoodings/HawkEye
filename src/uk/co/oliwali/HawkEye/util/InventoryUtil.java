@@ -84,6 +84,7 @@ public class InventoryUtil {
 			}
 			ops.add(op);
 		}
+		if (ops.size() == 1) ops.add(new HashMap<String,Integer>());
 		return ops;
 	}
 	

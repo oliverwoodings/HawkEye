@@ -162,6 +162,7 @@ public class SearchQuery extends Thread {
 				results.add(DataManager.createEntryFromRes(res));
 		} catch (Exception ex) {
 			Util.severe("Error executing MySQL query: " + ex);
+			ex.printStackTrace();
 			callBack.error(SearchError.MYSQL_ERROR, "Error executing MySQL query: " + ex);
 			return;
 		} finally {

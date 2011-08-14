@@ -39,7 +39,7 @@ public enum DataType {
 	LAVA_FLOW(26, "BlockEntry", true, "lava-flow", true),
 	WATER_FLOW(27, "BlockEntry", true, "water-flow", true),
 	CONTAINER_TRANSACTION(28, "ContainerEntry", true, "container-transaction", true),
-	SIGN_BREAK(28, "SignEntry", true, "sign-break", true);
+	SIGN_BREAK(29, "SignEntry", true, "sign-break", true);
 	
 	private int id;
 	private boolean canHere;

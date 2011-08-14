@@ -8,6 +8,8 @@ import uk.co.oliwali.HawkEye.util.BlockUtil;
 
 public class BlockEntry extends DataEntry {
 	
+	public BlockEntry() { }
+	
 	public BlockEntry(String player, DataType type, Block block) {
 		setInfo(player, type, block.getLocation());
 		data = BlockUtil.getBlockString(block);

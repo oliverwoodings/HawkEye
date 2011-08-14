@@ -16,6 +16,8 @@ import uk.co.oliwali.HawkEye.util.InventoryUtil;
 
 public class ContainerEntry extends DataEntry {
 	
+	public ContainerEntry() { }
+	
 	public ContainerEntry(Player player, Location location, String diff) {
 		data = diff;
 		setInfo(player, DataType.CONTAINER_TRANSACTION, location);
