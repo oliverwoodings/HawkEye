@@ -20,7 +20,7 @@ public class Config {
 	public static List<Integer> BlockFilter = new ArrayList<Integer>();
 	public static int MaxLines = 0;
 	public static int MaxRadius;
-	public static int ToolBlock;
+	public static String ToolBlock;
 	public static String CleanseAge;
 	public static boolean Debug;
 	public static boolean LogIpAddresses;
@@ -71,7 +71,7 @@ public class Config {
 		BlockFilter = config.getIntList("block-filter", Arrays.asList(new Integer[]{97,98}));
 		MaxLines = config.getInt("general.max-lines", 0);
 		MaxRadius = config.getInt("general.max-radius", 0);
-		ToolBlock = config.getInt("general.tool-block", 17);
+		ToolBlock = config.getString("general.tool-block", "17");
 		CleanseAge = config.getString("general.cleanse-age", "0");
 		Debug = config.getBoolean("general.debug", false);
 		LogIpAddresses = config.getBoolean("general.log-ip-addresses", true);
