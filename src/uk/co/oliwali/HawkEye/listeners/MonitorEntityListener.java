@@ -17,6 +17,8 @@ import uk.co.oliwali.HawkEye.HawkEye;
 import uk.co.oliwali.HawkEye.DataType;
 import uk.co.oliwali.HawkEye.PlayerSession;
 import uk.co.oliwali.HawkEye.database.DataManager;
+import uk.co.oliwali.HawkEye.entry.BlockEntry;
+import uk.co.oliwali.HawkEye.entry.DataEntry;
 import uk.co.oliwali.HawkEye.util.Config;
 import uk.co.oliwali.HawkEye.util.Util;
 
@@ -44,16 +46,15 @@ public class MonitorEntityListener extends EntityListener {
 			
 			Player victim = (Player) entity;
 			EntityDamageEvent attackEvent = victim.getLastDamageCause();
-			
 			//Mob or PVP death
 			if (attackEvent instanceof EntityDamageByEntityEvent || attackEvent instanceof EntityDamageByProjectileEvent) {
 				Entity damager;
 				if (attackEvent instanceof EntityDamageByEntityEvent) damager = ((EntityDamageByEntityEvent)attackEvent).getDamager();
 				else damager = ((EntityDamageByProjectileEvent)attackEvent).getDamager();
 				if (damager instanceof Player) {
-					DataManager.addEntry(victim, DataType.PVP_DEATH, victim.getLocation(), Util.getEntityName(damager));
+					DataManager.addEntry(new DataEntry(victim, DataType.PVP_DEATH, victim.getLocation(), Util.getEntityName(damager)));
 				} else {
-					DataManager.addEntry(victim, DataType.MOB_DEATH, victim.getLocation(), Util.getEntityName(damager));
+					DataManager.addEntry(new DataEntry(victim, DataType.MOB_DEATH, victim.getLocation(), Util.getEntityName(damager)));
 				}
 			//Other death
 			} else {
@@ -62,7 +63,7 @@ public class MonitorEntityListener extends EntityListener {
 				for (int i = 0; i < words.length; i++)
 					words[i] = words[i].substring(0,1).toUpperCase() + words[i].substring(1).toLowerCase();
 				cause = Util.join(Arrays.asList(words), " ");
-				DataManager.addEntry(victim, DataType.OTHER_DEATH, victim.getLocation(), cause);
+				DataManager.addEntry(new DataEntry(victim, DataType.OTHER_DEATH, victim.getLocation(), cause));
 			}
             
 			//Log item drops
@@ -73,7 +74,7 @@ public class MonitorEntityListener extends EntityListener {
 						data = stack.getAmount() + "x " + stack.getTypeId() + ":" + stack.getData().getData();
 				    else
 				    	data = stack.getAmount() + "x " + stack.getTypeId();
-				    DataManager.addEntry(victim, DataType.ITEM_DROP, victim.getLocation(), data);                           
+				    DataManager.addEntry(new DataEntry(victim, DataType.ITEM_DROP, victim.getLocation(), data));                           
 				}
 			}
 	
@@ -83,7 +84,7 @@ public class MonitorEntityListener extends EntityListener {
 	public void onEntityExplode(EntityExplodeEvent event) {
 		if (event.isCancelled()) return;
 		for (Block b : event.blockList().toArray(new Block[0]))
-			DataManager.addEntry("Environment", DataType.EXPLOSION, b.getLocation(), Integer.toString(b.getTypeId()));
+			DataManager.addEntry(new BlockEntry("Environment", DataType.EXPLOSION, b));
 	}
 
 }

@@ -1,6 +1,5 @@
 package uk.co.oliwali.HawkEye.listeners;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -17,7 +16,10 @@ import org.bukkit.event.block.SignChangeEvent;
 import uk.co.oliwali.HawkEye.HawkEye;
 import uk.co.oliwali.HawkEye.DataType;
 import uk.co.oliwali.HawkEye.database.DataManager;
-import uk.co.oliwali.HawkEye.util.BlockUtil;
+import uk.co.oliwali.HawkEye.entry.BlockChangeEntry;
+import uk.co.oliwali.HawkEye.entry.BlockEntry;
+import uk.co.oliwali.HawkEye.entry.SignEntry;
+import uk.co.oliwali.HawkEye.entry.SimpleRollbackEntry;
 
 /**
  * Block listener class for HawkEye
@@ -33,47 +35,43 @@ public class MonitorBlockListener extends BlockListener {
 	
 	public void onBlockBreak(BlockBreakEvent event) {
 		if (event.isCancelled()) return;
-		Block block   = event.getBlock();
-		if (block.getType() == Material.SIGN || block.getType() == Material.SIGN_POST) return;
-		DataManager.addEntry(event.getPlayer(), DataType.BLOCK_BREAK, block.getLocation(), BlockUtil.getBlockString(block));
+		Block block = event.getBlock();
+		if (block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST)
+			DataManager.addEntry(new SignEntry(event.getPlayer(), DataType.SIGN_BREAK, event.getBlock()));
+		DataManager.addEntry(new BlockEntry(event.getPlayer(), DataType.BLOCK_BREAK, block));
 	}
 	
 	public void onBlockPlace(BlockPlaceEvent event) {
 		if (event.isCancelled()) return;
 		Player player = event.getPlayer();
 		Block block   = event.getBlock();
-		if (block.getType() == Material.SIGN || block.getType() == Material.SIGN_POST) return;
-		DataManager.addEntry(player, DataType.BLOCK_PLACE, block.getLocation(), BlockUtil.getBlockString(event.getBlockReplacedState()) + "-" + BlockUtil.getBlockString(block));
+		if (block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST) return;
+		DataManager.addEntry(new BlockChangeEntry(player, DataType.BLOCK_PLACE, event.getBlockReplacedState(), block.getState()));
 	}
 	
 	public void onSignChange(SignChangeEvent event) {
 		if (event.isCancelled()) return;
-        Player player = event.getPlayer();
-    	Location loc  = event.getBlock().getLocation();
-        String text = "";
-        for (String line : event.getLines())
-            text = text + "|" + line;
-        DataManager.addEntry(player, DataType.SIGN_PLACE, loc, text);
+        DataManager.addEntry(new SignEntry(event.getPlayer(), DataType.SIGN_PLACE, event.getBlock()));
 	}
 	
 	public void onBlockForm(BlockFormEvent event) {
 		if (event.isCancelled()) return;
-		DataManager.addEntry("Environment", DataType.BLOCK_FORM, event.getBlock().getLocation(), BlockUtil.getBlockString(event.getBlock()) + "-" + BlockUtil.getBlockString(event.getNewState()));
+		DataManager.addEntry(new BlockChangeEntry("Environment", DataType.BLOCK_FORM, event.getBlock().getState(), event.getNewState()));
 	}
 	
 	public void onBlockFade(BlockFadeEvent event) {
 		if (event.isCancelled()) return;
-		DataManager.addEntry("Environment", DataType.BLOCK_FADE, event.getBlock().getLocation(), BlockUtil.getBlockString(event.getBlock()) + "-" + BlockUtil.getBlockString(event.getNewState()));
+		DataManager.addEntry(new BlockChangeEntry("Environment", DataType.BLOCK_FADE, event.getBlock().getState(), event.getNewState()));
 	}
 	
 	public void onBlockBurn(BlockBurnEvent event) {
 		if (event.isCancelled()) return;
-		DataManager.addEntry("Environment", DataType.BLOCK_BURN, event.getBlock().getLocation(), Integer.toString(event.getBlock().getTypeId()));
+		DataManager.addEntry(new BlockEntry("Environment", DataType.BLOCK_BURN, event.getBlock()));
 	}
 	
 	public void onLeavesDecay(LeavesDecayEvent event) {
 		if (event.isCancelled()) return;
-		DataManager.addEntry("Environment", DataType.LEAF_DECAY, event.getBlock().getLocation(), "18");
+		DataManager.addEntry(new SimpleRollbackEntry("Environment", DataType.LEAF_DECAY, event.getBlock().getLocation(), ""));
 	}
 	
 	public void onBlockFromTo(BlockFromToEvent event) {
@@ -81,9 +79,9 @@ public class MonitorBlockListener extends BlockListener {
 		Block from = event.getBlock();
 		Block to = event.getToBlock();
 		if (from.getTypeId() == 10 || from.getTypeId() == 11)
-			DataManager.addEntry("Environment", DataType.LAVA_FLOW, event.getToBlock().getLocation(), Integer.toString(to.getTypeId()));
+			DataManager.addEntry(new BlockEntry("Environment", DataType.LAVA_FLOW, to));
 		else if (from.getTypeId() == 8 || from.getTypeId() == 9)
-			DataManager.addEntry("Environment", DataType.WATER_FLOW, event.getToBlock().getLocation(), Integer.toString(to.getTypeId()));
+			DataManager.addEntry(new BlockEntry("Environment", DataType.WATER_FLOW, to));
 	}
 
 }

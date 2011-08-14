@@ -10,6 +10,7 @@ import uk.co.oliwali.HawkEye.callbacks.BaseCallback;
 import uk.co.oliwali.HawkEye.database.DataManager;
 import uk.co.oliwali.HawkEye.database.SearchQuery;
 import uk.co.oliwali.HawkEye.database.SearchQuery.SearchDir;
+import uk.co.oliwali.HawkEye.entry.DataEntry;
 
 /**
  * API for other plugins.
@@ -27,7 +28,8 @@ public class HawkEyeAPI {
 	 * @param data data relevant to the event
 	 */
 	public static void addCustomEntry(JavaPlugin plugin, String action, Player player, Location loc, String data) {
-		DataManager.addEntry(player, plugin, DataType.OTHER, loc, action + "-" + data);
+		addEntry(plugin, DataType.OTHER, player, loc, data);
+		
 	}
 	
 	/**
@@ -39,7 +41,9 @@ public class HawkEyeAPI {
 	 * @param data data relevant to the event
 	 */
 	public static void addEntry(JavaPlugin plugin, DataType type, Player player, Location loc, String data) {
-		DataManager.addEntry(player, plugin, type, loc, data);
+		DataEntry entry = new DataEntry(player, type, loc, data);
+		entry.setPlugin(plugin.getDescription().getName());
+		DataManager.addEntry(entry);
 	}
 	
 	/**

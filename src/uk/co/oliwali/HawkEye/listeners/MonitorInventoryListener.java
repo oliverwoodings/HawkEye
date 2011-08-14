@@ -7,8 +7,8 @@ import org.getspout.spoutapi.event.inventory.InventoryCloseEvent;
 import org.getspout.spoutapi.event.inventory.InventoryListener;
 import org.getspout.spoutapi.event.inventory.InventoryOpenEvent;
 
-import uk.co.oliwali.HawkEye.DataType;
 import uk.co.oliwali.HawkEye.database.DataManager;
+import uk.co.oliwali.HawkEye.entry.ContainerEntry;
 import uk.co.oliwali.HawkEye.util.InventoryUtil;
 
 /**
@@ -30,7 +30,7 @@ public class MonitorInventoryListener extends InventoryListener {
 		if (event.isCancelled() || !containers.containsKey(player)) return;
 		HashMap<String,Integer> after = InventoryUtil.compressInventory(event.getInventory().getContents());
 		String diff = InventoryUtil.createDifferenceString(containers.get(player), after);
-		DataManager.addEntry(player, DataType.CONTAINER_TRANSACTION, event.getLocation(), diff);
+		DataManager.addEntry(new ContainerEntry(player, event.getLocation(), diff));
 		containers.remove(player);
 	}
 	

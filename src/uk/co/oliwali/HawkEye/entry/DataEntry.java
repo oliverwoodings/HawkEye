@@ -1,9 +1,11 @@
-package uk.co.oliwali.HawkEye.database;
+package uk.co.oliwali.HawkEye.entry;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import uk.co.oliwali.HawkEye.DataType;
@@ -14,15 +16,13 @@ import uk.co.oliwali.HawkEye.DataType;
  */
 public class DataEntry {
 
-    private int dataid;
-
-    private String plugin;
+	private String plugin = null;
+    
+    private int dataId;
 
     private String date;
 
     private String player;
-
-    private DataType type;
 
     private String world;
 
@@ -32,28 +32,37 @@ public class DataEntry {
 
     private double z;
 
-    private String data;
-
-	public void setDataid(int dataid) {
-		this.dataid = dataid;
-	}
-
-    public int getDataid() {
-		return dataid;
-	}
+    protected DataType type;
+    
+    protected String data;
+    
+    public DataEntry() { }
+    public DataEntry(Player player, DataType type, Location loc, String data) {
+    	setInfo(player, type, loc);
+    	this.data = data;
+    }
+    public DataEntry(String player, DataType type, Location loc, String data) {
+    	setInfo(player, type, loc);
+    	this.data = data;
+    }
 
 	public void setPlugin(String plugin) {
 		this.plugin = plugin;
 	}
-
     public String getPlugin() {
 		return plugin;
+	}
+
+	public void setDataId(int dataId) {
+		this.dataId = dataId;
+	}
+    public int getDataId() {
+		return dataId;
 	}
 
 	public void setDate(String date) {
         this.date = date;
     }
-
     public String getDate() {
         return date;
     }
@@ -61,7 +70,6 @@ public class DataEntry {
     public void setPlayer(String player) {
         this.player = player;
     }
-
     public String getPlayer() {
         return player;
     }
@@ -69,7 +77,6 @@ public class DataEntry {
     public void setType(DataType type) {
     	this.type = type;
     }
-    
     public DataType getType() {
     	return type;
     }
@@ -77,7 +84,6 @@ public class DataEntry {
     public void setWorld(String world) {
         this.world = world;
     }
-
     public String getWorld() {
         return world;
     }
@@ -85,7 +91,6 @@ public class DataEntry {
     public void setX(double x) {
         this.x = x;
     }
-
     public double getX() {
         return x;
     }
@@ -93,7 +98,6 @@ public class DataEntry {
     public void setY(double y) {
         this.y = y;
     }
-
     public double getY() {
         return y;
     }
@@ -101,7 +105,6 @@ public class DataEntry {
     public void setZ(double z) {
         this.z = z;
     }
-
     public double getZ() {
         return z;
     }
@@ -109,30 +112,49 @@ public class DataEntry {
     public void setData(String data) {
     	this.data = data;
     }
-    
-    public String getData() {
-    	return data;
-    }
+	public String getStringData() {
+		return data;
+	}
+	
+	public void interpretSqlData(String data) {
+		this.data = data;
+	}
+	public String getSqlData() {
+		return data;
+	}
+	
+	public boolean rollback(Block block) {
+		return false;
+	}
     
     /**
-     * Parses the inputted data into the DataEntry instance
+     * Parses the inputted action into the DataEntry instance
      * @param player
      * @param instance
      * @param type
      * @param loc
-     * @param data
+     * @param action
      */
-	public void setInfo(String player, JavaPlugin instance, DataType type, Location loc, String data) {
+
+	public void setInfo(Player player, DataType type, Location loc) {
+		setInfo(player.getName(), type, loc);
+	}
+	public void setInfo(String player, DataType type, Location loc) {
+		setInfo(player, "HawkEye", type, loc);
+	}
+	public void setInfo(String player, JavaPlugin instance, DataType type, Location loc) {
+		setInfo(player, instance.getDescription().getName(), type, loc);
+	}
+	public void setInfo(String player, String instance, DataType type, Location loc) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	    setDate(sdf.format(Calendar.getInstance().getTime()));
-	    setPlugin(instance.getDescription().getName());
+	    setPlugin(instance);
 		setPlayer(player);
 		setType(type);
 		setWorld(loc.getWorld().getName());
 		setX(loc.getX());
 		setY(loc.getY());
 		setZ(loc.getZ());
-		setData(data);
 	}
 
 }

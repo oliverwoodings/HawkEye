@@ -1,25 +1,18 @@
 package uk.co.oliwali.HawkEye;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
-import org.bukkit.block.ContainerBlock;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
-import uk.co.oliwali.HawkEye.database.DataEntry;
 import uk.co.oliwali.HawkEye.database.DataManager;
-import uk.co.oliwali.HawkEye.util.BlockUtil;
+import uk.co.oliwali.HawkEye.entry.DataEntry;
 import uk.co.oliwali.HawkEye.util.Config;
-import uk.co.oliwali.HawkEye.util.InventoryUtil;
 import uk.co.oliwali.HawkEye.util.Util;
 
 /**
@@ -80,54 +73,20 @@ public class Rollback implements Runnable {
 			if (world == null)
 				continue;
 			
-			//Get some data from the entry, then switch through some of the actions, performing the rollback
+			//Get some data from the entry
 			Location loc = new Location(world, entry.getX(), entry.getY(), entry.getZ());
 			Block block = world.getBlockAt(loc);
-			undo.add(block.getState());
-			switch (entry.getType()) {
-				case BLOCK_BREAK:
-				case BLOCK_BURN:
-				case LEAF_DECAY:
-				case LAVA_FLOW:
-				case WATER_FLOW:
-				case EXPLOSION:
-					BlockUtil.setBlockString(block, entry.getData());
-					break;
-				case BLOCK_PLACE:
-				case BLOCK_FORM:
-				case BLOCK_FADE:
-					if (entry.getData().indexOf("-") == -1)
-						block.setType(Material.AIR);
-					else
-						BlockUtil.setBlockString(block, entry.getData().substring(0, entry.getData().indexOf("-")));
-					break;
-				case SIGN_PLACE:
-				case LAVA_BUCKET:
-				case WATER_BUCKET:
-					block.setType(Material.AIR);
-					break;
-				case CONTAINER_TRANSACTION:
-					if (block.getType() != Material.CHEST) continue;
-					Inventory inv = ((ContainerBlock)block.getState()).getInventory();
-					List<HashMap<String,Integer>> ops = InventoryUtil.interpretDifferenceString(entry.getData());
-					//Handle the additions
-					if (ops.size() > 0) {
-						for (ItemStack stack : InventoryUtil.uncompressInventory(ops.get(0)))
-							inv.removeItem(stack);
-					}
-					//Handle subtractions
-					if (ops.size() > 1) {
-						for (ItemStack stack : InventoryUtil.uncompressInventory(ops.get(1)))
-							inv.addItem(stack);
-					}
-					break;
+			
+			//Attempt rollback
+			if (entry.rollback(world.getBlockAt(loc))) {
+				undo.add(block.getState());
+				
+				//Delete data if told to
+				if (Config.DeleteDataOnRollback)
+					DataManager.deleteEntry(entry.getDataId());
+				
+				counter++;
 			}
-			
-			//Delete data if told to
-			if (Config.DeleteDataOnRollback)
-				DataManager.deleteEntry(entry.getDataid());
-			
-			counter++;
 			
 		}
 		

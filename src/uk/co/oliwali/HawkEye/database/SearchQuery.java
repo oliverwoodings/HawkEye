@@ -12,6 +12,7 @@ import uk.co.oliwali.HawkEye.DataType;
 import uk.co.oliwali.HawkEye.SearchParser;
 import uk.co.oliwali.HawkEye.callbacks.BaseCallback;
 import uk.co.oliwali.HawkEye.database.DataManager;
+import uk.co.oliwali.HawkEye.entry.DataEntry;
 import uk.co.oliwali.HawkEye.util.Config;
 import uk.co.oliwali.HawkEye.util.Util;
 
@@ -159,7 +160,7 @@ public class SearchQuery extends Thread {
 			//Retrieve results
 			while (res.next())
 				results.add(DataManager.createEntryFromRes(res));
-		} catch (SQLException ex) {
+		} catch (Exception ex) {
 			Util.severe("Error executing MySQL query: " + ex);
 			callBack.error(SearchError.MYSQL_ERROR, "Error executing MySQL query: " + ex);
 			return;

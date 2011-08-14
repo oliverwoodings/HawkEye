@@ -5,7 +5,7 @@ import org.bukkit.World;
 
 import uk.co.oliwali.HawkEye.HawkEye;
 import uk.co.oliwali.HawkEye.database.DataManager;
-import uk.co.oliwali.HawkEye.database.DataEntry;
+import uk.co.oliwali.HawkEye.entry.DataEntry;
 import uk.co.oliwali.HawkEye.util.Permission;
 import uk.co.oliwali.HawkEye.util.Util;
 

@@ -13,7 +13,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import uk.co.oliwali.HawkEye.HawkEye;
 import uk.co.oliwali.HawkEye.DataType;
@@ -24,6 +23,7 @@ import uk.co.oliwali.HawkEye.util.Util;
 import uk.co.oliwali.HawkEye.callbacks.SearchCallback;
 import uk.co.oliwali.HawkEye.database.JDCConnection;
 import uk.co.oliwali.HawkEye.database.SearchQuery.SearchDir;
+import uk.co.oliwali.HawkEye.entry.DataEntry;
 
 /**
  * Handler for everything to do with the database.
@@ -32,7 +32,6 @@ import uk.co.oliwali.HawkEye.database.SearchQuery.SearchDir;
  */
 public class DataManager extends TimerTask {
 	
-	private static HawkEye plugin;
 	private static LinkedBlockingQueue<DataEntry> queue = new LinkedBlockingQueue<DataEntry>();
 	private static ConnectionManager connections;
 	private static Timer loggingTimer = null;
@@ -47,7 +46,7 @@ public class DataManager extends TimerTask {
 	 * @throws Exception
 	 */
 	public DataManager(HawkEye instance) throws Exception {
-		plugin = instance;
+		
 		connections = new ConnectionManager(Config.DbUrl, Config.DbUser, Config.DbPassword);
 		getConnection().close();
 		
@@ -82,21 +81,6 @@ public class DataManager extends TimerTask {
 		if (loggingTimer != null) loggingTimer.cancel();
 	}
 	
-	public static void addEntry(Player player, DataType dataType, Location loc, String data) {
-		addEntry(player, plugin, dataType, loc, data);
-	}
-	public static void addEntry(String player, DataType dataType, Location loc, String data) {
-		addEntry(player, plugin, dataType, loc, data);
-	}
-	public static void addEntry(Player player, JavaPlugin cplugin, DataType dataType, Location loc, String data) {
-		addEntry(player.getName(), cplugin, dataType, loc, data);
-	}
-	public static void addEntry(String player, JavaPlugin cplugin, DataType dataType, Location loc, String data) {
-		DataEntry dataEntry = new DataEntry();
-		loc = Util.getSimpleLocation(loc);
-		dataEntry.setInfo(player, cplugin, dataType, loc, data);
-		addEntry(dataEntry);
-	}
 	/**
 	 * Adds a {@link DataEntry} to the database queue.
 	 * {Rule}s are checked at this point
@@ -108,15 +92,15 @@ public class DataManager extends TimerTask {
 		//Check block filter
 		switch (entry.getType()) {
 			case BLOCK_BREAK:
-				if (Config.BlockFilter.contains(BlockUtil.getBlockStringName(entry.getData())))
+				if (Config.BlockFilter.contains(BlockUtil.getBlockStringName(entry.getSqlData())))
 					return;
 				break;
 			case BLOCK_PLACE:
 				String txt = null;
-				if (entry.getData().indexOf("-") == -1)
-					txt = BlockUtil.getBlockStringName(entry.getData());
+				if (entry.getSqlData().indexOf("-") == -1)
+					txt = BlockUtil.getBlockStringName(entry.getSqlData());
 				else
-					txt = BlockUtil.getBlockStringName(entry.getData().substring(entry.getData().indexOf("-") + 1));
+					txt = BlockUtil.getBlockStringName(entry.getSqlData().substring(entry.getSqlData().indexOf("-") + 1));
 				if (Config.BlockFilter.contains(txt))
 					return;
 		}
@@ -136,19 +120,8 @@ public class DataManager extends TimerTask {
 			conn = getConnection();
 			ResultSet res = conn.createStatement().executeQuery("SELECT * FROM `" + Config.DbHawkEyeTable + "` WHERE `data_id` = " + id);
 			res.next();
-			DataEntry entry = new DataEntry();
-			entry.setDataid(res.getInt("data_id"));
-			entry.setDate(res.getString("date"));
-			entry.setPlayer(DataManager.getPlayer(res.getInt("player_id")));
-			entry.setType(DataType.fromId(res.getInt("action")));
-			entry.setData(res.getString("data"));
-			entry.setPlugin(res.getString("plugin"));
-			entry.setWorld(DataManager.getWorld(res.getInt("world_id")));
-			entry.setX(res.getInt("x"));
-			entry.setY(res.getInt("y"));
-			entry.setZ(res.getInt("z"));
-			return entry;
-		} catch (SQLException ex) {
+			return createEntryFromRes(res);
+		} catch (Exception ex) {
 			Util.severe("Unable to retrieve data entry from MySQL Server: " + ex);
 		} finally {
 			conn.close();
@@ -230,13 +203,14 @@ public class DataManager extends TimerTask {
 	 * @return returns a {@link DataEntry}
 	 * @throws SQLException
 	 */
-	public static DataEntry createEntryFromRes(ResultSet res) throws SQLException {
-		DataEntry entry = new DataEntry();
+	public static DataEntry createEntryFromRes(ResultSet res) throws Exception {
+		DataType type = DataType.fromId(res.getInt("action"));
+		DataEntry entry = (DataEntry)Class.forName(type.getEntryClass()).newInstance();
 		entry.setPlayer(DataManager.getPlayer(res.getInt("player_id")));
 		entry.setDate(res.getString("date"));
-		entry.setDataid(res.getInt("data_id"));
+		entry.setDataId(res.getInt("data_id"));
 		entry.setType(DataType.fromId(res.getInt("action")));
-		entry.setData(res.getString("data"));
+		entry.interpretSqlData(res.getString("data"));
 		entry.setPlugin(res.getString("plugin"));
 		entry.setWorld(DataManager.getWorld(res.getInt("world_id")));
 		entry.setX(res.getInt("x"));
@@ -377,9 +351,9 @@ public class DataManager extends TimerTask {
 					if (!addWorld(entry.getWorld()))
 						continue;
 				
-				if (entry.getDataid() > 0) {
+				if (entry.getDataId() > 0) {
 					stmnt = conn.prepareStatement("INSERT into `" + Config.DbHawkEyeTable + "` (date, player_id, action, world_id, x, y, z, data, plugin, data_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
-					stmnt.setInt(10, entry.getDataid());
+					stmnt.setInt(10, entry.getDataId());
 				}
 				else
 					stmnt = conn.prepareStatement("INSERT into `" + Config.DbHawkEyeTable + "` (date, player_id, action, world_id, x, y, z, data, plugin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);");
@@ -390,7 +364,7 @@ public class DataManager extends TimerTask {
 				stmnt.setDouble(5, entry.getX());
 				stmnt.setDouble(6, entry.getY());
 				stmnt.setDouble(7, entry.getZ());
-				stmnt.setString(8, entry.getData());
+				stmnt.setString(8, entry.getSqlData());
 				stmnt.setString(9, entry.getPlugin());
 				stmnt.executeUpdate();
 			}

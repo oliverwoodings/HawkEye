@@ -1,38 +1,34 @@
-package uk.co.oliwali.HawkEye.actions;
+package uk.co.oliwali.HawkEye.entry;
 
 import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.ContainerBlock;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import uk.co.oliwali.HawkEye.DataType;
 import uk.co.oliwali.HawkEye.util.InventoryUtil;
 
-public class ContainerAction extends BaseAction {
+public class ContainerEntry extends DataEntry {
 	
-	private String diff;
-	
-	public ContainerAction(String diff, DataType type) {
-		this.diff = diff;
-		this.type = type;
-	}
-	
-	public String getStringData() {
-		return InventoryUtil.createChangeString(InventoryUtil.interpretDifferenceString(diff));
+	public ContainerEntry(Player player, Location location, String diff) {
+		data = diff;
+		setInfo(player, DataType.CONTAINER_TRANSACTION, location);
 	}
 
-	public String getSqlData() {
-		return diff;
+	public String getStringData() {
+		return InventoryUtil.createChangeString(InventoryUtil.interpretDifferenceString(data));
 	}
 
 	public boolean rollback(Block block) {
 		if (block.getType() != Material.CHEST) return false;
 		Inventory inv = ((ContainerBlock)block.getState()).getInventory();
-		List<HashMap<String,Integer>> ops = InventoryUtil.interpretDifferenceString(diff);
+		List<HashMap<String,Integer>> ops = InventoryUtil.interpretDifferenceString(data);
 		//Handle the additions
 		if (ops.size() > 0) {
 			for (ItemStack stack : InventoryUtil.uncompressInventory(ops.get(0)))
@@ -44,10 +40,6 @@ public class ContainerAction extends BaseAction {
 				inv.addItem(stack);
 		}
 		return true;
-	}
-
-	public void interpretSqlData(String data) {
-		this.diff = data;
 	}
 
 }

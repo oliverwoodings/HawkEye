@@ -5,7 +5,7 @@ import java.util.List;
 import org.bukkit.block.BlockState;
 import org.bukkit.command.CommandSender;
 
-import uk.co.oliwali.HawkEye.database.DataEntry;
+import uk.co.oliwali.HawkEye.entry.DataEntry;
 
 /**
  * Stores data specific to each player on the server.

@@ -2,8 +2,8 @@ package uk.co.oliwali.HawkEye.callbacks;
 
 import java.util.List;
 
-import uk.co.oliwali.HawkEye.database.DataEntry;
 import uk.co.oliwali.HawkEye.database.SearchQuery.SearchError;
+import uk.co.oliwali.HawkEye.entry.DataEntry;
 
 /**
  * Abstract class representing a callback for use in {@SearchQuery}

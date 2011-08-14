@@ -4,9 +4,7 @@ import java.util.List;
 
 import org.bukkit.command.CommandSender;
 
-import uk.co.oliwali.HawkEye.database.DataEntry;
-import uk.co.oliwali.HawkEye.util.BlockUtil;
-import uk.co.oliwali.HawkEye.util.InventoryUtil;
+import uk.co.oliwali.HawkEye.entry.DataEntry;
 import uk.co.oliwali.HawkEye.util.Util;
 import uk.co.oliwali.HawkEye.util.Util.CustomColor;
 
@@ -44,34 +42,9 @@ public class DisplayManager {
 			if (i == results.size())
 				break;
 			DataEntry entry = results.get(i);
-			String data = entry.getData();
-			String action = entry.getType().getConfigName();
-			
-			//Modify output according to DataType
-			switch (entry.getType()) {
-				case BLOCK_BREAK:
-				case OPEN_CONTAINER:
-					data = BlockUtil.getBlockStringName(data);
-					break;
-				case BLOCK_PLACE:
-				case BLOCK_FORM:
-				case BLOCK_FADE:
-					if (data.indexOf("-") == -1)
-						data = BlockUtil.getBlockStringName(data);
-					else
-						data = BlockUtil.getBlockStringName(data.substring(0, data.indexOf("-"))) + " changed to " + BlockUtil.getBlockStringName(data.substring(data.indexOf("-") + 1));
-					break;
-				case OTHER:
-					action = data.substring(0, data.indexOf("-"));
-					data = data.substring(data.indexOf("-") + 1);
-					break;
-				case CONTAINER_TRANSACTION:
-					data = InventoryUtil.createChangeString(InventoryUtil.interpretDifferenceString(data));
-					break;
-			}
 
-			sendLine(session.getSender(), "&cid:" + entry.getDataid() + " &7" + entry.getDate().substring(5) + " &c" + entry.getPlayer() + " &7" + action);
-			sendLine(session.getSender(), "   &cLoc: &7" + entry.getWorld() + "-" + entry.getX() + "," + entry.getY() + "," + entry.getZ() + " &cData: &7" + data);
+			sendLine(session.getSender(), "&cid:" + entry.getDataId() + " &7" + entry.getDate().substring(5) + " &c" + entry.getPlayer() + " &7" + entry.getType().getConfigName());
+			sendLine(session.getSender(), "   &cLoc: &7" + entry.getWorld() + "-" + entry.getX() + "," + entry.getY() + "," + entry.getZ() + " &cData: &7" + entry.getStringData());
 		}
 		Util.sendMessage(session.getSender(), "&8-----------------------------------------------------");
 		return;
