@@ -66,7 +66,10 @@
 									   "Block Fade",
 									   "Lava Flow",
 									   "Water Flow",
-									   "Chest Transaction"),
+									   "Chest Transaction",
+									   "Sign Break",
+									   "Painting Break",
+									   "Painting Place"),
 
 					"results" => array("title" => "Ergebnisse",
 									   "id" => "ID",

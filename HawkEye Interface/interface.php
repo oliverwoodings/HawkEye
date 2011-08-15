@@ -148,9 +148,6 @@
 					$fdata = getBlockName($arr[0]) . " replaced by " . getBlockName($arr[1]);
 				else $fdata = getBlockName($arr[0]);
 				break;
-			case 2:
-				$fdata = str_replace("|", "<br />", $fdata);
-				break;
 			case 16:
 				$arr = explode("-", $fdata);
 				if (count($arr) > 0)
@@ -163,7 +160,7 @@
 				foreach (explode("@", $fdata) as $op) {
 					$changes = array();
 					foreach (explode("&", $op) as $change) {
-						if ($change == "") continue;
+						if ($change == "") break;
 						$item = explode(",", $change);
 						$changes[] = $item[1] . "x " . getBlockName($item[0]);
 					}
@@ -172,6 +169,19 @@
 					$i++;
 				}
 				$fdata = $changeString;
+				break;
+			case 2:
+			case 29:
+				if (strpos("@", $fdata)) {
+					$fdata = str_replace("|", "<br />", $fdata);
+					break;
+				}
+				$arr = explode("@", $fdata);
+				if (count($arr) < 3) break;
+				$lines = explode(",", $arr[2]);
+				foreach ($lines as $key => $value)
+					$lines[$key] = base64_decode($value);
+				$fdata = implode("<br />", $lines);
 				break;
 		}
 		
