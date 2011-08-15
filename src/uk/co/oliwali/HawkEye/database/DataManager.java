@@ -305,11 +305,11 @@ public class DataManager extends TimerTask {
 			//Check if tables exist
 			if (!JDBCUtil.tableExists(dbm, Config.DbPlayerTable)) {
 				Util.info("Table `" + Config.DbPlayerTable + "` not found, creating...");
-				stmnt.execute("CREATE TABLE IF NOT EXISTS `" + Config.DbPlayerTable + "` (`player_id` int(11) NOT NULL AUTO_INCREMENT, `player` varchar(255) NOT NULL, PRIMARY KEY (`player_id`), KEY `player` (`player`) ) ENGINE=MyISAM;");
+				stmnt.execute("CREATE TABLE IF NOT EXISTS `" + Config.DbPlayerTable + "` (`player_id` int(11) NOT NULL AUTO_INCREMENT, `player` varchar(255) NOT NULL, PRIMARY KEY (`player_id`), UNIQUE KEY `player` (`player`) ) ENGINE=MyISAM;");
 			}
 			if (!JDBCUtil.tableExists(dbm, Config.DbWorldTable)) {
 				Util.info("Table `" + Config.DbWorldTable + "` not found, creating...");
-				stmnt.execute("CREATE TABLE IF NOT EXISTS `" + Config.DbWorldTable + "` (`world_id` int(11) NOT NULL AUTO_INCREMENT, `world` varchar(255) NOT NULL, PRIMARY KEY (`world_id`), KEY `world` (`world`) ) ENGINE=MyISAM;");
+				stmnt.execute("CREATE TABLE IF NOT EXISTS `" + Config.DbWorldTable + "` (`world_id` int(11) NOT NULL AUTO_INCREMENT, `world` varchar(255) NOT NULL, PRIMARY KEY (`world_id`), UNIQUE KEY `world` (`world`) ) ENGINE=MyISAM;");
 			}
 			if (!JDBCUtil.tableExists(dbm, Config.DbHawkEyeTable)) {
 				Util.info("Table `" + Config.DbHawkEyeTable + "` not found, creating...");
