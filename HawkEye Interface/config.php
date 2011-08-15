@@ -15,9 +15,9 @@
 					"dbDbase" => "minecraft",
 					"dbUser"  => "root",
 					"dbPass"  => "",
-					"dbTable" => "datalog",
-					"dbPlayerTable" => "dl_players",
-					"dbWorldTable" => "dl_worlds",
+					"dbTable" => "hawkeye",
+					"dbPlayerTable" => "hawk_players",
+					"dbWorldTable" => "hawk_worlds",
 					
 					//Set this to the password you want people to have to use to access the interface
 					//Leave blank for no password
