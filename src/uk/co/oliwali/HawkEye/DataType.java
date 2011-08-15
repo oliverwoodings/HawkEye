@@ -12,7 +12,7 @@ public enum DataType {
 	
 	BLOCK_BREAK(0, "BlockEntry", true, "block-break", true),
 	BLOCK_PLACE(1, "BlockChangeEntry", true, "block-place", true),
-	SIGN_PLACE(2, "SignEntry", true, "sign-place"),
+	SIGN_PLACE(2, "SignEntry", true, "sign-place", true),
 	CHAT(3, "DataEntry", "chat"),
 	COMMAND(4, "DataEntry", "command"),
 	JOIN(5, "DataEntry", "join"),

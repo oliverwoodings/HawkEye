@@ -30,10 +30,13 @@ import org.getspout.spout.Spout;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
+import uk.co.oliwali.HawkEye.commands.ApplyCommand;
 import uk.co.oliwali.HawkEye.commands.BaseCommand;
+import uk.co.oliwali.HawkEye.commands.CancelCommand;
 import uk.co.oliwali.HawkEye.commands.HelpCommand;
 import uk.co.oliwali.HawkEye.commands.HereCommand;
 import uk.co.oliwali.HawkEye.commands.PageCommand;
+import uk.co.oliwali.HawkEye.commands.PreviewCommand;
 import uk.co.oliwali.HawkEye.commands.RollbackCommand;
 import uk.co.oliwali.HawkEye.commands.RollbackHelpCommand;
 import uk.co.oliwali.HawkEye.commands.SearchCommand;
@@ -265,7 +268,9 @@ public class HawkEye extends JavaPlugin {
         commands.add(new ToolCommand());
         commands.add(new RollbackHelpCommand());
         commands.add(new WorldEditRollbackCommand());
-        
+        commands.add(new PreviewCommand());
+        commands.add(new ApplyCommand());
+        commands.add(new CancelCommand());
 	}
 	
 	/**

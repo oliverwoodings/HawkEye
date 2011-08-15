@@ -1,12 +1,5 @@
 package uk.co.oliwali.HawkEye.commands;
 
-import org.bukkit.util.Vector;
-
-import com.sk89q.worldedit.IncompleteRegionException;
-import com.sk89q.worldedit.LocalPlayer;
-import com.sk89q.worldedit.bukkit.BukkitPlayer;
-import com.sk89q.worldedit.regions.Region;
-
 import uk.co.oliwali.HawkEye.DataType;
 import uk.co.oliwali.HawkEye.Rollback.RollbackType;
 import uk.co.oliwali.HawkEye.SearchParser;
@@ -17,17 +10,17 @@ import uk.co.oliwali.HawkEye.util.Permission;
 import uk.co.oliwali.HawkEye.util.Util;
 
 /**
- * Rolls back actions inside a WorldEdit selection according to the player's specified input.
+ * Previews a rollback according to the player's specified input.
  * Error handling for user input is done using exceptions to keep code neat.
  * @author oliverw92
  */
-public class WorldEditRollbackCommand extends BaseCommand {
+public class PreviewCommand extends BaseCommand {
 
-	public WorldEditRollbackCommand() {
-		name = "werollback";
+	public PreviewCommand() {
+		name = "preview";
 		argLength = 1;
 		bePlayer = true;
-		usage = "<parameters> <- rollback in WorldEdit selection";
+		usage = "<parameters> <- preview rollback changes";
 	}
 	
 	public boolean execute() {
@@ -38,27 +31,12 @@ public class WorldEditRollbackCommand extends BaseCommand {
 			return true;
 		}
 		
-		//Check if WorldEdit is enabled
-		if (plugin.worldEdit == null) {
-			Util.sendMessage(sender, "&7WorldEdit&c is not enabled, unable to perform rollbacks in selected region");
-			return true;
-		}
-		
-		//Check if the WorldEdit selection is complete
-		Region region = null;
-		try {
-			LocalPlayer lp = new BukkitPlayer(plugin.worldEdit, plugin.worldEdit.getWorldEdit().getServer(), player);
-			region = plugin.worldEdit.getWorldEdit().getSession(lp).getRegionSelector().getRegion();
-		} catch (IncompleteRegionException e) {
-			Util.sendMessage(sender, "&cPlease complete your selection before doing a &7WorldEdit&c rollback!");
-			return true;
-		}
-		
 		//Parse arguments
 		SearchParser parser = null;
 		try {
 			
 			parser = new SearchParser(player, args);
+			parser.loc = null;
 			
 			//Check that supplied actions can rollback
 			if (parser.actions.size() > 0) {
@@ -76,18 +54,14 @@ public class WorldEditRollbackCommand extends BaseCommand {
 			return true;
 		}
 		
-		//Set WorldEdit locations
-		parser.minLoc = new Vector(region.getMinimumPoint().getX(), region.getMinimumPoint().getY(), region.getMinimumPoint().getZ());
-		parser.maxLoc = new Vector(region.getMaximumPoint().getX(), region.getMaximumPoint().getY(), region.getMaximumPoint().getZ());
-		
 		//Create new SearchQuery with data
-		new SearchQuery(new RollbackCallback(session, RollbackType.GLOBAL), parser, SearchDir.DESC);
+		new SearchQuery(new RollbackCallback(session, RollbackType.LOCAL), parser, SearchDir.DESC);
 		return true;
 		
 	}
 	
 	public boolean permission() {
-		return Permission.rollback(sender);
+		return Permission.preview(sender);
 	}
 
 }

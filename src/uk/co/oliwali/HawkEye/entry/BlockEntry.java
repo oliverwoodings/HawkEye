@@ -29,5 +29,11 @@ public class BlockEntry extends DataEntry {
 		BlockUtil.setBlockString(block, data);
 		return true;
 	}
+	
+	@Override
+	public boolean rollbackPlayer(Block block, Player player) {
+		player.sendBlockChange(block.getLocation(), BlockUtil.getIdFromString(data), BlockUtil.getDataFromString(data));
+		return true;
+	}
 
 }

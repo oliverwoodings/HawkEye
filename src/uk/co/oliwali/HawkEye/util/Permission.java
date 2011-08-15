@@ -121,6 +121,10 @@ public class Permission {
 		return hasPermission(player, "hawkeye.notify");
 	}
 	
+	public static boolean preview(CommandSender player) {
+		return hasPermission(player, "hawkeye.preview");
+	}
+	
 	/**
 	 * Check if a player is in a group
 	 * @param world

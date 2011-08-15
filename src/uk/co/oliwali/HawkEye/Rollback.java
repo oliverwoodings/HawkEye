@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.entity.Player;
 
 import uk.co.oliwali.HawkEye.database.DataManager;
 import uk.co.oliwali.HawkEye.entry.DataEntry;
@@ -25,14 +26,17 @@ public class Rollback implements Runnable {
 	public PlayerSession session = null;
 	private Iterator<DataEntry> rollbackQueue;
 	private List<BlockState> undo = new ArrayList<BlockState>();
+	private List<Block> localUndo = new ArrayList<Block>();
 	private int timerID;
 	private int counter = 0;
+	private RollbackType rollbackType = RollbackType.GLOBAL;
 	
 	/**
 	 * @param session {@link PlayerSession} to retrieve rollback results from
 	 */
-	public Rollback(PlayerSession session) {
+	public Rollback(RollbackType rollbackType, PlayerSession session) {
 		
+		this.rollbackType = rollbackType;
 		this.session = session;
 		rollbackQueue = session.getRollbackResults().iterator();
 		session.setRollbackUndo(null);
@@ -78,13 +82,17 @@ public class Rollback implements Runnable {
 			Block block = world.getBlockAt(loc);
 			
 			//Attempt rollback
-			if (entry.rollback(world.getBlockAt(loc))) {
+			if (rollbackType == RollbackType.GLOBAL && entry.rollback(world.getBlockAt(loc))) {
 				undo.add(block.getState());
 				
 				//Delete data if told to
 				if (Config.DeleteDataOnRollback)
 					DataManager.deleteEntry(entry.getDataId());
 				
+				counter++;
+			}
+			else if (rollbackType == RollbackType.LOCAL && entry.rollbackPlayer(block, (Player)session.getSender())) {
+				localUndo.add(block);
 				counter++;
 			}
 			
@@ -97,15 +105,27 @@ public class Rollback implements Runnable {
 			Bukkit.getServer().getScheduler().cancelTask(timerID);
 			
 			//Store undo results and notify player
-			session.setRollbackUndo(undo);
-			session.setDoingRollback(false);
-			Util.sendMessage(session.getSender(), "&cRollback complete, &7" + counter + "&c edits performed");
-			Util.sendMessage(session.getSender(), "&cUndo this rollback using &7/dl undo");
+			if (rollbackType == RollbackType.GLOBAL) {
+				session.setRollbackUndo(undo);
+				session.setDoingRollback(false);
+				Util.sendMessage(session.getSender(), "&cRollback complete, &7" + counter + "&c edits performed");
+				Util.sendMessage(session.getSender(), "&cUndo this rollback using &7/dl undo");
+			}
+			else {
+				session.setLocalRollbackUndo(localUndo);
+				Util.sendMessage(session.getSender(), "&cRollback preview complete, &7" + counter + "&c edits performed to you");
+				Util.sendMessage(session.getSender(), "&cType &7/hawk apply&c to make these changes permanent or &7/hawk cancel&c to cancel");
+			}
 			
 			Util.debug("Rollback complete, " + counter + " edits performed");
 			
 		}
 		
+	}
+	
+	public enum RollbackType {
+		GLOBAL,
+		LOCAL
 	}
 
 }

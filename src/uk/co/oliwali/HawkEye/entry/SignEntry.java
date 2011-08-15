@@ -67,6 +67,14 @@ public class SignEntry extends DataEntry {
 		return true;
 		
 	}
+	
+	@Override
+	public boolean rollbackPlayer(Block block, Player player) {
+		//If it is a sign place
+		if (type == DataType.SIGN_PLACE) player.sendBlockChange(block.getLocation(), 0, (byte)0);
+		else player.sendBlockChange(block.getLocation(), wallSign?Material.WALL_SIGN:Material.SIGN_POST, (byte)0);
+		return true;
+	}
 
 	@Override
 	public void interpretSqlData(String data) {

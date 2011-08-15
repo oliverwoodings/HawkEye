@@ -26,4 +26,10 @@ public class SimpleRollbackEntry extends DataEntry {
 		return true;
 	}
 	
+	@Override
+	public boolean rollbackPlayer(Block block, Player player) {
+		player.sendBlockChange(block.getLocation(), Material.AIR, (byte)0);
+		return true;
+	}
+	
 }

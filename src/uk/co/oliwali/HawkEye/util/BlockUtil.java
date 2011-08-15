@@ -76,5 +76,24 @@ public class BlockUtil {
 		if (blockArr.length > 1)
 			block.setData((byte) Integer.parseInt(blockArr[1]));
 	}
+	
+	/**
+	 * Returns ID section of a block string
+	 * @param string
+	 * @return int ID
+	 */
+	public static int getIdFromString(String string) {
+		return Integer.parseInt(string.split(":")[0]);
+	}
+	
+	/**
+	 * Returns data section of a block string
+	 * @param string
+	 * @return int data
+	 */
+	public static byte getDataFromString(String string) {
+		if (string.split(":").length == 1) return 0;
+		return (byte)Integer.parseInt(string.split(":")[1]);
+	}
 
 }

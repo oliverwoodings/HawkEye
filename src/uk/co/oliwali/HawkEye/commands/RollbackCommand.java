@@ -1,6 +1,7 @@
 package uk.co.oliwali.HawkEye.commands;
 
 import uk.co.oliwali.HawkEye.DataType;
+import uk.co.oliwali.HawkEye.Rollback.RollbackType;
 import uk.co.oliwali.HawkEye.SearchParser;
 import uk.co.oliwali.HawkEye.callbacks.RollbackCallback;
 import uk.co.oliwali.HawkEye.database.SearchQuery.SearchDir;
@@ -54,7 +55,7 @@ public class RollbackCommand extends BaseCommand {
 		}
 		
 		//Create new SearchQuery with data
-		new SearchQuery(new RollbackCallback(session), parser, SearchDir.DESC);
+		new SearchQuery(new RollbackCallback(session, RollbackType.GLOBAL), parser, SearchDir.DESC);
 		return true;
 		
 	}

@@ -126,6 +126,9 @@ public class DataEntry {
 	public boolean rollback(Block block) {
 		return false;
 	}
+	public boolean rollbackPlayer(Block block, Player player) {
+		return false;
+	}
     
     /**
      * Parses the inputted action into the DataEntry instance

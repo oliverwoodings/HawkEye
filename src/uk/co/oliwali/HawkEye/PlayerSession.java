@@ -2,6 +2,7 @@ package uk.co.oliwali.HawkEye;
 
 import java.util.List;
 
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.command.CommandSender;
 
@@ -18,6 +19,7 @@ public class PlayerSession {
 	private List<DataEntry> searchResults = null;
 	private List<DataEntry> rollbackResults  = null;
 	private List<BlockState> rollbackUndo = null;
+	private List<Block> localRollbackUndo = null;
 	private boolean usingTool = false;
 	private boolean doingRollback = false;
 	
@@ -51,6 +53,13 @@ public class PlayerSession {
 	}
 	public void setRollbackUndo(List<BlockState> rollbackUndo) {
 		this.rollbackUndo = rollbackUndo;
+	}
+	
+	public List<Block> getLocalRollbackUndo() {
+		return localRollbackUndo;
+	}
+	public void setLocalRollbackUndo(List<Block> localRollbackUndo) {
+		this.localRollbackUndo = localRollbackUndo;
 	}
 
 	public boolean isUsingTool() {
