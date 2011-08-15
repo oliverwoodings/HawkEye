@@ -258,19 +258,19 @@ public class HawkEye extends JavaPlugin {
 		
         //Add commands
         commands.add(new HelpCommand());
+        commands.add(new ToolCommand());
         commands.add(new SearchCommand());
+        commands.add(new SearchHelpCommand());
         commands.add(new PageCommand());
         commands.add(new TptoCommand());
-        commands.add(new SearchHelpCommand());
         commands.add(new HereCommand());
-        commands.add(new RollbackCommand());
-        commands.add(new UndoCommand());
-        commands.add(new ToolCommand());
-        commands.add(new RollbackHelpCommand());
-        commands.add(new WorldEditRollbackCommand());
         commands.add(new PreviewCommand());
         commands.add(new ApplyCommand());
         commands.add(new CancelCommand());
+        commands.add(new RollbackCommand());
+        commands.add(new WorldEditRollbackCommand());
+        commands.add(new RollbackHelpCommand());
+        commands.add(new UndoCommand());
 	}
 	
 	/**
