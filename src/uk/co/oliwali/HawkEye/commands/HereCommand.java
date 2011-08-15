@@ -57,6 +57,11 @@ public class HereCommand extends BaseCommand {
 		return true;
 		
 	}
+	
+	public void moreHelp() {
+		Util.sendMessage(sender, "&cShows all changes in a radius around you");
+		Util.sendMessage(sender, "&cRadius should be an integer");
+	}
 
 	public boolean permission() {
 		return Permission.search(sender);

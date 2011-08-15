@@ -33,13 +33,18 @@ public class ToolCommand extends BaseCommand {
 					player.getInventory().setItemInHand(stack);
 				}
 			}
-			Util.sendMessage(sender, "&cHawkEye tool enabled! &7Left click a block or place the tool to get infomation");
+			Util.sendMessage(sender, "&cHawkEye tool enabled! &7Left click a block or place the tool to get information");
 		}
 		else {
 			session.setUsingTool(false);
 			Util.sendMessage(sender, "&cHawkEye tool disabled");
 		}
 		return true;
+	}
+	
+	public void moreHelp() {
+		Util.sendMessage(sender, "&cGives you the HawkEye tool. You can use this to see changes at specific places");
+		Util.sendMessage(sender, "&cLeft click a block or place the tool to get information");
 	}
 
 	public boolean permission() {

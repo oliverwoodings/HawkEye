@@ -78,6 +78,11 @@ public abstract class BaseCommand {
 	public abstract boolean permission();
 	
 	/**
+	 * Sends advanced help to the sender
+	 */
+	public abstract void moreHelp();
+	
+	/**
 	 * Displays the help information for this command
 	 */
 	public void sendUsage() {

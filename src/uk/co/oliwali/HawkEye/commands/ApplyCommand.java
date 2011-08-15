@@ -20,7 +20,7 @@ public class ApplyCommand extends BaseCommand {
 		bePlayer = true;
 		name = "apply";
 		argLength = 0;
-		usage = "<parameters> <- apply rollback preview";
+		usage = "<- apply rollback preview";
 	}
 	
 	public boolean execute() {
@@ -37,6 +37,11 @@ public class ApplyCommand extends BaseCommand {
 		session.setLocalRollbackUndo(new ArrayList<Block>());
 		return true;
 		
+	}
+	
+	public void moreHelp() {
+		Util.sendMessage(sender, "&cApplies the results of a &7/hawk preview&c globally");
+		Util.sendMessage(sender, "&cUntil this command is called, the preview is only visible to you");
 	}
 	
 	public boolean permission() {

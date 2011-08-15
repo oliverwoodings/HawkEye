@@ -18,7 +18,7 @@ public class CancelCommand extends BaseCommand {
 		bePlayer = true;
 		name = "cancel";
 		argLength = 0;
-		usage = "<parameters> <- cancel rollback preview";
+		usage = "<- cancel rollback preview";
 	}
 	
 	public boolean execute() {
@@ -36,6 +36,11 @@ public class CancelCommand extends BaseCommand {
 		Util.sendMessage(sender, "&cPreview rollback cancelled");
 		return true;
 		
+	}
+	
+	public void moreHelp() {
+		Util.sendMessage(sender, "&cCancels results of a &7/hawk preview");
+		Util.sendMessage(sender, "&cOnly affects you - no changes are seen by anyony else");
 	}
 	
 	public boolean permission() {

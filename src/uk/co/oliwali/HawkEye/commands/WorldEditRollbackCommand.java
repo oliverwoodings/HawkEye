@@ -27,7 +27,7 @@ public class WorldEditRollbackCommand extends BaseCommand {
 		name = "werollback";
 		argLength = 1;
 		bePlayer = true;
-		usage = "<parameters> <- rollback in WorldEdit selection";
+		usage = "<parameters> <- rollback in WorldEdit area";
 	}
 	
 	public boolean execute() {
@@ -84,6 +84,12 @@ public class WorldEditRollbackCommand extends BaseCommand {
 		new SearchQuery(new RollbackCallback(session, RollbackType.GLOBAL), parser, SearchDir.DESC);
 		return true;
 		
+	}
+	
+	public void moreHelp() {
+		Util.sendMessage(sender, "&cRolls back all changes inside a WorldEdit selection");
+		Util.sendMessage(sender, "&cParameters are the same as a normal rollback command");
+		Util.sendMessage(sender, "&cDoes not support polygon selections.");
 	}
 	
 	public boolean permission() {

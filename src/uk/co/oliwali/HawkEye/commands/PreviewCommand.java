@@ -60,6 +60,13 @@ public class PreviewCommand extends BaseCommand {
 		
 	}
 	
+	public void moreHelp() {
+		Util.sendMessage(sender, "&cPreviews a rollback to only you");
+		Util.sendMessage(sender, "&cThis type of rollback does not affect the actual world in any way");
+		Util.sendMessage(sender, "&cThe effects can be applied after using &7/hawk apply&c or cancelled using &7/hawk cancel");
+		Util.sendMessage(sender, "&cThe parameters are the same as &7/hawk rollback");
+	}
+	
 	public boolean permission() {
 		return Permission.preview(sender);
 	}

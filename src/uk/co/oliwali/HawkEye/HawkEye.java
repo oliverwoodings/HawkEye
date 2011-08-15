@@ -38,9 +38,7 @@ import uk.co.oliwali.HawkEye.commands.HereCommand;
 import uk.co.oliwali.HawkEye.commands.PageCommand;
 import uk.co.oliwali.HawkEye.commands.PreviewCommand;
 import uk.co.oliwali.HawkEye.commands.RollbackCommand;
-import uk.co.oliwali.HawkEye.commands.RollbackHelpCommand;
 import uk.co.oliwali.HawkEye.commands.SearchCommand;
-import uk.co.oliwali.HawkEye.commands.SearchHelpCommand;
 import uk.co.oliwali.HawkEye.commands.ToolCommand;
 import uk.co.oliwali.HawkEye.commands.TptoCommand;
 import uk.co.oliwali.HawkEye.commands.UndoCommand;
@@ -260,7 +258,6 @@ public class HawkEye extends JavaPlugin {
         commands.add(new HelpCommand());
         commands.add(new ToolCommand());
         commands.add(new SearchCommand());
-        commands.add(new SearchHelpCommand());
         commands.add(new PageCommand());
         commands.add(new TptoCommand());
         commands.add(new HereCommand());
@@ -269,7 +266,6 @@ public class HawkEye extends JavaPlugin {
         commands.add(new CancelCommand());
         commands.add(new RollbackCommand());
         commands.add(new WorldEditRollbackCommand());
-        commands.add(new RollbackHelpCommand());
         commands.add(new UndoCommand());
 	}
 	
