@@ -11,6 +11,10 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityListener;
+import org.bukkit.event.painting.PaintingBreakByEntityEvent;
+import org.bukkit.event.painting.PaintingBreakEvent;
+import org.bukkit.event.painting.PaintingPlaceEvent;
+import org.bukkit.event.painting.PaintingBreakEvent.RemoveCause;
 import org.bukkit.inventory.ItemStack;
 
 import uk.co.oliwali.HawkEye.HawkEye;
@@ -85,6 +89,18 @@ public class MonitorEntityListener extends EntityListener {
 		if (event.isCancelled()) return;
 		for (Block b : event.blockList().toArray(new Block[0]))
 			DataManager.addEntry(new BlockEntry("Environment", DataType.EXPLOSION, b));
+	}
+	
+	public void onPaintingBreak(PaintingBreakEvent event) {
+		if (event.isCancelled() || event.getCause() != RemoveCause.ENTITY) return;
+		PaintingBreakByEntityEvent e = (PaintingBreakByEntityEvent)event;
+		if (e.getRemover() instanceof Player)
+			DataManager.addEntry(new DataEntry((Player)e.getRemover(), DataType.PAINTING_BREAK, e.getPainting().getLocation(), ""));
+	}
+	
+	public void onPaintingPlace(PaintingPlaceEvent event) {
+		if (event.isCancelled()) return;
+		DataManager.addEntry(new DataEntry(event.getPlayer(), DataType.PAINTING_PLACE, event.getPainting().getLocation(), ""));
 	}
 
 }
