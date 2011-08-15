@@ -11,7 +11,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import uk.co.oliwali.HawkEye.DataType;
 
 /**
- * Represents a HawkEye entry entity
+ * Represents a HawkEye database entry
+ * This class can be extended and overriden by sub-entry classes to allow customisation of rollbacks etc
  * @author oliverw92
  */
 public class DataEntry {
@@ -39,11 +40,11 @@ public class DataEntry {
     public DataEntry() { }
     public DataEntry(Player player, DataType type, Location loc, String data) {
     	setInfo(player, type, loc);
-    	this.data = data;
+    	setData(data);
     }
     public DataEntry(String player, DataType type, Location loc, String data) {
     	setInfo(player, type, loc);
-    	this.data = data;
+    	setData(data);
     }
 
 	public void setPlugin(String plugin) {
@@ -112,20 +113,52 @@ public class DataEntry {
     public void setData(String data) {
     	this.data = data;
     }
+    
+    /**
+     * Returns the entry data in a visually attractive and readable way for an in-game user to read
+     * Extending classes can add colours, customise layout etc.
+     * @return
+     */
 	public String getStringData() {
 		return data;
 	}
 	
+	/**
+	 * Converts the raw data from the database into the actual data required by the entry
+	 * Extending classes can override this to support custom storage methods (e.g. sign data etc)
+	 * @param data string to be interpreted
+	 */
 	public void interpretSqlData(String data) {
 		this.data = data;
 	}
+	
+	/**
+	 * Returns the entry data ready for storage in the database
+	 * Extending classes can override this method and format the data as they wish
+	 * @return string containing data to be stored
+	 */
 	public String getSqlData() {
 		return data;
 	}
 	
+	/**
+	 * Rolls back the data entry on the specified block
+	 * Default is to return false, however extending classes can override this and do their own thing
+	 * @param block
+	 * @return true if rollback is performed, false if it isn't
+	 */
 	public boolean rollback(Block block) {
 		return false;
 	}
+	
+	/**
+	 * Performs a local rollback for the specified player only
+	 * Default is to return false, and most extending classes will not override this
+	 * If overriding, the method should use Player.sendBlockChange() for sending fake changes
+	 * @param block
+	 * @param player
+	 * @return true if rollback is performed, false if it isn't
+	 */
 	public boolean rollbackPlayer(Block block, Player player) {
 		return false;
 	}
@@ -138,7 +171,6 @@ public class DataEntry {
      * @param loc
      * @param action
      */
-
 	public void setInfo(Player player, DataType type, Location loc) {
 		setInfo(player.getName(), type, loc);
 	}

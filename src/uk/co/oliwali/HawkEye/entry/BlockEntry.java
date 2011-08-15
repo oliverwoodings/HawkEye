@@ -6,6 +6,11 @@ import org.bukkit.entity.Player;
 import uk.co.oliwali.HawkEye.DataType;
 import uk.co.oliwali.HawkEye.util.BlockUtil;
 
+/**
+ * Represents a block-type entry in the database
+ * Rollbacks will set the block to the data value
+ * @author oliverw92
+ */
 public class BlockEntry extends DataEntry {
 	
 	public BlockEntry() { }

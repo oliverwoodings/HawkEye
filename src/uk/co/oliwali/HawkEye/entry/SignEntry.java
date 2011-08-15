@@ -16,6 +16,11 @@ import sun.misc.BASE64Encoder;
 import uk.co.oliwali.HawkEye.DataType;
 import uk.co.oliwali.HawkEye.util.Util;
 
+/**
+ * Represents a sign entry in the database
+ * Contains system for encoding sign text and storing sign orientation etc
+ * @author oliverw92
+ */
 public class SignEntry extends DataEntry {
 	
 	private BlockFace facing = BlockFace.NORTH;

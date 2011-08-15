@@ -14,6 +14,10 @@ import org.bukkit.inventory.ItemStack;
 import uk.co.oliwali.HawkEye.DataType;
 import uk.co.oliwali.HawkEye.util.InventoryUtil;
 
+/**
+ * Represents a container transaction as created in {@MonitorInventoryListener}
+ * @author oliverw92
+ */
 public class ContainerEntry extends DataEntry {
 	
 	public ContainerEntry() { }

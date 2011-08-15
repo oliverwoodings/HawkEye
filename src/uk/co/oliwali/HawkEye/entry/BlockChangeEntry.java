@@ -9,6 +9,10 @@ import org.bukkit.entity.Player;
 import uk.co.oliwali.HawkEye.DataType;
 import uk.co.oliwali.HawkEye.util.BlockUtil;
 
+/**
+ * Represents a block change entry - one block changing to another
+ * @author oliverw92
+ */
 public class BlockChangeEntry extends DataEntry {
 	
 	private String from = null;

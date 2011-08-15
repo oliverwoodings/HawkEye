@@ -7,6 +7,10 @@ import org.bukkit.entity.Player;
 
 import uk.co.oliwali.HawkEye.DataType;
 
+/**
+ * Used for simple rollbacks - sets the block to air regardless of the data
+ * @author oliverw92
+ */
 public class SimpleRollbackEntry extends DataEntry {
 	
 	public SimpleRollbackEntry() { }
