@@ -29,6 +29,8 @@ public class SearchParser {
 	public String dateTo = null;
 	public String[] filters = null;
 	
+	public SearchParser() { }
+	
 	public SearchParser(Player player) {
 		this.player = player;
 	}
