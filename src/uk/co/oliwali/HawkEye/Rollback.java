@@ -81,9 +81,10 @@ public class Rollback implements Runnable {
 			Location loc = new Location(world, entry.getX(), entry.getY(), entry.getZ());
 			Block block = world.getBlockAt(loc);
 			
+			BlockState state = block.getState();
 			//Attempt rollback
 			if (rollbackType == RollbackType.GLOBAL && entry.rollback(world.getBlockAt(loc))) {
-				undo.add(block.getState());
+				undo.add(state);
 				
 				//Delete data if told to
 				if (Config.DeleteDataOnRollback)
@@ -109,7 +110,7 @@ public class Rollback implements Runnable {
 				session.setRollbackUndo(undo);
 				session.setDoingRollback(false);
 				Util.sendMessage(session.getSender(), "&cRollback complete, &7" + counter + "&c edits performed");
-				Util.sendMessage(session.getSender(), "&cUndo this rollback using &7/dl undo");
+				Util.sendMessage(session.getSender(), "&cUndo this rollback using &7/hawk undo");
 			}
 			else {
 				session.setLocalRollbackUndo(localUndo);

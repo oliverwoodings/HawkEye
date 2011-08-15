@@ -27,7 +27,7 @@ public class Undo implements Runnable {
 	 * Contains appropriate methods of catching errors and notifying the player
 	 */
 	public void run() {
-		if (session.getRollbackResults() != null) {
+		if (session.doingRollback()) {
 			Util.sendMessage(session.getSender(), "&cYour previous rollback is still processing, please wait before performing an undo!");
 			return;
 		}
