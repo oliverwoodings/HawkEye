@@ -34,7 +34,7 @@ public class DataEntry {
 
     protected DataType type;
     
-    protected String data;
+    protected String data = null;
     
     public DataEntry() { }
     public DataEntry(Player player, DataType type, Location loc, String data) {

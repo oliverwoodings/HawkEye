@@ -18,8 +18,8 @@ import uk.co.oliwali.HawkEye.util.Util;
 
 public class SignEntry extends DataEntry {
 	
-	private BlockFace facing;
-	private boolean wallSign;
+	private BlockFace facing = BlockFace.NORTH;
+	private boolean wallSign = true;
 	private String[] lines = new String[4];
 	
 	public SignEntry() { }
@@ -36,11 +36,13 @@ public class SignEntry extends DataEntry {
 	
 	@Override
 	public String getStringData() {
-		return Util.join(Arrays.asList(lines), " | ");
+		if (data == null) return Util.join(Arrays.asList(lines), " | ");
+		return data;
 	}
 
 	@Override
 	public String getSqlData() {
+		if (data != null) return data;
 		BASE64Encoder encoder = new BASE64Encoder();
 		List<String> encoded = new ArrayList<String>();
 		for (int i = 0; i < 4; i++) if (lines[i] != null && lines[i].length() > 0) encoded.add(encoder.encode(lines[i].getBytes()));
@@ -78,6 +80,8 @@ public class SignEntry extends DataEntry {
 
 	@Override
 	public void interpretSqlData(String data) {
+		
+		if (data.indexOf("@") == -1) return;
 		
 		String[] arr = data.split("@");
 		//Parse wall sign or not
