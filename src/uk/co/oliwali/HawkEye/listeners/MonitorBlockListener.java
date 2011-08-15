@@ -2,6 +2,7 @@ package uk.co.oliwali.HawkEye.listeners;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockFadeEvent;
@@ -11,12 +12,17 @@ import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.painting.PaintingBreakByEntityEvent;
+import org.bukkit.event.painting.PaintingBreakEvent;
+import org.bukkit.event.painting.PaintingBreakEvent.RemoveCause;
+import org.bukkit.event.painting.PaintingPlaceEvent;
 
 import uk.co.oliwali.HawkEye.HawkEye;
 import uk.co.oliwali.HawkEye.DataType;
 import uk.co.oliwali.HawkEye.database.DataManager;
 import uk.co.oliwali.HawkEye.entry.BlockChangeEntry;
 import uk.co.oliwali.HawkEye.entry.BlockEntry;
+import uk.co.oliwali.HawkEye.entry.DataEntry;
 import uk.co.oliwali.HawkEye.entry.SignEntry;
 import uk.co.oliwali.HawkEye.entry.SimpleRollbackEntry;
 
@@ -80,6 +86,18 @@ public class MonitorBlockListener extends BlockListener {
 			DataManager.addEntry(new BlockEntry("Environment", DataType.LAVA_FLOW, to));
 		else if (from.getTypeId() == 8 || from.getTypeId() == 9)
 			DataManager.addEntry(new BlockEntry("Environment", DataType.WATER_FLOW, to));
+	}
+	
+	public void onPaintingBreak(PaintingBreakEvent event) {
+		if (event.isCancelled() || event.getCause() != RemoveCause.ENTITY) return;
+		PaintingBreakByEntityEvent e = (PaintingBreakByEntityEvent)event;
+		if (e.getRemover() instanceof Player)
+			DataManager.addEntry(new DataEntry((Player)e.getRemover(), DataType.PAINTING_BREAK, e.getPainting().getLocation(), ""));
+	}
+	
+	public void onPaintingPlace(PaintingPlaceEvent event) {
+		if (event.isCancelled()) return;
+		DataManager.addEntry(new DataEntry(event.getPlayer(), DataType.PAINTING_PLACE, event.getPainting().getLocation(), ""));
 	}
 
 }
