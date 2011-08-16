@@ -267,8 +267,9 @@ public class HawkEye extends JavaPlugin {
         commands.add(new ApplyCommand());
         commands.add(new CancelCommand());
         commands.add(new RollbackCommand());
-        commands.add(new WorldEditRollbackCommand());
+        if (worldEdit != null) commands.add(new WorldEditRollbackCommand());
         commands.add(new UndoCommand());
+        
 	}
 	
 	/**

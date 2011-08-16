@@ -39,7 +39,7 @@
 	
 	//Get worlds
 	$worlds = array();
-	$res = mysql_query("SELECT * FROM dl_worlds `" . $config["dbWorldTable"] . "`");
+	$res = mysql_query("SELECT * FROM `" . $config["dbWorldTable"] . "`");
 	if (!$res)
 		return error(mysql_error());
 	if (mysql_num_rows($res) == 0)
