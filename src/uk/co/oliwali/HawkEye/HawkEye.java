@@ -1,13 +1,7 @@
 package uk.co.oliwali.HawkEye;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -194,22 +188,15 @@ public class HawkEye extends JavaPlugin {
         	worldEdit = (WorldEditPlugin)we;
         	Util.info("WorldEdit found, selection rollbacks enabled");
         }
+        else Util.info("WARNING! WorldEdit not found, WorldEdit selection rollbacks disabled until WorldEdit is available");
         
-        //Check if Spout is loaded. If not, download and enable it
-	    if (Config.isLogged(DataType.CONTAINER_TRANSACTION) && pm.getPlugin("Spout") == null) {
-	        try {
-	            download(new URL("http://dl.dropbox.com/u/49805/Spout.jar"), new File("plugins" + File.separator + "Spout.jar"));
-	            pm.loadPlugin(new File("plugins" + File.separator + "Spout.jar"));
-	            pm.enablePlugin(pm.getPlugin("Spout"));
-	        } catch (final Exception ex) {
-	            Util.info("WARNING! Unable to download and install Spout. Container logging disabled until Spout is available");
-	        }
-		}
+        //Check if Spout is loaded
 	    Plugin bc = pm.getPlugin("Spout");
 	    if (bc != null) {
 	    	spout = (Spout)bc;
 	    	Util.info("Spout found, container logging enabled");
 	    }
+	    else Util.info("WARNING! Unable to find Spout. Container logging disabled until Spout is available");
 	    
 	}
 	
@@ -312,38 +299,6 @@ public class HawkEye extends JavaPlugin {
 		PlayerSession session = new PlayerSession(player);
 		playerSessions.put(player, session);
 		return session;
-	}
-	
-	/**
-	 * Downloads a file from the internet
-	 * @param url URL of the file to download
-	 * @param file location where the file should be downloaded to
-	 * @throws IOException
-	 */
-	public static void download(URL url, File file) throws IOException {
-	    if (!file.getParentFile().exists())
-	        file.getParentFile().mkdir();
-	    if (file.exists())
-	        file.delete();
-	    file.createNewFile();
-	    int size = url.openConnection().getContentLength();
-	    Util.info("Downloading " + file.getName() + " (" + size / 1024 + "kb) ...");
-	    InputStream in = url.openStream();
-	    OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
-	    byte[] buffer = new byte[1024];
-	    int len, downloaded = 0, msgs = 0;
-	    final long start = System.currentTimeMillis();
-	    while ((len = in.read(buffer)) >= 0) {
-	        out.write(buffer, 0, len);
-	        downloaded += len;
-	        if ((int)((System.currentTimeMillis() - start) / 500) > msgs) {
-	            Util.info((int)((double)downloaded / (double)size * 100d) + "%");
-	            msgs++;
-	        }
-	    }
-	    in.close();
-	    out.close();
-	    Util.info("Download finished");
 	}
 
 }

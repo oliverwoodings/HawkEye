@@ -1,6 +1,12 @@
 package uk.co.oliwali.HawkEye.util;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.logging.Logger;
@@ -80,7 +86,39 @@ public class Util {
 		}
 		return file.delete();
 		
-	} 
+	}
+	
+	/**
+	 * Downloads a file from the internet
+	 * @param url URL of the file to download
+	 * @param file location where the file should be downloaded to
+	 * @throws IOException
+	 */
+	public static void download(URL url, File file) throws IOException {
+	    if (!file.getParentFile().exists())
+	        file.getParentFile().mkdir();
+	    if (file.exists())
+	        file.delete();
+	    file.createNewFile();
+	    int size = url.openConnection().getContentLength();
+	    Util.info("Downloading " + file.getName() + " (" + size / 1024 + "kb) ...");
+	    InputStream in = url.openStream();
+	    OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
+	    byte[] buffer = new byte[1024];
+	    int len, downloaded = 0, msgs = 0;
+	    final long start = System.currentTimeMillis();
+	    while ((len = in.read(buffer)) >= 0) {
+	        out.write(buffer, 0, len);
+	        downloaded += len;
+	        if ((int)((System.currentTimeMillis() - start) / 500) > msgs) {
+	            Util.info((int)((double)downloaded / (double)size * 100d) + "%");
+	            msgs++;
+	        }
+	    }
+	    in.close();
+	    out.close();
+	    Util.info("Download finished");
+	}
 	
 	/**
 	 * Send a message to a CommandSender (can be a player or console).
