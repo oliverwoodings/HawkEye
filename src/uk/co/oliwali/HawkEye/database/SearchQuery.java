@@ -132,17 +132,19 @@ public class SearchQuery extends Thread {
 			args.add("data LIKE " + Util.join(Arrays.asList(parser.filters), " OR HawkEye.data LIKE "));
 		}
 		
-		//Check the limits
-		Util.debug("Building limits");
+		//Build WHERE clause
 		sql += Util.join(args, " AND ");
-		if (Config.MaxLines > 0)
-			sql += " LIMIT " + Config.MaxLines;
 		
 		//Add order by
 		Util.debug("Ordering by data_id");
 		sql += " ORDER BY `data_id` ";
 		if (dir == SearchDir.DESC) sql += "DESC";
 		else sql+= "ASC";
+		
+		//Check the limits
+		Util.debug("Building limits");
+		if (Config.MaxLines > 0)
+			sql += " LIMIT " + Config.MaxLines;
 		
 		Util.debug("Searching: " + sql);
 		
