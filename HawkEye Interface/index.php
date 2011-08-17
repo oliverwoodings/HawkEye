@@ -1,5 +1,9 @@
 <?php
 
+	function error($msg) {
+		die($msg);
+	}
+
 	session_start();
 		
 	//Include config and lang pack

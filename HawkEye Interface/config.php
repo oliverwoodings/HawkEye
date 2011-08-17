@@ -37,15 +37,15 @@
 					
 					//Log queries to log.txt
 					//Useful to keep track of who is querying what
-					"logQueries" => true
+					"logQueries" => true,
 					
 					);
 	
 	$con = mysql_connect($config["dbHost"], $config["dbUser"], $config["dbPass"]);
 	if (!$con)
-		die("Could not connect to MySQL Database!");
+		return error("Could not connect to MySQL Database!");
 	if (!mysql_select_db($config["dbDbase"], $con))
-		die(mysql_error());
+		return error(mysql_error());
 		
 	mysql_query("SET NAMES UTF8");
 		
