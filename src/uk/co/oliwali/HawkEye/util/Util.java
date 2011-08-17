@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.logging.Logger;
@@ -169,6 +170,7 @@ public class Util {
 		}
 		return true;
 	}
+	
 	/**
 	 * Java version of PHP's join(array, delimiter)
 	 * Takes any kind of collection (List, HashMap etc)
@@ -186,6 +188,30 @@ public class Util {
 	    }
 	    return buffer.toString();
 	}
+	
+	/**
+	 * Concatenate any number of arrays of the same type
+	 * @return
+	 */
+	public static <T> T[] concat(T[] first, T[]... rest) {
+		
+		//Read rest
+		int totalLength = first.length;
+		for (T[] array : rest) {
+			totalLength += array.length;
+		}
+		
+		//Concat with arraycopy
+		T[] result = Arrays.copyOf(first, totalLength);
+		int offset = first.length;
+		for (T[] array : rest) {
+		    System.arraycopy(array, 0, result, offset, array.length);
+		    offset += array.length;
+		}
+		return result;
+	
+	}
+
 	
 	/**
 	* Returns the distance between two {Location}s
