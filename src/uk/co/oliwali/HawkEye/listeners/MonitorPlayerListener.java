@@ -38,10 +38,8 @@ public class MonitorPlayerListener extends PlayerListener {
 	public void onPlayerChat(PlayerChatEvent event) {
 		DataManager.addEntry(new DataEntry(event.getPlayer(), DataType.CHAT, event.getPlayer().getLocation(), event.getMessage()));
 	}
-	
 
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-		if (event.isCancelled()) return;
 		//Check command filter
 		if (Config.CommandFilter.contains(event.getMessage().split(" ")[0])) return;
 		DataManager.addEntry(new DataEntry(event.getPlayer(), DataType.COMMAND, event.getPlayer().getLocation(), event.getMessage()));
@@ -49,6 +47,7 @@ public class MonitorPlayerListener extends PlayerListener {
 	
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
+		//Add session
 		HawkEye.addSession(player);
 		Location loc  = player.getLocation();
 		DataManager.addEntry(new DataEntry(player, DataType.JOIN, loc, Config.LogIpAddresses?player.getAddress().getAddress().getHostAddress().toString():""));
