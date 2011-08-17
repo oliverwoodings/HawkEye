@@ -19,7 +19,6 @@ public class PreviewCommand extends BaseCommand {
 	public PreviewCommand() {
 		name = "preview";
 		argLength = 1;
-		bePlayer = true;
 		usage = "<parameters> <- preview rollback changes";
 	}
 	

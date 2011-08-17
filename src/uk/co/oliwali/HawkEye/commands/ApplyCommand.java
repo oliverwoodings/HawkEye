@@ -17,7 +17,6 @@ import uk.co.oliwali.HawkEye.util.Util;
 public class ApplyCommand extends BaseCommand {
 
 	public ApplyCommand() {
-		bePlayer = true;
 		name = "apply";
 		argLength = 0;
 		usage = "<- apply rollback preview";

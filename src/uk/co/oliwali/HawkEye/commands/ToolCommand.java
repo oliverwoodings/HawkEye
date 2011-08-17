@@ -16,7 +16,6 @@ public class ToolCommand extends BaseCommand {
 	public ToolCommand() {
 		name = "tool";
 		argLength = 0;
-		bePlayer = true;
 		usage = " <- enables/disables the searching tool";
 	}
 	

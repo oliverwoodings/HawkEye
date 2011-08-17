@@ -15,7 +15,6 @@ import uk.co.oliwali.HawkEye.util.Util;
 public class CancelCommand extends BaseCommand {
 
 	public CancelCommand() {
-		bePlayer = true;
 		name = "cancel";
 		argLength = 0;
 		usage = "<- cancel rollback preview";

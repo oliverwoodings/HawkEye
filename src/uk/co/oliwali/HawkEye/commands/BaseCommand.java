@@ -24,7 +24,7 @@ public abstract class BaseCommand {
 	public String name;
 	public int argLength = 0;
 	public String usage;
-	public boolean bePlayer = false;
+	public boolean bePlayer = true;
 	public Player player;
 	public String usedCommand;
 	public PlayerSession session;

@@ -18,7 +18,6 @@ public class TptoCommand extends BaseCommand {
 	public TptoCommand() {
 		name = "tpto";
 		argLength = 1;
-		bePlayer = true;
 		usage = "<id> <- teleport to location of the data entry";
 	}
 	
