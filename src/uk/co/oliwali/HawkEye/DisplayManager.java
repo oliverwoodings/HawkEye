@@ -25,7 +25,7 @@ public class DisplayManager {
 		//Check if any results are found
 		List<DataEntry> results = session.getSearchResults();
 		if (results == null || results.size() == 0) {
-			Util.sendMessage(session.getSender(), "&cNo results found, type &7/dl searchhelp");
+			Util.sendMessage(session.getSender(), "&cNo results found");
 			return;
 		}
 		
