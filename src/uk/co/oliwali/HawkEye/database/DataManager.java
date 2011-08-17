@@ -205,7 +205,7 @@ public class DataManager extends TimerTask {
 	 */
 	public static DataEntry createEntryFromRes(ResultSet res) throws Exception {
 		DataType type = DataType.fromId(res.getInt("action"));
-		DataEntry entry = (DataEntry)Class.forName(type.getEntryClass()).newInstance();
+		DataEntry entry = (DataEntry)type.getEntryClass().newInstance();
 		entry.setPlayer(DataManager.getPlayer(res.getInt("player_id")));
 		entry.setDate(res.getString("date"));
 		entry.setDataId(res.getInt("data_id"));
