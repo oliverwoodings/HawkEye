@@ -62,7 +62,8 @@ public class MonitorEntityListener extends EntityListener {
 				}
 			//Other death
 			} else {
-				String cause = victim.getLastDamageCause().getCause().name();
+				EntityDamageEvent dEvent = victim.getLastDamageCause();
+				String cause = dEvent == null?"Unknown":victim.getLastDamageCause().getCause().name();
 				String[] words = cause.split("_");
 				for (int i = 0; i < words.length; i++)
 					words[i] = words[i].substring(0,1).toUpperCase() + words[i].substring(1).toLowerCase();
