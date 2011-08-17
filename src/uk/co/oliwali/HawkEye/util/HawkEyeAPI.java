@@ -27,9 +27,14 @@ public class HawkEyeAPI {
 	 * @param loc location of the event
 	 * @param data data relevant to the event
 	 */
-	public static void addCustomEntry(JavaPlugin plugin, String action, Player player, Location loc, String data) {
-		addEntry(plugin, DataType.OTHER, player, loc, data);
-		
+	public static boolean addCustomEntry(JavaPlugin plugin, String action, Player player, Location loc, String data) {
+		return addCustomEntry(plugin, action, player.getName(), loc, data);
+	}
+	public static boolean addCustomEntry(JavaPlugin plugin, String action, String player, Location loc, String data) {
+		if (plugin == null || action == null || player == null || loc == null || data == null) return false;
+		DataEntry entry = new DataEntry(player, DataType.OTHER, loc, data);
+		entry.setPlugin(plugin.getDescription().getName());
+		return true;
 	}
 	
 	/**
@@ -39,11 +44,17 @@ public class HawkEyeAPI {
 	 * @param player player that performed the action
 	 * @param loc location of the event
 	 * @param data data relevant to the event
+	 * @return true if accepted, false if not
 	 */
-	public static void addEntry(JavaPlugin plugin, DataType type, Player player, Location loc, String data) {
-		DataEntry entry = new DataEntry(player, type, loc, data);
+	public static boolean addEntry(JavaPlugin plugin, DataEntry entry) {
+		
+		if (entry.getClass() != entry.getType().getEntryClass()) return false;
+		if (entry.getPlayer() == null) return false;
+		
 		entry.setPlugin(plugin.getDescription().getName());
 		DataManager.addEntry(entry);
+		return true;
+		
 	}
 	
 	/**
