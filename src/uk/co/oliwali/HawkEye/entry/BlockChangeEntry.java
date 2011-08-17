@@ -33,6 +33,7 @@ public class BlockChangeEntry extends DataEntry {
 	
 	@Override
 	public String getStringData() {
+		if (from == null) return BlockUtil.getBlockStringName(to);
 		return BlockUtil.getBlockStringName(from) + " changed to " + BlockUtil.getBlockStringName(to);
 	}
 
