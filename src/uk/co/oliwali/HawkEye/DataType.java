@@ -17,38 +17,38 @@ import uk.co.oliwali.HawkEye.entry.SimpleRollbackEntry;
  */
 public enum DataType {
 	
-	BLOCK_BREAK(0, BlockEntry.class, true, "block-break", true),
-	BLOCK_PLACE(1, BlockChangeEntry.class, true, "block-place", true),
-	SIGN_PLACE(2, SignEntry.class, true, "sign-place", true),
-	CHAT(3, DataEntry.class, "chat"),
-	COMMAND(4, DataEntry.class, "command"),
-	JOIN(5, DataEntry.class, "join"),
-	QUIT(6, DataEntry.class, "quit"),
-	TELEPORT(7, DataEntry.class, "teleport"),
-	LAVA_BUCKET(8, SimpleRollbackEntry.class, true, "lava-bucket", true),
-	WATER_BUCKET(9, SimpleRollbackEntry.class, true, "water-bucket", true),
-	OPEN_CONTAINER(10, DataEntry.class, true, "open-container"),
-	DOOR_INTERACT(11, DataEntry.class, true, "door-interact"),
-	PVP_DEATH(12, DataEntry.class, "pvp-death"),
-	FLINT_AND_STEEL(13, SimpleRollbackEntry.class, true, "flint-steel"),
-	LEVER(14, DataEntry.class, true, "lever"),
-	STONE_BUTTON(15, DataEntry.class, true, "button"),
-	OTHER(16, DataEntry.class, "other"),
-	EXPLOSION(17, BlockEntry.class, true, "explosion", true),
-	BLOCK_BURN(18, BlockEntry.class, true, "block-burn", true),
-	BLOCK_FORM(19, BlockChangeEntry.class, true, "block-form", true),
-	LEAF_DECAY(20, BlockEntry.class, true, "leaf-decay", true),
-	MOB_DEATH(21, DataEntry.class, "mob-death"),
-	OTHER_DEATH(22, DataEntry.class, "other-death"),
-	ITEM_DROP(23, DataEntry.class, "item-drop"),
-	ITEM_PICKUP(24, DataEntry.class, "item-pickup"),
-	BLOCK_FADE(25, BlockChangeEntry.class, "block-fade", true),
-	LAVA_FLOW(26, BlockEntry.class, true, "lava-flow", true),
-	WATER_FLOW(27, BlockEntry.class, true, "water-flow", true),
-	CONTAINER_TRANSACTION(28, ContainerEntry.class, true, "container-transaction", true),
-	SIGN_BREAK(29, SignEntry.class, true, "sign-break", true),
-	PAINTING_BREAK(30, DataEntry.class, "painting-break"),
-	PAINTING_PLACE(31, DataEntry.class, "painting-place");
+	BLOCK_BREAK(0, BlockEntry.class, "block-break", true, true),
+	BLOCK_PLACE(1, BlockChangeEntry.class, "block-place", true, true),
+	SIGN_PLACE(2, SignEntry.class, "sign-place", true, true),
+	CHAT(3, DataEntry.class, "chat", false, false),
+	COMMAND(4, DataEntry.class, "command", false, false),
+	JOIN(5, DataEntry.class, "join", false, false),
+	QUIT(6, DataEntry.class, "quit", false, false),
+	TELEPORT(7, DataEntry.class, "teleport", false, false),
+	LAVA_BUCKET(8, SimpleRollbackEntry.class, "lava-bucket", true, true),
+	WATER_BUCKET(9, SimpleRollbackEntry.class, "water-bucket", true, true),
+	OPEN_CONTAINER(10, DataEntry.class, "open-container", true, false),
+	DOOR_INTERACT(11, DataEntry.class, "door-interact", true, false),
+	PVP_DEATH(12, DataEntry.class, "pvp-death", false, false),
+	FLINT_AND_STEEL(13, SimpleRollbackEntry.class, "flint-steel", true, true),
+	LEVER(14, DataEntry.class, "lever", true, false),
+	STONE_BUTTON(15, DataEntry.class, "button", true, false),
+	OTHER(16, DataEntry.class, "other", false, false),
+	EXPLOSION(17, BlockEntry.class, "explosion", true, true),
+	BLOCK_BURN(18, BlockEntry.class, "block-burn", true, true),
+	BLOCK_FORM(19, BlockChangeEntry.class, "block-form", true, true),
+	LEAF_DECAY(20, BlockEntry.class, "leaf-decay", true, true),
+	MOB_DEATH(21, DataEntry.class, "mob-death", false, false),
+	OTHER_DEATH(22, DataEntry.class, "other-death", false, false),
+	ITEM_DROP(23, DataEntry.class, "item-drop", true, false),
+	ITEM_PICKUP(24, DataEntry.class, "item-pickup", true, false),
+	BLOCK_FADE(25, BlockChangeEntry.class, "block-fade", true, true),
+	LAVA_FLOW(26, BlockEntry.class, "lava-flow", true, true),
+	WATER_FLOW(27, BlockEntry.class, "water-flow", true, true),
+	CONTAINER_TRANSACTION(28, ContainerEntry.class, "container-transaction", true, true),
+	SIGN_BREAK(29, SignEntry.class, "sign-break", true, true),
+	PAINTING_BREAK(30, DataEntry.class, "painting-break", true, false),
+	PAINTING_PLACE(31, DataEntry.class, "painting-place", true, false);
 	
 	private int id;
 	private boolean canHere;
@@ -69,27 +69,7 @@ public enum DataType {
 		}
 	}
 	
-	private DataType(int id, Class<?> entryClass, String configName) {
-		this.id = id;
-		this.entryClass = entryClass;
-		this.canHere = false;
-		this.configName = configName;
-		this.canRollback = false;
-	}
-	private DataType(int id, Class<?> entryClass, String configName, boolean canRollback) {
-		this.id = id;
-		this.entryClass = entryClass;
-		this.configName = configName;
-		this.canRollback = canRollback;
-	}
-	private DataType(int id, Class<?> entryClass, boolean canHere, String configName) {
-		this.id = id;
-		this.entryClass = entryClass;
-		this.canHere = canHere;
-		this.configName = configName;
-		this.canRollback = false;
-	}
-	private DataType(int id, Class<?> entryClass, boolean canHere, String configName, boolean canRollback) {
+	private DataType(int id, Class<?> entryClass, String configName, boolean canHere, boolean canRollback) {
 		this.id = id;
 		this.entryClass = entryClass;
 		this.canHere = canHere;
