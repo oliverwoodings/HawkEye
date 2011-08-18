@@ -35,8 +35,11 @@ $(document).ready(function(){
 	$("#dateTo").datepicker();
     
     $(".selectAll").click(function() {
-        $('#actions').find(':checkbox').attr('checked', this.checked);
-    });
+                var checked_status = this.checked;
+                $('#actions').find("input").each(function() {
+                    $(this).attr(":checked", true);
+                });
+        });
 
 	$(".searchButton").click(
 		function () {
