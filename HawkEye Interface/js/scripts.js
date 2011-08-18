@@ -33,7 +33,11 @@ $(document).ready(function(){
 	$("#timeTo").timepicker();
 	$("#dateFrom").datepicker();
 	$("#dateTo").datepicker();
-	
+    
+    $(".selectAll").click(function() {
+        $('#actions').find(':checkbox').attr('checked', this.checked);
+    });
+
 	$(".searchButton").click(
 		function () {
 			
