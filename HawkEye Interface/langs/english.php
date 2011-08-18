@@ -24,7 +24,8 @@
 									  "dTo" => "Date To",
 									  "block" => "Block",
 									  "search" => "Search",
-									  "exclude" => "Exclude Filter"),
+									  "exclude" => "Exclude Filter",
+									  "selectall" => "Select All"),
 					
 					"tips" => array("hideFilter" => "Show/Hide Filter Options",
 									"hideResults" => "Show/Hide Results",
@@ -39,7 +40,8 @@
 									"dTo" => "(Optional) Time and date to search up to",
 									"block" => "(Optional) Block to search for in 'Block Break' and 'Block Place' events",
 									"reverse" => "If checked, order of logs will be in reverse-chronological order. Uncheck for viewing chat logs",
-									"exclude" => "(Optional) List of keywords to exclude from results separated by commas"),
+									"exclude" => "(Optional) List of keywords to exclude from results separated by commas",
+									"selectall" => "Click to select all actions, click again to deselect all"),
 					
 					"actions" => array("Block Break",
 									   "Block Place",

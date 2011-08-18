@@ -25,7 +25,6 @@ input, textarea {
     border: solid 1px #999;
     outline: 0;  
     font: normal 13px/100% Verdana, Tahoma, sans-serif;
-    width: 100px;  
     background: #FFFFFF;
 	border-radius: 5px 5px 5px 5px;
 	-moz-border-radius: 5px;
@@ -90,7 +89,6 @@ input, textarea {
 	font-size: 74px;
 	vertical-align: middle;
 	text-align: center;
-	margin-bottom: -20px;
 }
 
 .innerHeader {
@@ -144,7 +142,7 @@ input, textarea {
 	height: 240px;
 	margin-top: 10px;
 	white-space: nowrap;
-	font-size: 15px;
+	font-size: 14px;
 }
 	.filter hr {
 		margin-left: 5px;
@@ -158,9 +156,9 @@ input, textarea {
 .actions {
     border: 1px solid #999999;
 	font-size: 13px;
-    border-radius: 10px;
-	-moz-border-radius: 10px;
-	-webkit-border-radius: 10px;
+    border-radius: 10px 0 0 10px;
+	-moz-border-radius: 10px 0 0 10px;
+	-webkit-border-radius: 10px 0 0 10px;
     height: 205px;
     margin-left: 40px;
     margin-top: -15px;
@@ -175,10 +173,15 @@ input, textarea {
 .parameters1 {
 	margin-left: 20px;
 	margin-top: 10px;
+	width: 270px;
 }
 .parameters2 {
 	margin-left: 20px;
 	margin-top: 10px;
+	width: 270px;
+}
+.selectAll {
+	margin-top: 5px;
 }
 .searchButton {
 	height: 40px;
