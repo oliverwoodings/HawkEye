@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import uk.co.oliwali.HawkEye.DataType;
+import uk.co.oliwali.HawkEye.util.Util;
 
 /**
  * Represents a HawkEye database entry
@@ -181,6 +182,7 @@ public class DataEntry {
 		setInfo(player, instance.getDescription().getName(), type, loc);
 	}
 	public void setInfo(String player, String instance, DataType type, Location loc) {
+		loc = Util.getSimpleLocation(loc);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	    setDate(sdf.format(Calendar.getInstance().getTime()));
 	    setPlugin(instance);

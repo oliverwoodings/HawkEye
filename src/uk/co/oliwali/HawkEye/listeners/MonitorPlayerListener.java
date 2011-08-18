@@ -100,6 +100,7 @@ public class MonitorPlayerListener extends PlayerListener {
 			}
 			
 			if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+				loc = block.getRelative(event.getBlockFace()).getLocation();
 				switch (player.getItemInHand().getType()) {
 					case FLINT_AND_STEEL:
 						DataManager.addEntry(new SimpleRollbackEntry(player, DataType.FLINT_AND_STEEL, loc, ""));
