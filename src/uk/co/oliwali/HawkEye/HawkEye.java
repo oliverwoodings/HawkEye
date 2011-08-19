@@ -297,9 +297,15 @@ public class HawkEye extends JavaPlugin {
 	 * Adds a PlayerSession to the list
 	 */
 	public static PlayerSession addSession(CommandSender player) {
-		if (playerSessions.containsKey(player)) return playerSessions.get(player);
-		PlayerSession session = new PlayerSession(player);
-		playerSessions.put(player, session);
+		PlayerSession session;
+		if (playerSessions.containsKey(player)) {
+			session = playerSessions.get(player);
+			session.setSender(player);
+		}
+		else {
+			session = new PlayerSession(player);
+			playerSessions.put(player, session);
+		}
 		return session;
 	}
 
