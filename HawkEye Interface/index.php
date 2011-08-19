@@ -10,6 +10,23 @@
 	include("config.php");
 	include("langs/" . $config["langFile"]);
 	
+	//Are we checking phpBB3 authentication?
+	if ($config["phpBB3Auth"])
+	{	
+		//If they don't have admin, we need to check if they've been granted login
+		//(This means they logged out of phpBB3!)
+		if (!$skipLogin)
+		{
+			//If they have been granted login, we'll de-grant it and send them to the login page.
+			if (isset($_SESSION["loginGrant"]))
+			{
+				unset($_SESSION["loggedin"]);
+				unset($_SESSION["loginGrant"]);
+				header("Location: login.php");
+			}
+		}
+	}	
+	
 	//If we aren't logged in, go to login page
 	if (!isset($_SESSION["loggedin"]) && $config["password"] != "")
 		header("Location: login.php");

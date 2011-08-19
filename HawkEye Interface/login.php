@@ -5,6 +5,27 @@
 	//Include config and lang pack
 	include("config.php");
 	include("langs/" . $config["langFile"]);
+	
+	//Are we checking phpBB3 authentication?
+	if ($config["phpBB3Auth"]) {
+		//They've got admin permission!  Let's send them on through.
+		if ($skipLogin)
+		{
+			$_SESSION["loggedin"] = true;
+			$_SESSION["loginGrant"] = true;
+			header("Location: index.php");
+		}
+		else
+		{
+			//They don't have admin, has the login been granted from a previous instance?
+			if (isset($_SESSION["loginGrant"]))
+			{
+				//If it has, then we neen to log them out!
+				unset($_SESSION["loggedin"]);
+				unset($_SESSION["loginGrant"]);
+			}
+		}
+	}
 
 	if (isset($_SESSION["loggedin"]))
 		header("Location: index.php");
