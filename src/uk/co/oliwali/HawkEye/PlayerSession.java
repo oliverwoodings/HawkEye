@@ -7,6 +7,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.command.CommandSender;
 
 import uk.co.oliwali.HawkEye.entry.DataEntry;
+import uk.co.oliwali.HawkEye.util.Config;
 
 /**
  * Stores data specific to each player on the server.
@@ -22,6 +23,7 @@ public class PlayerSession {
 	private List<Block> localRollbackUndo = null;
 	private boolean usingTool = false;
 	private boolean doingRollback = false;
+	private String[] toolCommand = Config.DefaultToolCommand;
 	
 	public PlayerSession(CommandSender sender) {
 		this.sender = sender;
@@ -74,6 +76,13 @@ public class PlayerSession {
 	}
 	public void setDoingRollback(boolean doingRollback) {
 		this.doingRollback = doingRollback;
+	}
+	
+	public String[] getToolCommand() {
+		return toolCommand;
+	}
+	public void setToolCommand(String[] toolCommand) {
+		this.toolCommand = toolCommand;
 	}
 
 }

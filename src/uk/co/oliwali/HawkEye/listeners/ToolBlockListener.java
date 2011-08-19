@@ -6,7 +6,7 @@ import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 import uk.co.oliwali.HawkEye.HawkEye;
-import uk.co.oliwali.HawkEye.database.DataManager;
+import uk.co.oliwali.HawkEye.ToolManager;
 import uk.co.oliwali.HawkEye.util.BlockUtil;
 import uk.co.oliwali.HawkEye.util.Config;
 
@@ -20,7 +20,7 @@ public class ToolBlockListener extends BlockListener {
 		Player player = event.getPlayer();
 		Block block   = event.getBlock();
 		if (BlockUtil.getBlockString(block).equals(Config.ToolBlock) && HawkEye.getSession(player).isUsingTool()) {
-			DataManager.toolSearch(player, block.getLocation());
+			ToolManager.toolSearch(player, block.getLocation());
 			event.setCancelled(true);
 		}
 	}

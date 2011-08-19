@@ -19,3 +19,7 @@ permissions:
             hawkeye.tool: true
             hawkeye.notify: true
             hawkeye.preview: true
+    hawkeye.tool.*:
+        description: Permission to use the HawkEye tool
+        children:
+            hawkeye.tool.bind: true

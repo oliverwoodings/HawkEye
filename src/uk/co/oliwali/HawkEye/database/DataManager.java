@@ -11,18 +11,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-
 import uk.co.oliwali.HawkEye.HawkEye;
 import uk.co.oliwali.HawkEye.DataType;
-import uk.co.oliwali.HawkEye.SearchParser;
 import uk.co.oliwali.HawkEye.util.BlockUtil;
 import uk.co.oliwali.HawkEye.util.Config;
 import uk.co.oliwali.HawkEye.util.Util;
-import uk.co.oliwali.HawkEye.callbacks.SearchCallback;
 import uk.co.oliwali.HawkEye.database.JDCConnection;
-import uk.co.oliwali.HawkEye.database.SearchQuery.SearchDir;
 import uk.co.oliwali.HawkEye.entry.DataEntry;
 
 /**
@@ -167,21 +161,6 @@ public class DataManager extends TimerTask {
 			if (entry.getValue() == id)
 				return entry.getKey();
 		return null;
-	}
-	
-	/**
-	 * Performs a HawkEye tool search at the specified location
-	 * @param player
-	 * @param loc
-	 */
-	public static void toolSearch(Player player, Location loc) {
-		SearchParser parser = new SearchParser(player);
-		for (DataType type : DataType.values())
-			if (type.canHere()) parser.actions.add(type);
-		loc = Util.getSimpleLocation(loc);
-		parser.loc = loc.toVector();
-		parser.worlds = new String[]{ loc.getWorld().getName() };
-		new SearchQuery(new SearchCallback(HawkEye.getSession(player)), parser, SearchDir.DESC);
 	}
 	
 	/**

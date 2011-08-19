@@ -40,19 +40,28 @@ public abstract class BaseCommand {
 	 * @return true on success, false if there is an error in the checks or if the extending command returns false
 	 */
 	public boolean run(HawkEye instace, CommandSender csender, String[] preArgs, String cmd) {
+		
 		plugin = instace;
 		sender = csender;
 		session = HawkEye.getSession(sender);
+		usedCommand = cmd;
+		
+		//Sort out arguments
 		args.clear();
 		for (String arg : preArgs)
 			args.add(arg);
-		args.remove(0);
-		usedCommand = cmd;
 		
+		//Remove commands from arguments
+		for (int i = 0; i <= name.split(" ").length; i++)
+			args.remove(i);
+		
+		//Check arg lengths
 		if (argLength > args.size()) {
 			sendUsage();
 			return true;
 		}
+		
+		//Check if sender should be a player
 		if (bePlayer && !(sender instanceof Player))
 			return false;
 		if (sender instanceof Player)

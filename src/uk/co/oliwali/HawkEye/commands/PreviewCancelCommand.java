@@ -12,10 +12,10 @@ import uk.co.oliwali.HawkEye.util.Util;
  * Error handling for user input is done using exceptions to keep code neat.
  * @author oliverw92
  */
-public class CancelCommand extends BaseCommand {
+public class PreviewCancelCommand extends BaseCommand {
 
-	public CancelCommand() {
-		name = "cancel";
+	public PreviewCancelCommand() {
+		name = "preview cancel";
 		argLength = 0;
 		usage = "<- cancel rollback preview";
 	}

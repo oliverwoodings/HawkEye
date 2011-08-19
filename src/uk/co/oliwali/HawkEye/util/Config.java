@@ -22,6 +22,7 @@ public class Config {
 	public static int MaxRadius;
 	public static int DefaultHereRadius;
 	public static String ToolBlock;
+	public static String[] DefaultToolCommand;
 	public static String CleanseAge;
 	public static boolean Debug;
 	public static boolean LogIpAddresses;
@@ -74,6 +75,7 @@ public class Config {
 		MaxRadius = config.getInt("general.max-radius", 0);
 		DefaultHereRadius = config.getInt("general.default-here-radius", 5);
 		ToolBlock = config.getString("general.tool-block", "17");
+		DefaultToolCommand = config.getString("general.default-tool-command", "").split(" ");
 		CleanseAge = config.getString("general.cleanse-age", "0");
 		Debug = config.getBoolean("general.debug", false);
 		LogIpAddresses = config.getBoolean("general.log-ip-addresses", true);

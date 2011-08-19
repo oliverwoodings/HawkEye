@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -23,9 +24,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
-import uk.co.oliwali.HawkEye.commands.ApplyCommand;
+import uk.co.oliwali.HawkEye.commands.PreviewApplyCommand;
 import uk.co.oliwali.HawkEye.commands.BaseCommand;
-import uk.co.oliwali.HawkEye.commands.CancelCommand;
+import uk.co.oliwali.HawkEye.commands.PreviewCancelCommand;
 import uk.co.oliwali.HawkEye.commands.HelpCommand;
 import uk.co.oliwali.HawkEye.commands.HereCommand;
 import uk.co.oliwali.HawkEye.commands.PageCommand;
@@ -240,8 +241,8 @@ public class HawkEye extends JavaPlugin {
         commands.add(new TptoCommand());
         commands.add(new HereCommand());
         commands.add(new PreviewCommand());
-        commands.add(new ApplyCommand());
-        commands.add(new CancelCommand());
+        commands.add(new PreviewApplyCommand());
+        commands.add(new PreviewCancelCommand());
         commands.add(new RollbackCommand());
         if (worldEdit != null) commands.add(new WorldEditRollbackCommand());
         commands.add(new UndoCommand());
@@ -263,7 +264,7 @@ public class HawkEye extends JavaPlugin {
 			for (BaseCommand command : commands.toArray(new BaseCommand[0])) {
 				if (command.name.equalsIgnoreCase("help"))
 					help = command;
-				if (command.name.equalsIgnoreCase(args[0]))
+				if (command.name.equalsIgnoreCase(Util.join(Arrays.asList(args[0]), " ").substring(0, name.length())))
 					return command.run(this, sender, args, commandLabel);
 			}
 			return help.run(this, sender, args, commandLabel);
