@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.ContainerBlock;
 import org.bukkit.entity.Player;
@@ -26,13 +25,17 @@ public class ContainerEntry extends DataEntry {
 		data = diff;
 		setInfo(player, DataType.CONTAINER_TRANSACTION, location);
 	}
-
+	public ContainerEntry(String player, Location location, String diff) {
+		data = diff;
+		setInfo(player, DataType.CONTAINER_TRANSACTION, location);
+	}
+	
 	public String getStringData() {
 		return InventoryUtil.createChangeString(InventoryUtil.interpretDifferenceString(data));
 	}
 
 	public boolean rollback(Block block) {
-		if (block.getType() != Material.CHEST) return false;
+		if (!(block instanceof ContainerBlock)) return false;
 		Inventory inv = ((ContainerBlock)block.getState()).getInventory();
 		List<HashMap<String,Integer>> ops = InventoryUtil.interpretDifferenceString(data);
 		//Handle the additions
