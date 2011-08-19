@@ -114,11 +114,16 @@
 		$sql .= " LIMIT " . $config["maxResults"];
 		
 	//Log query
+	set_error_handler('handleError');
 	if ($config["logQueries"] == true) {
-		if (!file_put_contents("log.txt", date("m.d.y G:i:s") . " - " . $_SERVER["REMOTE_ADDR"] . " - " . $sql, FILE_APPEND))
+		try {
+			if (!file_put_contents("log.txt", date("m.d.y G:i:s") . " - " . $_SERVER["REMOTE_ADDR"] . " - " . $sql, FILE_APPEND))
+				return error("Unable to open/write to log.txt!");
+		} catch (ErrorException $e) {
 			return error("Unable to open/write to log.txt!");
-	}	
-		
+		}
+	}
+	restore_error_handler();
 		
 	//Run query
 	$res = mysql_query($sql);
