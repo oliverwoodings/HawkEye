@@ -52,8 +52,9 @@ public abstract class BaseCommand {
 			args.add(arg);
 		
 		//Remove commands from arguments
-		for (int i = 0; i <= name.split(" ").length; i++)
-			args.remove(i);
+		for (int i = 0; i <= name.split(" ").length; i++) {
+			if (i < args.size()) args.remove(i);
+		}
 		
 		//Check arg lengths
 		if (argLength > args.size()) {

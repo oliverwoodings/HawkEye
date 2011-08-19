@@ -262,9 +262,10 @@ public class HawkEye extends JavaPlugin {
 				args = new String[]{"help"};
 			BaseCommand help = null;
 			for (BaseCommand command : commands.toArray(new BaseCommand[0])) {
+				String argString = Util.join(Arrays.asList(args), " ");
 				if (command.name.equalsIgnoreCase("help"))
 					help = command;
-				if (command.name.equalsIgnoreCase(Util.join(Arrays.asList(args[0]), " ").substring(0, name.length())))
+				if (command.name.equalsIgnoreCase(argString.substring(0, name.length()>argString.length()?argString.length():name.length())))
 					return command.run(this, sender, args, commandLabel);
 			}
 			return help.run(this, sender, args, commandLabel);
