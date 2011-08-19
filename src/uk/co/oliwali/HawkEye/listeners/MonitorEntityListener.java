@@ -1,10 +1,8 @@
 package uk.co.oliwali.HawkEye.listeners;
 
 import java.util.Arrays;
-import java.util.HashMap;
 
 import org.bukkit.block.Block;
-import org.bukkit.block.ContainerBlock;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -24,11 +22,8 @@ import uk.co.oliwali.HawkEye.DataType;
 import uk.co.oliwali.HawkEye.PlayerSession;
 import uk.co.oliwali.HawkEye.database.DataManager;
 import uk.co.oliwali.HawkEye.entry.BlockEntry;
-import uk.co.oliwali.HawkEye.entry.ContainerEntry;
 import uk.co.oliwali.HawkEye.entry.DataEntry;
-import uk.co.oliwali.HawkEye.entry.SignEntry;
 import uk.co.oliwali.HawkEye.util.Config;
-import uk.co.oliwali.HawkEye.util.InventoryUtil;
 import uk.co.oliwali.HawkEye.util.Util;
 
 /**
@@ -93,25 +88,8 @@ public class MonitorEntityListener extends EntityListener {
 	
 	public void onEntityExplode(EntityExplodeEvent event) {
 		if (event.isCancelled()) return;
-		for (Block b : event.blockList().toArray(new Block[0])) {
-			//Log chest contents if its a container
-			if (b instanceof ContainerBlock) {
-				ContainerBlock cont = (ContainerBlock)b;
-				HashMap<String,Integer> before = InventoryUtil.compressInventory(cont.getInventory().getContents());
-				String diff = InventoryUtil.createDifferenceString(before, new HashMap<String,Integer>());
-				DataManager.addEntry(new ContainerEntry("Environment", b.getLocation(), diff));
-			}
-			//Check other types such as sign
-			switch (b.getType()) {
-				case SIGN_POST:
-				case WALL_SIGN:
-					DataManager.addEntry(new SignEntry("Environment", DataType.SIGN_BREAK, b));
-					break;
-				default:
-					DataManager.addEntry(new BlockEntry("Environment", DataType.EXPLOSION, b));
-					break;
-			}
-		}
+		for (Block b : event.blockList().toArray(new Block[0]))
+			DataManager.addEntry(new BlockEntry("Environment", DataType.EXPLOSION, b));
 	}
 	
 	public void onPaintingBreak(PaintingBreakEvent event) {
