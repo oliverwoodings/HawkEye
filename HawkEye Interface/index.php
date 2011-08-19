@@ -42,7 +42,7 @@
     
         <div class="header">
         	<div class="innerHeader">
-            	<div class="headerText"><b class="logout"></div><div class="logout"><?php if ($config["password"] != "") echo '<a href="login.php?page=logout"><button>Log Out</button></a>'; ?></div>
+            	<div class="headerText"><!--<b class="logout">--></div><div class="logout"><?php if ($config["password"] != "") echo '<a href="login.php?page=logout"><button>Log Out</button></a>'; ?></div>
             </div>
         </div>
         
