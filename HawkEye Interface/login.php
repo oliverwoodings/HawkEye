@@ -17,7 +17,7 @@
 		}
 		else
 		{
-			//They don't have admin, has the login been granted? from a previous instance?
+			//They don't have admin, has the login been granted from a previous instance?
 			if (isset($_SESSION["loginGrant"]))
 			{
 				//If it has, then we neen to log them out!
