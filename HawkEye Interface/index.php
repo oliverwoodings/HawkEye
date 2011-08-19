@@ -99,7 +99,7 @@
                             <input title="<?php echo $lang["tips"]["range"]; ?>" type="text" name="range" /> <?php echo $lang["filter"]["range"]; ?><br />
                             <input title="<?php echo $lang["tips"]["keys"]; ?>" type="text" name="keywords" /> <?php echo $lang["filter"]["keys"]; ?><br />
                             <input title="<?php echo $lang["tips"]["exclude"]; ?>" type="text" name="exclude" /> <?php echo $lang["filter"]["exclude"]; ?><br />
-                        	<div class="selectAll" title="<?php echo $lang["tips"]["selectall"]; ?>"><input type="checkbox" id="selectAll" name="selectall" /> <?php echo $lang["filter"]["selectall"]; ?></div>
+                        	<div class="selectAll" title="<?php echo $lang["tips"]["selectall"]; ?>"><input type="checkbox" id="selectAll" name="selectall" /> <span id="selectAllText"><?php echo $lang["filter"]["selectall"]; ?></span></div>
                         </div>
                         <div class="parameters2">
                             <input title="<?php echo $lang["tips"]["worlds"]; ?>" type="text" name="worlds" /> <?php echo $lang["filter"]["worlds"]; ?><br />

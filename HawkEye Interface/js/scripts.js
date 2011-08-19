@@ -35,11 +35,10 @@ $(document).ready(function(){
 	$("#dateTo").datepicker();
     
     $(".selectAll").click(function() {
-                var checked_status = this.checked;
-                $('#actions').find("input").each(function() {
-                    $(this).attr(":checked", true);
-                });
-        });
+        $('#actions input').prop('checked', $("#selectAll").attr("checked")?true:false);
+        $('#selectAllText').html($("#selectAll").attr("checked")?"De-select all":"Select all");
+        $.uniform.update(); 
+    });
 
 	$(".searchButton").click(
 		function () {
