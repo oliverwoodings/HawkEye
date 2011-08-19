@@ -94,7 +94,8 @@ public class InventoryUtil {
 	 * @return
 	 */
 	public static String createChangeString(List<HashMap<String,Integer>> ops) {
-		
+
+		if (ops.size() == 0) return "";
 		String changeString = "";
 		
 		//Loop through ops
