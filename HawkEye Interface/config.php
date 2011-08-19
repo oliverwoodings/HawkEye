@@ -39,7 +39,29 @@
 					//Useful to keep track of who is querying what
 					"logQueries" => true,
 					
+					//Do we want to use phpBB3 authentication?
+					//Allows members with ACP access to bypass the need for a password.
+					"phpBB3Auth" => false,
+					
+					//The relative path to the phpBB3 forums.
+					//Default value will assume that the phpBB3 directory is up one level.
+					"phpBB3Path" => "../phpBB3",
+					
 					);
+	
+	
+	
+	if ($config["phpBB3Auth"])
+	{
+		define('IN_PHPBB', true);
+		$phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : $config["phpBB3Path"];
+		$phpEx = substr(strrchr(__FILE__, '.'), 1);
+		include($phpbb_root_path . 'common.' . $phpEx);
+		$user->session_begin();
+		$auth->acl($user->data);
+		if($auth->acl_get('a_'))
+			$skipLogin = true;
+	}
 	
 	$con = mysql_connect($config["dbHost"], $config["dbUser"], $config["dbPass"]);
 	if (!$con)
