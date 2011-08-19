@@ -14,7 +14,7 @@ public enum DataType {
 	BLOCK_PLACE(1, "BlockChangeEntry", true, "block-place", true),
 	SIGN_PLACE(2, "SignEntry", true, "sign-place", true),
 	CHAT(3, "DataEntry", "chat"),
-	COMMAND(4, "DataEntry", "command"),
+	COMMAND(4, "DataEntry", true, "command"),
 	JOIN(5, "DataEntry", "join"),
     QUIT(6, "DataEntry", "quit"),
     TELEPORT(7, "DataEntry", "teleport"),

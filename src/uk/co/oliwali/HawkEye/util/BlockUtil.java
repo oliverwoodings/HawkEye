@@ -59,7 +59,7 @@ public class BlockUtil {
 	 */
 	public static String getBlockStringName(String blockData) {
 		String[] blockArr = blockData.split(":");
-		Material.getMaterial(Integer.parseInt(blockArr[0]));
+		if (!Util.isInteger(blockArr[0])) return blockData;
 		if (blockArr.length > 1)
 			return Material.getMaterial(Integer.parseInt(blockArr[0])).name() + ":" + blockArr[1];
 		else return Material.getMaterial(Integer.parseInt(blockArr[0])).name();
