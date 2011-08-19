@@ -9,7 +9,7 @@
 	
 	//Include config, lang pack and MySQL connector
 	include("config.php");
-	include("langs/" . $config["langFile"]);
+	include("langs/" . $config["langFile"]);	
 	
 	//Set up output array
 	$output = array(
@@ -17,6 +17,9 @@
 		"columns" => $lang["results"],
 		"data" => array()
 	);
+	
+	//Check if required functions are here
+	if (!function_exists("json_decode")) return error("JSON PHP library not installed! Update to PHP 5.3 or later!");
 	
 	//If not logged in, throw an error
 	if (!isset($_SESSION["loggedin"]) && $config["password"] != "")
@@ -117,7 +120,7 @@
 	set_error_handler('handleError');
 	if ($config["logQueries"] == true) {
 		try {
-			if (!file_put_contents("log.txt", date("m.d.y G:i:s") . " - " . $_SERVER["REMOTE_ADDR"] . " - " . $sql, FILE_APPEND))
+			if (!file_put_contents("log.txt", date("m.d.y G:i:s") . " - " . $_SERVER["REMOTE_ADDR"] . " - " . $sql . "\n", FILE_APPEND))
 				return error("Unable to open/write to log.txt!");
 		} catch (ErrorException $e) {
 			return error("Unable to open/write to log.txt!");

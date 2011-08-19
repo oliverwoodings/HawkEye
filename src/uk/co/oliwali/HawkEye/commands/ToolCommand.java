@@ -1,5 +1,6 @@
 package uk.co.oliwali.HawkEye.commands;
 
+import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -22,23 +23,29 @@ public class ToolCommand extends BaseCommand {
 	}
 	
 	public boolean execute() {
+		//If not using tool, enable
 		if (!session.isUsingTool()) {
 			Inventory inv = player.getInventory();
 			session.setUsingTool(true);
 			ItemStack stack = BlockUtil.itemStringToStack(Config.ToolBlock, 1);
+			//If player doesn't have a tool, give them on
 			if (!inv.contains(stack)) {
 				int first = inv.firstEmpty();
 				if (first == -1)
 					player.getWorld().dropItem(player.getLocation(), stack);
 				else inv.setItem(first, stack);
 			}
-			ItemStack back = player.getItemInHand().clone();
-			int slot = inv.first(stack);
-			player.setItemInHand(inv.getItem(inv.first(stack)));
-			if (back.getAmount() == 0) inv.clear(slot);
-			else inv.setItem(slot, back);
+			//If they aren't holding a tool, move the tool to their hand
+			if (player.getItemInHand().getType() != Material.LOG && inv.first(Material.LOG) != -1){ 
+				ItemStack back = player.getItemInHand().clone();
+				int slot = inv.first(Material.LOG);
+				player.setItemInHand(inv.getItem(inv.first(Material.LOG)));
+				if (back.getAmount() == 0) inv.clear(slot);
+				else inv.setItem(slot, back);
+			}
 			Util.sendMessage(sender, "&cHawkEye tool enabled! &7Left click a block or place the tool to get information");
 		}
+		//If using tool, disable
 		else {
 			session.setUsingTool(false);
 			Util.sendMessage(sender, "&cHawkEye tool disabled");
