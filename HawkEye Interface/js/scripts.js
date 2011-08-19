@@ -33,7 +33,13 @@ $(document).ready(function(){
 	$("#timeTo").timepicker();
 	$("#dateFrom").datepicker();
 	$("#dateTo").datepicker();
-	
+    
+    $(".selectAll").click(function() {
+        $('#actions input').prop('checked', $("#selectAll").attr("checked")?true:false);
+        $('#selectAllText').html($("#selectAll").attr("checked")?"De-select all":"Select all");
+        $.uniform.update(); 
+    });
+
 	$(".searchButton").click(
 		function () {
 			

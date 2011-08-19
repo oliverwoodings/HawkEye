@@ -18,12 +18,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-    	<script type="text/javascript" src="js/jquery-1.5.1.min.js"></script>
+    	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
         <script type="text/javascript" src="js/jquery-ui-1.8.13.custom.min.js"></script>
         <script type="text/javascript" src="js/jquery.ui.timepicker.js"></script>
         <script type="text/javascript" src="js/scripts.js"></script>
-        <script type="text/javascript" src="js/jquery.uniform.js"></script>
-        <script type="text/javascript" src="js/jquery.dataTables.js"></script>
+        <script type="text/javascript" src="js/jquery.uniform.min.js"></script>
         <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 
         <script type="text/javascript" src="http://cdn.jquerytools.org/1.2.5/tiny/jquery.tools.min.js"></script>
@@ -42,7 +41,7 @@
     
         <div class="header">
         	<div class="innerHeader">
-            	<div class="headerText"><b class="logout"></div><div class="logout"><?php if ($config["password"] != "") echo '<a href="login.php?page=logout"><button>Log Out</button></a>'; ?></div>
+            	<a href="https://github.com/oliverw92/HawkEye/wiki"><div class="headerText"></div></a><div class="logout"><?php if ($config["password"] != "") echo '<a href="login.php?page=logout"><button>Log Out</button></a>'; ?></div>
             </div>
         </div>
         
@@ -56,42 +55,42 @@
                 
                 <div class="filter">
                     <form id="searchForm" action="">
-                        <div class="actions" title="<?php echo $lang["tips"]["actions"]; ?>">
+                        <div class="actions" id="actions" title="<?php echo $lang["tips"]["actions"]; ?>">
                             <div>
-                                <div><input type="checkbox" name="action" value="0" /> <?php echo $lang["actions"][0]; ?></div><br />
-                                <div><input type="checkbox" name="action" value="1" /> <?php echo $lang["actions"][1]; ?></div><br />
-                                <div><input type="checkbox" name="action" value="2" /> <?php echo $lang["actions"][2]; ?></div><br />
-                                <div><input type="checkbox" name="action" value="3" /> <?php echo $lang["actions"][3]; ?></div><br />
-                                <div><input type="checkbox" name="action" value="4" /> <?php echo $lang["actions"][4]; ?></div><br />
-                                <div><input type="checkbox" name="action" value="5" /> <?php echo $lang["actions"][5]; ?></div><br />
-                                <div><input type="checkbox" name="action" value="6" /> <?php echo $lang["actions"][6]; ?></div><br />
-                                <div><input type="checkbox" name="action" value="7" /> <?php echo $lang["actions"][7]; ?></div><br />
-                                <div><input type="checkbox" name="action" value="8" /> <?php echo $lang["actions"][8]; ?></div><br />
-                                <div><input type="checkbox" name="action" value="9" /> <?php echo $lang["actions"][9]; ?></div><br />
-                                <div><input type="checkbox" name="action" value="10" /> <?php echo $lang["actions"][10]; ?></div><br />
-                                <div><input type="checkbox" name="action" value="11" /> <?php echo $lang["actions"][11]; ?></div><br />
-                                <div><input type="checkbox" name="action" value="12" /> <?php echo $lang["actions"][12]; ?></div><br />
-                                <div><input type="checkbox" name="action" value="13" /> <?php echo $lang["actions"][13]; ?></div><br />
-                                <div><input type="checkbox" name="action" value="14" /> <?php echo $lang["actions"][14]; ?></div><br />
-                                <div><input type="checkbox" name="action" value="15" /> <?php echo $lang["actions"][15]; ?></div><br />
+                                <div><input type="checkbox" name="action" class="act" value="0" /> <?php echo $lang["actions"][0]; ?></div><br />
+                                <div><input type="checkbox" name="action" class="act" value="1" /> <?php echo $lang["actions"][1]; ?></div><br />
+                                <div><input type="checkbox" name="action" class="act" value="2" /> <?php echo $lang["actions"][2]; ?></div><br />
+                                <div><input type="checkbox" name="action" class="act" value="3" /> <?php echo $lang["actions"][3]; ?></div><br />
+                                <div><input type="checkbox" name="action" class="act" value="4" /> <?php echo $lang["actions"][4]; ?></div><br />
+                                <div><input type="checkbox" name="action" class="act" value="5" /> <?php echo $lang["actions"][5]; ?></div><br />
+                                <div><input type="checkbox" name="action" class="act" value="6" /> <?php echo $lang["actions"][6]; ?></div><br />
+                                <div><input type="checkbox" name="action" class="act" value="7" /> <?php echo $lang["actions"][7]; ?></div><br />
+                                <div><input type="checkbox" name="action" class="act" value="8" /> <?php echo $lang["actions"][8]; ?></div><br />
+                                <div><input type="checkbox" name="action" class="act" value="9" /> <?php echo $lang["actions"][9]; ?></div><br />
+                                <div><input type="checkbox" name="action" class="act" value="10" /> <?php echo $lang["actions"][10]; ?></div><br />
+                                <div><input type="checkbox" name="action" class="act" value="11" /> <?php echo $lang["actions"][11]; ?></div><br />
+                                <div><input type="checkbox" name="action" class="act" value="12" /> <?php echo $lang["actions"][12]; ?></div><br />
+                                <div><input type="checkbox" name="action" class="act" value="13" /> <?php echo $lang["actions"][13]; ?></div><br />
+                                <div><input type="checkbox" name="action" class="act" value="14" /> <?php echo $lang["actions"][14]; ?></div><br />
+                                <div><input type="checkbox" name="action" class="act" value="15" /> <?php echo $lang["actions"][15]; ?></div><br />
                             </div>
                             <div>
-                                <div><input type="checkbox" name="action" value="16" /> <?php echo $lang["actions"][16]; ?></div><br />
-                                <div><input type="checkbox" name="action" value="17" /> <?php echo $lang["actions"][17]; ?></div><br />
-                                <div><input type="checkbox" name="action" value="18" /> <?php echo $lang["actions"][18]; ?></div><br />
-                                <div><input type="checkbox" name="action" value="19" /> <?php echo $lang["actions"][19]; ?></div><br />
-                                <div><input type="checkbox" name="action" value="20" /> <?php echo $lang["actions"][20]; ?></div><br />
-                                <div><input type="checkbox" name="action" value="21" /> <?php echo $lang["actions"][21]; ?></div><br />
-                        		<div><input type="checkbox" name="action" value="22" /> <?php echo $lang["actions"][22]; ?></div><br />
-                        		<div><input type="checkbox" name="action" value="23" /> <?php echo $lang["actions"][23]; ?></div><br />
-                                <div><input type="checkbox" name="action" value="24" /> <?php echo $lang["actions"][24]; ?></div><br />
-                                <div><input type="checkbox" name="action" value="25" /> <?php echo $lang["actions"][25]; ?></div><br />
-                        		<div><input type="checkbox" name="action" value="26" /> <?php echo $lang["actions"][26]; ?></div><br />
-                        		<div><input type="checkbox" name="action" value="27" /> <?php echo $lang["actions"][27]; ?></div><br />
-                                <div><input type="checkbox" name="action" value="28" /> <?php echo $lang["actions"][28]; ?></div><br />
-                        		<div><input type="checkbox" name="action" value="29" /> <?php echo $lang["actions"][29]; ?></div><br />
-                        		<div><input type="checkbox" name="action" value="30" /> <?php echo $lang["actions"][30]; ?></div><br />
-                        		<div><input type="checkbox" name="action" value="31" /> <?php echo $lang["actions"][31]; ?></div>
+                                <div><input type="checkbox" name="action" class="act" value="16" /> <?php echo $lang["actions"][16]; ?></div><br />
+                                <div><input type="checkbox" name="action" class="act" value="17" /> <?php echo $lang["actions"][17]; ?></div><br />
+                                <div><input type="checkbox" name="action" class="act" value="18" /> <?php echo $lang["actions"][18]; ?></div><br />
+                                <div><input type="checkbox" name="action" class="act" value="19" /> <?php echo $lang["actions"][19]; ?></div><br />
+                                <div><input type="checkbox" name="action" class="act" value="20" /> <?php echo $lang["actions"][20]; ?></div><br />
+                                <div><input type="checkbox" name="action" class="act" value="21" /> <?php echo $lang["actions"][21]; ?></div><br />
+                        		<div><input type="checkbox" name="action" class="act" value="22" /> <?php echo $lang["actions"][22]; ?></div><br />
+                        		<div><input type="checkbox" name="action" class="act" value="23" /> <?php echo $lang["actions"][23]; ?></div><br />
+                                <div><input type="checkbox" name="action" class="act" value="24" /> <?php echo $lang["actions"][24]; ?></div><br />
+                                <div><input type="checkbox" name="action" class="act" value="25" /> <?php echo $lang["actions"][25]; ?></div><br />
+                        		<div><input type="checkbox" name="action" class="act" value="26" /> <?php echo $lang["actions"][26]; ?></div><br />
+                        		<div><input type="checkbox" name="action" class="act" value="27" /> <?php echo $lang["actions"][27]; ?></div><br />
+                                <div><input type="checkbox" name="action" class="act" value="28" /> <?php echo $lang["actions"][28]; ?></div><br />
+                        		<div><input type="checkbox" name="action" class="act" value="29" /> <?php echo $lang["actions"][29]; ?></div><br />
+                        		<div><input type="checkbox" name="action" class="act" value="30" /> <?php echo $lang["actions"][30]; ?></div><br />
+                        		<div><input type="checkbox" name="action" class="act" value="31" /> <?php echo $lang["actions"][31]; ?></div>
                             </div>
                         </div>
                         <div class="parameters1">
@@ -100,6 +99,7 @@
                             <input title="<?php echo $lang["tips"]["range"]; ?>" type="text" name="range" /> <?php echo $lang["filter"]["range"]; ?><br />
                             <input title="<?php echo $lang["tips"]["keys"]; ?>" type="text" name="keywords" /> <?php echo $lang["filter"]["keys"]; ?><br />
                             <input title="<?php echo $lang["tips"]["exclude"]; ?>" type="text" name="exclude" /> <?php echo $lang["filter"]["exclude"]; ?><br />
+                        	<div class="selectAll" title="<?php echo $lang["tips"]["selectall"]; ?>"><input type="checkbox" id="selectAll" name="selectall" /> <span id="selectAllText"><?php echo $lang["filter"]["selectall"]; ?></span></div>
                         </div>
                         <div class="parameters2">
                             <input title="<?php echo $lang["tips"]["worlds"]; ?>" type="text" name="worlds" /> <?php echo $lang["filter"]["worlds"]; ?><br />

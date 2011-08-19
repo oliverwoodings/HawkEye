@@ -1,5 +1,6 @@
 package uk.co.oliwali.HawkEye.commands;
 
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import uk.co.oliwali.HawkEye.util.BlockUtil;
@@ -21,17 +22,20 @@ public class ToolCommand extends BaseCommand {
 	
 	public boolean execute() {
 		if (!session.isUsingTool()) {
+			Inventory inv = player.getInventory();
 			session.setUsingTool(true);
-			if (!player.getInventory().contains(BlockUtil.itemStringToStack(Config.ToolBlock, 1))) {
-				ItemStack stack = BlockUtil.itemStringToStack(Config.ToolBlock, 1);
-				int first = player.getInventory().firstEmpty();
+			ItemStack stack = BlockUtil.itemStringToStack(Config.ToolBlock, 1);
+			if (!inv.contains(stack)) {
+				int first = inv.firstEmpty();
 				if (first == -1)
 					player.getWorld().dropItem(player.getLocation(), stack);
-				else {
-					player.getInventory().setItem(first, player.getInventory().getItemInHand());
-					player.getInventory().setItemInHand(stack);
-				}
+				else inv.setItem(first, stack);
 			}
+			ItemStack back = player.getItemInHand().clone();
+			int slot = inv.first(stack);
+			player.setItemInHand(inv.getItem(inv.first(stack)));
+			if (back.getAmount() == 0) inv.clear(slot);
+			else inv.setItem(slot, back);
 			Util.sendMessage(sender, "&cHawkEye tool enabled! &7Left click a block or place the tool to get information");
 		}
 		else {

@@ -30,15 +30,28 @@ public class SignEntry extends DataEntry {
 	public SignEntry() { }
 	
 	public SignEntry(Player player, DataType type, Block block) {
+		interpretSignBlock(block);
+		setInfo(player, type, block.getLocation());
+	}
+	
+	public SignEntry(String player, DataType type, Block block) {
+		interpretSignBlock(block);
+		setInfo(player, type, block.getLocation());
+	}
+	
+	/**
+	 * Extracts the sign data from a block
+	 * @param block
+	 */
+	private void interpretSignBlock(Block block) {
 		Sign sign = (Sign)(block.getState());
 		org.bukkit.material.Sign signData = ((org.bukkit.material.Sign)sign.getData());
-		setInfo(player, type, block.getLocation());
 		if (signData.isWallSign()) this.facing = signData.getAttachedFace();
 		else this.facing = signData.getFacing();
 		this.wallSign = signData.isWallSign();
 		this.lines = sign.getLines();
 	}
-	
+
 	@Override
 	public String getStringData() {
 		if (data == null) return Util.join(Arrays.asList(lines), " | ");

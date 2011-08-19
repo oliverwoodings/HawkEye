@@ -59,7 +59,7 @@ public class BlockUtil {
 	 */
 	public static String getBlockStringName(String blockData) {
 		String[] blockArr = blockData.split(":");
-		Material.getMaterial(Integer.parseInt(blockArr[0]));
+		if (!Util.isInteger(blockArr[0])) return blockData;
 		if (blockArr.length > 1)
 			return Material.getMaterial(Integer.parseInt(blockArr[0])).name() + ":" + blockArr[1];
 		else return Material.getMaterial(Integer.parseInt(blockArr[0])).name();
@@ -72,6 +72,7 @@ public class BlockUtil {
 	 */
 	public static void setBlockString(Block block, String blockData) {
 		String[] blockArr = blockData.split(":");
+		if (!Util.isInteger(blockArr[0])) return;
 		block.setTypeId(Integer.parseInt(blockArr[0]));
 		if (blockArr.length > 1)
 			block.setData((byte) Integer.parseInt(blockArr[1]));
@@ -83,6 +84,7 @@ public class BlockUtil {
 	 * @return int ID
 	 */
 	public static int getIdFromString(String string) {
+		if (!Util.isInteger(string.split(":")[0])) return 0;
 		return Integer.parseInt(string.split(":")[0]);
 	}
 	

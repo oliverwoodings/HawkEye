@@ -8,7 +8,7 @@
 	///////////////////////////////////////////////////
 	$lang = array(
 					
-					"pageTitle"  => "HawkEye Navigateur",
+					"pageTitle"  => "HawkEye - Outil d'administration",
 					"title" => "HawkEye",
 					
 					"filter" => array("title" => "Options de filtrage",
@@ -23,10 +23,10 @@
 									  "search" => "Rechercher",
 									  "exclude" => "Exclure les filtres"),
 					
-					"tips" => array("hideFilter" => "Afficher / Masquer les options de filtre",
+					"tips" => array("hideFilter" => "Afficher / Masquer les options de filtrage",
 									"hideResults" => "Afficher / Masquer les résultats",
-									"actions" => "Actions à rechercher. Vous devez en sélectionner au moins un",
-									"password" => "Mot de passe pour utiliser le navigateur. Requis seulement si il a été défini",
+									"actions" => "Actions à rechercher. Vous devez en sélectionner au moins une",
+									"password" => "Mot de passe pour utiliser le navigateur. Requis seulement s'il a été défini",
 									"players" => "(Facultatif) Liste des joueurs que vous souhaitez rechercher séparés par des virgules",
 									"xyz" => "(Facultatif) Coordonnées auxquelles vous souhaitez rechercher",
 									"range" => "(Facultatif) Etendue des coordonnées spécifiées ci-dessus pour rechercher",
@@ -34,7 +34,7 @@
 									"worlds" => "(Facultatif) Liste des mondes séparés par des virgules. Laissez vide pour tous les mondes",
 									"dFrom" => "(Facultatif) Date et heure de début de la période de recherche",
 									"dTo" => "(Facultatif) Date et heure de fin de la période de recherche",
-									"block" => "(Facultatif) Blocs à rechercher dans les événements 'Block Break' et 'Block Place'",
+									"block" => "(Facultatif) Blocs à rechercher dans les événements 'Bloc cassé' et 'Bloc posé'",
 									"reverse" => "Si elle est cochée, les résultats seront dans l'ordre chronologique inverse. Décochez la case pour afficher les journaux de conversation",
 									"exclude" => "(Facultatif) liste des mots clés à exclure des résultats séparés par des virgules"),
 						
@@ -43,9 +43,9 @@
 									   "Panneau placé",
 									   "Chat",
 									   "Commande",
-									   "Join",
-									   "Quit",
-									   "Téléport",
+									   "Connexion",
+									   "Déconnexion",
+									   "Téléportation",
 									   "Seau de Lave",
 									   "Seau d'eau",
 									   "Ouverture coffre",
@@ -58,18 +58,18 @@
 									   "Explosions",
 									   "Combustion de bloc",
 									   "Formation de bloc",
-									   "Tombe de feuilles",
-									   "Mort Mob",
+									   "Chute de feuilles",
+									   "Mort Monstre",
 									   "Mort Autre",
 									   "Déposer l'Article",
 									   "Ramassage Article",
 									   "Bloc Fade",
-									   "Lave Flow",
-									   "Eau Flow",
-									   "Chest Transaction",
+									   "Ecoulement Lave",
+									   "Ecoulement eau",
+									   "Transaction coffre",
 									   "Panneau posé",
-									   "Painting posé",
-									   "Painting cassé"),
+									   "Peinture posée",
+									   "Peinture cassée"),
 					
 					"results" => array("title" => "Résultats",
 									   "id" => "ID",
@@ -78,18 +78,18 @@
 									   "action" => "Action",
 									   "world" => "Monde",
 									   "xyz" => "XYZ",
-									   "data" => "Donéées"),
+									   "data" => "Données"),
 									   
 					"login" => array("password" => "Mot de Passe: ",
 									 "login" => "Login"),
 					
 					"messages" => array("clickTo" => "Cliquez sur Rechercher pour récupérer des données",
-										"breakMe" => "Arrêtez d'essayer de me m\'arrêter!",
-									    "invalidPass" => "Mot de passe invalide!",
+										"breakMe" => "Arrêtez d'essayer de m\'arrêter !",
+									    "invalidPass" => "Mot de passe invalide !",
 									    "noActions" => "Vous devez sélectionner au moins 1 action à rechercher !",
 									    "noResults" => "Aucun résultat correspondant à ces options",
-									    "error" => "Erreur!",
-									    "notLoggedIn" => "Vous n'êtes pas connecté!")
+									    "error" => "Erreur !",
+									    "notLoggedIn" => "Vous n'êtes pas connecté !")
 					
 					);
 	

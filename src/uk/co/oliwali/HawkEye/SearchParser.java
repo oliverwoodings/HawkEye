@@ -92,8 +92,10 @@ public class SearchParser {
 				}
 			}
 			//Radius
-			else if (param.equals("r"))
+			else if (param.equals("r")) {
+				if (!Util.isInteger(values[0])) throw new IllegalArgumentException("Invalid radius supplied: &7" + values[0]);
 				radius = Integer.parseInt(values[0]);
+			}
 			//Time
 			else if (param.equals("t")) {
 				

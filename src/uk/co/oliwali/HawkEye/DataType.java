@@ -49,7 +49,7 @@ public enum DataType {
 	SIGN_BREAK(29, SignEntry.class, "sign-break", true, true),
 	PAINTING_BREAK(30, DataEntry.class, "painting-break", true, false),
 	PAINTING_PLACE(31, DataEntry.class, "painting-place", true, false);
-	
+
 	private int id;
 	private boolean canHere;
 	private String configName;
