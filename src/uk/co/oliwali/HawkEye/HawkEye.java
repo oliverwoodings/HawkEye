@@ -20,7 +20,6 @@ import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.getspout.spout.Spout;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
@@ -39,7 +38,6 @@ import uk.co.oliwali.HawkEye.commands.UndoCommand;
 import uk.co.oliwali.HawkEye.commands.WorldEditRollbackCommand;
 import uk.co.oliwali.HawkEye.database.DataManager;
 import uk.co.oliwali.HawkEye.listeners.MonitorBlockListener;
-import uk.co.oliwali.HawkEye.listeners.MonitorInventoryListener;
 import uk.co.oliwali.HawkEye.listeners.MonitorEntityListener;
 import uk.co.oliwali.HawkEye.listeners.MonitorPlayerListener;
 import uk.co.oliwali.HawkEye.listeners.ToolBlockListener;
@@ -61,7 +59,7 @@ public class HawkEye extends JavaPlugin {
 	public ToolPlayerListener toolPlayerListener = new ToolPlayerListener();
 	public static List<BaseCommand> commands = new ArrayList<BaseCommand>();
 	public WorldEditPlugin worldEdit = null;
-	public Spout spout = null;
+	public static ContainerAccessManager containerManager;
 	private static HashMap<CommandSender, PlayerSession> playerSessions = new HashMap<CommandSender, PlayerSession>();
 	
 	/**
@@ -109,6 +107,8 @@ public class HawkEye extends JavaPlugin {
 		playerSessions.put(sender, new PlayerSession(sender));
 		
 		checkDependencies(pm);
+		
+		containerManager = new ContainerAccessManager();
         
 	    registerListeners(pm);
         
@@ -189,14 +189,6 @@ public class HawkEye extends JavaPlugin {
         	Util.info("WorldEdit found, selection rollbacks enabled");
         }
         else Util.info("WARNING! WorldEdit not found, WorldEdit selection rollbacks disabled until WorldEdit is available");
-        
-        //Check if Spout is loaded
-	    Plugin bc = pm.getPlugin("Spout");
-	    if (bc != null) {
-	    	spout = (Spout)bc;
-	    	Util.info("Spout found, container logging enabled");
-	    }
-	    else Util.info("WARNING! Unable to find Spout. Container logging disabled until Spout is available");
 	    
 	}
 	
@@ -231,11 +223,6 @@ public class HawkEye extends JavaPlugin {
         //Register tool events
         pm.registerEvent(Type.BLOCK_PLACE, toolBlockListener, Event.Priority.Highest, this);
         pm.registerEvent(Type.PLAYER_INTERACT, toolPlayerListener, Event.Priority.Highest, this);
-        
-        //Register Spout events
-        if (spout != null) {
-        	pm.registerEvent(Type.CUSTOM_EVENT, new MonitorInventoryListener(), Event.Priority.Monitor, this);
-        }
 		
 	}
 	

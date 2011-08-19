@@ -36,15 +36,21 @@ public class MonitorPlayerListener extends PlayerListener {
 	}
 	
 	public void onPlayerChat(PlayerChatEvent event) {
-		DataManager.addEntry(new DataEntry(event.getPlayer(), DataType.CHAT, event.getPlayer().getLocation(), event.getMessage()));
+		Player player = event.getPlayer();
+		//Check for inventory close
+		HawkEye.containerManager.checkInventoryClose(event.getPlayer());
+		DataManager.addEntry(new DataEntry(player, DataType.CHAT, player.getLocation(), event.getMessage()));
 	}
 	
 
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
 		if (event.isCancelled()) return;
+		Player player = event.getPlayer();
+		//Check for inventory close
+		HawkEye.containerManager.checkInventoryClose(player);
 		//Check command filter
 		if (Config.CommandFilter.contains(event.getMessage().split(" ")[0])) return;
-		DataManager.addEntry(new DataEntry(event.getPlayer(), DataType.COMMAND, event.getPlayer().getLocation(), event.getMessage()));
+		DataManager.addEntry(new DataEntry(player, DataType.COMMAND, player.getLocation(), event.getMessage()));
 	}
 	
 	public void onPlayerJoin(PlayerJoinEvent event) {
@@ -57,11 +63,15 @@ public class MonitorPlayerListener extends PlayerListener {
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
 		Location loc  = player.getLocation();
+		//Check for inventory close
+		HawkEye.containerManager.checkInventoryClose(player);
 		DataManager.addEntry(new DataEntry(player, DataType.QUIT, loc, Config.LogIpAddresses?player.getAddress().getAddress().getHostAddress().toString():""));
 	}
 	
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
 		if (event.isCancelled()) return;
+		//Check for inventory close
+		HawkEye.containerManager.checkInventoryClose(event.getPlayer());
 		Location from = event.getFrom();
 		Location to   = event.getTo();
 		if (Util.distance(from, to) > 5)
@@ -78,6 +88,10 @@ public class MonitorPlayerListener extends PlayerListener {
 		
 		Player player = event.getPlayer();
 		Block block = event.getClickedBlock();
+		
+		//Check for inventory close
+		HawkEye.containerManager.checkInventoryClose(player);
+		
 		if (block != null) {
 			
 			Location loc = block.getLocation();
@@ -86,7 +100,11 @@ public class MonitorPlayerListener extends PlayerListener {
 				case FURNACE:
 				case DISPENSER:
 				case CHEST:
-					DataManager.addEntry(new DataEntry(player, DataType.OPEN_CONTAINER, loc, Integer.toString(block.getTypeId())));
+					if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+						//Call container manager for inventory open
+						HawkEye.containerManager.checkInventoryOpen(player, block);
+						DataManager.addEntry(new DataEntry(player, DataType.OPEN_CONTAINER, loc, Integer.toString(block.getTypeId())));
+					}
 					break;
 				case WOODEN_DOOR:
 					DataManager.addEntry(new DataEntry(player, DataType.DOOR_INTERACT, loc, ""));
