@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import uk.co.oliwali.HawkEye.database.DataManager;
 import uk.co.oliwali.HawkEye.entry.ContainerEntry;
 import uk.co.oliwali.HawkEye.util.InventoryUtil;
+import uk.co.oliwali.HawkEye.util.Util;
 
 public class ContainerAccessManager {
 	
@@ -31,13 +32,14 @@ public class ContainerAccessManager {
 		//Get current inventory, create diff string and add the database
 		HashMap<String,Integer> after = InventoryUtil.compressInventory(InventoryUtil.getContainerContents(access.container));
 		String diff = InventoryUtil.createDifferenceString(access.beforeInv, after);
-		DataManager.addEntry(new ContainerEntry(player, access.loc, diff));
+		Util.info(diff);
+		if (diff.length() > 1) DataManager.addEntry(new ContainerEntry(player, access.loc, diff));
 		accessList.remove(access);
 	}
 	
 	public void checkInventoryOpen(Player player, Block block) {
-		if (!(block instanceof ContainerBlock)) return;
-		ContainerBlock container = (ContainerBlock)block;
+		if (!(block.getState() instanceof ContainerBlock)) return;
+		ContainerBlock container = (ContainerBlock)(block.getState());
 		accessList.add(new ContainerAccess(container, player, InventoryUtil.compressInventory(InventoryUtil.getContainerContents(container)), block.getLocation()));
 	}
 
