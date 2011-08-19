@@ -5,6 +5,24 @@
 	//Include config and lang pack
 	include("config.php");
 	include("langs/" . $config["langFile"]);
+	
+	if ($config["phpBB3Auth"]) {
+		if ($skipLogin)
+		{
+			$_SESSION["loggedin"] = true;
+			$_SESSION["loginGrant"] = true;
+			header("Location: index.php");
+		}
+		else
+		{
+			if (isset($_SESSION["loginGrant"]))
+			{
+				unset($_SESSION["loggedin"]);
+				unset($_SESSION["loginGrant"]);
+				header("Location: index.php");
+			}
+		}
+	}
 
 	if (isset($_SESSION["loggedin"]))
 		header("Location: index.php");
