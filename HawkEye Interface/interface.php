@@ -5,6 +5,7 @@
 	//                 by oliverw92                  //
 	///////////////////////////////////////////////////
 	
+	error_reporting(E_ALL);
 	session_start();
 	
 	//Include config, lang pack and MySQL connector
@@ -123,7 +124,8 @@
 			if (!file_put_contents("log.txt", date("m.d.y G:i:s") . " - " . $_SERVER["REMOTE_ADDR"] . " - " . $sql . "\n", FILE_APPEND))
 				return error("Unable to open/write to log.txt!");
 		} catch (ErrorException $e) {
-			return error("Unable to open/write to log.txt!");
+			if (stristr($e, "Warning:"))
+				return error("Unable to open/write to log.txt!");
 		}
 	}
 	restore_error_handler();
@@ -163,6 +165,7 @@
 				$arr = explode("-", $fdata);
 				if (count($arr) > 0)
 					$action = array_shift($arr);
+				$action .= $entry->plugin . " - ";
 				$fdata = join("-", $arr);
 				break;
 			case 28:

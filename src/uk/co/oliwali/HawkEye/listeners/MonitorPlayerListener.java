@@ -10,7 +10,6 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -49,7 +48,6 @@ public class MonitorPlayerListener extends PlayerListener {
 		Player player = event.getPlayer();
 		//Check for inventory close
 		HawkEye.containerManager.checkInventoryClose(player);
-
 		//Check command filter
 		if (Config.CommandFilter.contains(event.getMessage().split(" ")[0])) return;
 		DataManager.addEntry(new DataEntry(player, DataType.COMMAND, player.getLocation(), event.getMessage()));
@@ -159,11 +157,6 @@ public class MonitorPlayerListener extends PlayerListener {
 		else
 			data = stack.getAmount() + "x " + stack.getTypeId();
 		DataManager.addEntry(new DataEntry(player, DataType.ITEM_PICKUP, player.getLocation(), data));
-	}
-	
-	public void onPlayerMove(PlayerMoveEvent event) {
-		//Check for inventory close
-		HawkEye.containerManager.checkInventoryClose(event.getPlayer());
 	}
 
 }

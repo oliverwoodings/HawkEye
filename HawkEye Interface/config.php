@@ -11,7 +11,7 @@
 	$hawkConfig = array(
 					//Enter your MySQL database information
 					//Do not change 'dbTable'
-					"dbHost"  => "localhost",
+					"dbHost"  => "localhost:3306",
 					"dbDbase" => "minecraft",
 					"dbUser"  => "root",
 					"dbPass"  => "",

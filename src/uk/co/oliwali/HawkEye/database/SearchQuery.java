@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -137,9 +138,7 @@ public class SearchQuery extends Thread {
 		
 		//Add order by
 		Util.debug("Ordering by data_id");
-		sql += " ORDER BY `data_id` ";
-		if (dir == SearchDir.DESC) sql += "DESC";
-		else sql+= "ASC";
+		sql += " ORDER BY `data_id` DESC";
 		
 		//Check the limits
 		Util.debug("Building limits");
@@ -155,13 +154,20 @@ public class SearchQuery extends Thread {
 		Statement stmnt = null;
 		
 		try {
+			
 			//Execute query
 			stmnt = conn.createStatement();
 			res = stmnt.executeQuery(sql);
 			Util.debug("Getting results");
+			
 			//Retrieve results
 			while (res.next())
 				results.add(DataManager.createEntryFromRes(res));
+			
+			//If ascending, reverse results
+			if (dir == SearchDir.ASC)
+				Collections.reverse(results);
+			
 		} catch (Exception ex) {
 			Util.severe("Error executing MySQL query: " + ex);
 			ex.printStackTrace();

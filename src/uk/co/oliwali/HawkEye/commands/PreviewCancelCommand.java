@@ -1,9 +1,7 @@
 package uk.co.oliwali.HawkEye.commands;
 
-import java.util.ArrayList;
-
-import org.bukkit.block.Block;
-
+import uk.co.oliwali.HawkEye.Rollback.RollbackType;
+import uk.co.oliwali.HawkEye.Undo;
 import uk.co.oliwali.HawkEye.util.Permission;
 import uk.co.oliwali.HawkEye.util.Util;
 
@@ -23,16 +21,16 @@ public class PreviewCancelCommand extends BaseCommand {
 	public boolean execute() {
 		
 		//Check if player already has a rollback processing
-		if (!session.doingRollback() || session.getLocalRollbackUndo().size() == 0) {
+		if (!session.isInPreview()) {
 			Util.sendMessage(sender, "&cNo preview to cancel!");
 			return true;
 		}
 		
 		//Undo local changes to the player
-		session.setDoingRollback(false);
-		for (Block block : session.getLocalRollbackUndo()) player.sendBlockChange(block.getLocation(), block.getType(), block.getData());
-		session.setLocalRollbackUndo(new ArrayList<Block>());
+		new Undo(RollbackType.LOCAL, session);
+		
 		Util.sendMessage(sender, "&cPreview rollback cancelled");
+		session.setInPreview(false);
 		return true;
 		
 	}

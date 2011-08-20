@@ -55,6 +55,7 @@ public class PreviewCommand extends BaseCommand {
 		
 		//Create new SearchQuery with data
 		new SearchQuery(new RollbackCallback(session, RollbackType.LOCAL), parser, SearchDir.DESC);
+		session.setInPreview(true);
 		return true;
 		
 	}

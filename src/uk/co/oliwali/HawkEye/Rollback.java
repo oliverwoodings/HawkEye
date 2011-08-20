@@ -25,8 +25,7 @@ public class Rollback implements Runnable {
 	
 	public PlayerSession session = null;
 	private Iterator<DataEntry> rollbackQueue;
-	private List<BlockState> undo = new ArrayList<BlockState>();
-	private List<Block> localUndo = new ArrayList<Block>();
+	private List<DataEntry> undo = new ArrayList<DataEntry>();
 	private int timerID;
 	private int counter = 0;
 	private RollbackType rollbackType = RollbackType.GLOBAL;
@@ -39,7 +38,6 @@ public class Rollback implements Runnable {
 		this.rollbackType = rollbackType;
 		this.session = session;
 		rollbackQueue = session.getRollbackResults().iterator();
-		session.setRollbackUndo(null);
 		
 		//Check that we actually have results
 		if (!rollbackQueue.hasNext()) {
@@ -80,11 +78,12 @@ public class Rollback implements Runnable {
 			//Get some data from the entry
 			Location loc = new Location(world, entry.getX(), entry.getY(), entry.getZ());
 			Block block = world.getBlockAt(loc);
-			
 			BlockState state = block.getState();
-			//Attempt rollback
+			
+			//Attempt global rollback
 			if (rollbackType == RollbackType.GLOBAL && entry.rollback(world.getBlockAt(loc))) {
-				undo.add(state);
+				entry.setUndoState(state);
+				undo.add(entry);
 				
 				//Delete data if told to
 				if (Config.DeleteDataOnRollback)
@@ -92,8 +91,10 @@ public class Rollback implements Runnable {
 				
 				counter++;
 			}
+			//Local rollback preview
 			else if (rollbackType == RollbackType.LOCAL && entry.rollbackPlayer(block, (Player)session.getSender())) {
-				localUndo.add(block);
+				entry.setUndoState(state);
+				undo.add(entry);
 				counter++;
 			}
 			
@@ -105,15 +106,15 @@ public class Rollback implements Runnable {
 			//End timer
 			Bukkit.getServer().getScheduler().cancelTask(timerID);
 			
+			session.setDoingRollback(false);
+			session.setRollbackResults(undo);
+			
 			//Store undo results and notify player
 			if (rollbackType == RollbackType.GLOBAL) {
-				session.setRollbackUndo(undo);
-				session.setDoingRollback(false);
 				Util.sendMessage(session.getSender(), "&cRollback complete, &7" + counter + "&c edits performed");
 				Util.sendMessage(session.getSender(), "&cUndo this rollback using &7/hawk undo");
 			}
 			else {
-				session.setLocalRollbackUndo(localUndo);
 				Util.sendMessage(session.getSender(), "&cRollback preview complete, &7" + counter + "&c edits performed to you");
 				Util.sendMessage(session.getSender(), "&cType &7/hawk apply&c to make these changes permanent or &7/hawk cancel&c to cancel");
 			}

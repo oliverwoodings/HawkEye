@@ -65,6 +65,12 @@ public class Config {
 				config.setProperty(getNode(type), true);
 		}
 		
+		//Check filters
+		if (config.getProperty("command-filter") == null)
+			config.setProperty("command-filter", Arrays.asList(new String[]{"/login", "/restartsrv", "/register"}));
+		if (config.getProperty("block-filter") == null)
+			config.setProperty("block-filter", Arrays.asList(new Integer[]{97,98}));
+		
 		//Update version
 		config.setProperty("version", plugin.version);
 

@@ -2,8 +2,6 @@ package uk.co.oliwali.HawkEye;
 
 import java.util.List;
 
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.command.CommandSender;
 
 import uk.co.oliwali.HawkEye.entry.DataEntry;
@@ -19,11 +17,10 @@ public class PlayerSession {
 	private CommandSender sender;
 	private List<DataEntry> searchResults = null;
 	private List<DataEntry> rollbackResults  = null;
-	private List<BlockState> rollbackUndo = null;
-	private List<Block> localRollbackUndo = null;
 	private boolean usingTool = false;
 	private boolean doingRollback = false;
 	private String[] toolCommand = Config.DefaultToolCommand;
+	private boolean inPreview = false;
 	
 	public PlayerSession(CommandSender sender) {
 		this.sender = sender;
@@ -50,20 +47,6 @@ public class PlayerSession {
 		this.rollbackResults = rollbackResults;
 	}
 
-	public List<BlockState> getRollbackUndo() {
-		return rollbackUndo;
-	}
-	public void setRollbackUndo(List<BlockState> rollbackUndo) {
-		this.rollbackUndo = rollbackUndo;
-	}
-	
-	public List<Block> getLocalRollbackUndo() {
-		return localRollbackUndo;
-	}
-	public void setLocalRollbackUndo(List<Block> localRollbackUndo) {
-		this.localRollbackUndo = localRollbackUndo;
-	}
-
 	public boolean isUsingTool() {
 		return usingTool;
 	}
@@ -83,6 +66,13 @@ public class PlayerSession {
 	}
 	public void setToolCommand(String[] toolCommand) {
 		this.toolCommand = toolCommand;
+	}
+	
+	public boolean isInPreview() {
+		return inPreview;
+	}
+	public void setInPreview(boolean inPreview) {
+		this.inPreview = inPreview;
 	}
 
 }

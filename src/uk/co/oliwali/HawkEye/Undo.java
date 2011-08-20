@@ -1,9 +1,15 @@
 package uk.co.oliwali.HawkEye;
 
-import java.util.List;
+import java.util.Iterator;
 
-import org.bukkit.block.BlockState;
+import org.bukkit.Bukkit;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 
+import uk.co.oliwali.HawkEye.Rollback.RollbackType;
+import uk.co.oliwali.HawkEye.database.DataManager;
+import uk.co.oliwali.HawkEye.entry.DataEntry;
+import uk.co.oliwali.HawkEye.util.Config;
 import uk.co.oliwali.HawkEye.util.Util;
 
 /**
@@ -14,12 +20,39 @@ import uk.co.oliwali.HawkEye.util.Util;
 public class Undo implements Runnable {
 	
 	public PlayerSession session = null;
+	private Iterator<DataEntry> undoQueue;
+	private int timerID;
+	private int counter = 0;
+	private RollbackType undoType = RollbackType.GLOBAL;
 	
 	/**
 	 * @param session {@link PlayerSession} to retrieve undo results from
 	 */
-	public Undo(PlayerSession session) {
+	public Undo(RollbackType undoType, PlayerSession session) {
+
+		this.undoType = undoType;
 		this.session = session;
+		undoQueue = session.getRollbackResults().iterator();
+		
+		//Check if already rolling back
+		if (session.doingRollback()) {
+			Util.sendMessage(session.getSender(), "&cYour previous rollback is still processing, please wait before performing an undo!");
+			return;
+		}
+		
+		//Check that we actually have results
+		if (!undoQueue.hasNext()) {
+			Util.sendMessage(session.getSender(), "&cNo results found to undo");
+			return;
+		}
+		
+		Util.debug("Starting undo of " + session.getRollbackResults().size() + " results");
+		
+		//Start undo
+		session.setDoingRollback(true);
+		Util.sendMessage(session.getSender(), "&cAttempting to undo &7" + session.getRollbackResults().size() + "&c rollback edits");
+		timerID = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Bukkit.getServer().getPluginManager().getPlugin("HawkEye"), this, 1, 2);
+		
 	}
 	
 	/**
@@ -27,21 +60,49 @@ public class Undo implements Runnable {
 	 * Contains appropriate methods of catching errors and notifying the player
 	 */
 	public void run() {
-		if (session.doingRollback()) {
-			Util.sendMessage(session.getSender(), "&cYour previous rollback is still processing, please wait before performing an undo!");
-			return;
+		
+		//Start rollback process
+		int i = 0;
+		while (i < 200 && undoQueue.hasNext()) {
+			
+			//If undo doesn't exist
+			DataEntry entry = undoQueue.next();
+			if (entry.getUndoState() == null) continue;
+			
+			//Global undo
+			if (undoType == RollbackType.GLOBAL) {
+				entry.getUndoState().update(true);
+				//Add back into database if delete data is on
+				if (Config.DeleteDataOnRollback)
+					DataManager.addEntry(entry);
+			}
+			
+			//Player undo
+			else {
+				Player player = (Player)session.getSender();
+				Block block = entry.getUndoState().getBlock();
+				player.sendBlockChange(block.getLocation(), block.getType(), block.getData());
+			}
+			
+			counter++;
+			
 		}
-		List<BlockState> results = session.getRollbackUndo();
-		if (results == null || results.size() == 0) {
-			Util.sendMessage(session.getSender(), "&cNo rollbacks to undo");
-			return;
+		
+		//Check if undo is finished
+		if (!undoQueue.hasNext()) {
+			
+			//End timer
+			Bukkit.getServer().getScheduler().cancelTask(timerID);
+			
+			session.setDoingRollback(false);
+			session.setRollbackResults(null);
+			
+			Util.sendMessage(session.getSender(), "&cUndo complete, &7" + counter + " &cedits performed");
+			Util.debug("Undo complete, " + counter + " edits performed");
+			
 		}
-		Util.sendMessage(session.getSender(), "&cUndoing rollback (&7" + results.size() + " action(s)&c)");
-		for (BlockState block : results.toArray(new BlockState[0]))
-			block.update(true);
-		Util.sendMessage(session.getSender(), "&cUndo complete");
-		session.setRollbackUndo(null);
-		session.setRollbackResults(null);
+		
+		
 	}
 	
 }

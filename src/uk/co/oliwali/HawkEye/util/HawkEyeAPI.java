@@ -32,9 +32,8 @@ public class HawkEyeAPI {
 	}
 	public static boolean addCustomEntry(JavaPlugin plugin, String action, String player, Location loc, String data) {
 		if (plugin == null || action == null || player == null || loc == null || data == null) return false;
-		DataEntry entry = new DataEntry(player, DataType.OTHER, loc, data);
-		entry.setPlugin(plugin.getDescription().getName());
-		return true;
+		DataEntry entry = new DataEntry(player, DataType.OTHER, loc, action + "-" + data);
+		return addEntry(plugin, entry);
 	}
 	
 	/**

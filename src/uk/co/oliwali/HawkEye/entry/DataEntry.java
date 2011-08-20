@@ -5,6 +5,7 @@ import java.util.Calendar;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -33,6 +34,8 @@ public class DataEntry {
     private double y;
 
     private double z;
+    
+    private BlockState undoState;
 
     protected DataType type = null;
     
@@ -114,6 +117,13 @@ public class DataEntry {
     public void setData(String data) {
     	this.data = data;
     }
+    
+	public BlockState getUndoState() {
+		return undoState;
+	}
+	public void setUndoState(BlockState undoState) {
+		this.undoState = undoState;
+	}
     
     /**
      * Returns the entry data in a visually attractive and readable way for an in-game user to read
