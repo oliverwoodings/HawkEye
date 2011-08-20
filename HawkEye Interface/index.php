@@ -8,10 +8,28 @@
 		
 	//Include config and lang pack
 	include("config.php");
-	include("langs/" . $config["langFile"]);
+	include("langs/" . $hawkConfig["langFile"]);
+	
+	//Let's check forum authentication
+	if ($hawkConfig["forumAuth"])
+	{
+		//If they're not logged in, and they're authed, let's log them in!
+		if (!isset($_SESSION["loggedIn"]) && $isAuth)
+		{
+			$_SESSION["loggedIn"] = true;
+			$_SESSION["forumAuth"] = true;
+		}
+		elseif (isset($_SESSION["forumAuth"]) && !$isAuth)
+		{
+			//They're not authed, yet the forumAuth variable is set
+			//Log them out!
+			unset($_SESSION["forumAuth"]);
+			unset($_SESSION["loggedIn"]);
+		}
+	}
 	
 	//If we aren't logged in, go to login page
-	if (!isset($_SESSION["loggedin"]) && $config["password"] != "")
+	if (!isset($_SESSION["loggedIn"]) && $hawkConfig["password"] != "")
 		header("Location: login.php");
 	
 ?>
@@ -41,7 +59,7 @@
     
         <div class="header">
         	<div class="innerHeader">
-            	<a href="https://github.com/oliverw92/HawkEye/wiki"><div class="headerText"></div></a><div class="logout"><?php if ($config["password"] != "") echo '<a href="login.php?page=logout"><button>Log Out</button></a>'; ?></div>
+            	<a href="https://github.com/oliverw92/HawkEye/wiki"><div class="headerText"></div></a><div class="logout"><?php if ($hawkConfig["password"] != "" && !$isAuth) echo '<a href="login.php?page=logout"><button>Log Out</button></a>'; ?></div>
             </div>
         </div>
         

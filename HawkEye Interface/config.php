@@ -8,7 +8,7 @@
 	//     escaped. If you can't work this out,      //
 	//     ask in the thread on bukkit.org.          //
 	///////////////////////////////////////////////////
-	$config = array(
+	$hawkConfig = array(
 					//Enter your MySQL database information
 					//Do not change 'dbTable'
 					"dbHost"  => "localhost",
@@ -39,12 +39,32 @@
 					//Useful to keep track of who is querying what
 					"logQueries" => true,
 					
+					//Use forum for authentication?
+					//Default is false
+					"forumAuth" => false,
+
+					//The relative location for the forum to this file.
+					//Default is "../forum/"
+					"forumDir" => "../forum/",
+
+					//The type of forum that will be used.
+					//Default is phpbb3
+					//Available types are: phpbb3
+					"forumType" => "phpbb3"
+					
 					);
+					
+	//The user wants to use forumAuth
+	if ($hawkConfig["forumAuth"])
+	{
+		//We need to require the specified forumType.  Hopefully we support it (Or the user is using their own file)
+		require('./forumAuth/'.$hawkConfig['forumType'].'.php');
+	}
 	
-	$con = mysql_connect($config["dbHost"], $config["dbUser"], $config["dbPass"]);
+	$con = mysql_connect($hawkConfig["dbHost"], $hawkConfig["dbUser"], $hawkConfig["dbPass"]);
 	if (!$con)
 		return error("Could not connect to MySQL Database!");
-	if (!mysql_select_db($config["dbDbase"], $con))
+	if (!mysql_select_db($hawkConfig["dbDbase"], $con))
 		return error(mysql_error());
 		
 	mysql_query("SET NAMES UTF8");
