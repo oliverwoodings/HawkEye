@@ -84,6 +84,8 @@ $(document).ready(function(){
 							"aaSorting": [[ 0, "asc" ]],
 							"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
 							"bAutoWidth": false,
+                            "iDisplayLength": 25,
+                            "sDom": '<"H"ipr>t<"F"lf>',
 							"aoColumns": [
 								{ "sTitle": data.columns.id },
 								{ "sTitle": data.columns.date, "sWidth": "160px" },

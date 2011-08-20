@@ -239,6 +239,7 @@ input, textarea {
 }
 	.restable td {
 		padding: 5px;
+    	font-size: 11px;
 	}
 
 .loading {
@@ -247,6 +248,24 @@ input, textarea {
 	margin-left: auto;
 	margin-right: auto;
 	height: 20px;
+}
+
+.DataTables_sort_wrapper
+{
+    font-size: 14px;
+}
+.dataTables_paginate {
+    font-size: 12px;
+}
+.dataTables_length {
+    font-size: 12px;
+}
+.dataTables_info {
+    font-size: 12px;
+}
+.dataTables_filter input
+{
+    padding: 2px !important;
 }
 
 .footer {
