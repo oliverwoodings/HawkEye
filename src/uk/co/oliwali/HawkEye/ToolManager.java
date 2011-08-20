@@ -102,7 +102,7 @@ public class ToolManager {
 		try {
 			new SearchParser(player, args);
 		} catch (IllegalArgumentException e) {
-			Util.sendMessage(player, "&cInvalid arguments supplied for tool bind: " + e.getMessage());
+			Util.sendMessage(player, "&c" + e.getMessage());
 			return;
 		}
 

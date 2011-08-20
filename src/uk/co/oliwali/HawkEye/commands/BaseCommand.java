@@ -52,9 +52,9 @@ public abstract class BaseCommand {
 			args.add(arg);
 		
 		//Remove commands from arguments
-		for (int i = 0; i <= name.split(" ").length; i++) {
-			if (i < args.size()) args.remove(i);
-		}
+		Util.info(name.split(" ").length + "derp");
+		for (int i = 0; i <= name.split(" ").length && i <= args.size(); i++)
+			args.remove(0);
 		
 		//Check arg lengths
 		if (argLength > args.size()) {
@@ -71,6 +71,7 @@ public abstract class BaseCommand {
 			Util.sendMessage(sender, "&cYou do not have permission to do that!");
 			return false;
 		}
+		
 		return execute();
 	}
 	

@@ -5,7 +5,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -33,7 +32,9 @@ import uk.co.oliwali.HawkEye.commands.PageCommand;
 import uk.co.oliwali.HawkEye.commands.PreviewCommand;
 import uk.co.oliwali.HawkEye.commands.RollbackCommand;
 import uk.co.oliwali.HawkEye.commands.SearchCommand;
+import uk.co.oliwali.HawkEye.commands.ToolBindCommand;
 import uk.co.oliwali.HawkEye.commands.ToolCommand;
+import uk.co.oliwali.HawkEye.commands.ToolResetCommand;
 import uk.co.oliwali.HawkEye.commands.TptoCommand;
 import uk.co.oliwali.HawkEye.commands.UndoCommand;
 import uk.co.oliwali.HawkEye.commands.WorldEditRollbackCommand;
@@ -235,14 +236,16 @@ public class HawkEye extends JavaPlugin {
 		
         //Add commands
         commands.add(new HelpCommand());
+        commands.add(new ToolBindCommand());
+        commands.add(new ToolResetCommand());
         commands.add(new ToolCommand());
         commands.add(new SearchCommand());
         commands.add(new PageCommand());
         commands.add(new TptoCommand());
         commands.add(new HereCommand());
-        commands.add(new PreviewCommand());
         commands.add(new PreviewApplyCommand());
         commands.add(new PreviewCancelCommand());
+        commands.add(new PreviewCommand());
         commands.add(new RollbackCommand());
         if (worldEdit != null) commands.add(new WorldEditRollbackCommand());
         commands.add(new UndoCommand());
@@ -260,15 +263,15 @@ public class HawkEye extends JavaPlugin {
 		if (cmd.getName().equalsIgnoreCase("hawk")) {
 			if (args.length == 0)
 				args = new String[]{"help"};
-			BaseCommand help = null;
+			outer:
 			for (BaseCommand command : commands.toArray(new BaseCommand[0])) {
-				String argString = Util.join(Arrays.asList(args), " ");
-				if (command.name.equalsIgnoreCase("help"))
-					help = command;
-				if (command.name.equalsIgnoreCase(argString.substring(0, name.length()>argString.length()?argString.length():name.length())))
-					return command.run(this, sender, args, commandLabel);
+				String[] cmds = command.name.split(" ");
+				for (int i = 0; i < cmds.length; i++)
+					if (i >= args.length || !cmds[i].equalsIgnoreCase(args[i])) continue outer;
+				return command.run(this, sender, args, commandLabel);
 			}
-			return help.run(this, sender, args, commandLabel);
+			new HelpCommand().run(this, sender, args, commandLabel);
+			return true;
 		}
 		return false;
 	}

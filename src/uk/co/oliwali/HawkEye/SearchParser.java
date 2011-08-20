@@ -51,7 +51,7 @@ public class SearchParser {
 			if (arg.equals("")) continue;
 			String param = arg.substring(0,1).toLowerCase();
 			if (!arg.substring(1,2).equals(":"))
-				throw new IllegalArgumentException("Invalid argument format!");
+				throw new IllegalArgumentException("Invalid argument format: &7" + arg);
 			String[] values = arg.substring(2).split(",");
 			
 			//Players
