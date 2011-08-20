@@ -5,15 +5,33 @@
 	}
 
 	session_start();
-		
+
 	//Include config and lang pack
 	include("config.php");
-	include("langs/" . $config["langFile"]);
-	
+	include("langs/" . $hawkConfig["langFile"]);
+
+	//Let's check forum authentication
+	if ($hawkConfig["forumAuth"])
+	{
+		//If they're not logged in, and they're authed, let's log them in!
+		if (!isset($_SESSION["loggedin"]) && $isAuth)
+		{
+			$_SESSION["loggedin"] = true;
+			$_SESSION["forumAuth"] = true;
+		}
+		elseif (isset($_SESSION["forumAuth"]) && !$isAuth)
+		{
+			//They're not authed, yet the forumAuth variable is set
+			//Log them out!
+			unset($_SESSION["forumAuth"]);
+			unset($_SESSION["loggedin"]);
+		}
+	}
+
 	//If we aren't logged in, go to login page
-	if (!isset($_SESSION["loggedin"]) && $config["password"] != "")
+	if (!isset($_SESSION["loggedin"]) && $hawkConfig["password"] != "")
 		header("Location: login.php");
-	
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -36,15 +54,15 @@
         <title><?php echo $lang["pageTitle"]; ?></title>
     </head>
 
-    
+
     <body>
-    
+
         <div class="header">
         	<div class="innerHeader">
-            	<a href="https://github.com/oliverw92/HawkEye/wiki"><div class="headerText"></div></a><div class="logout"><?php if ($config["password"] != "") echo '<a href="login.php?page=logout"><button>Log Out</button></a>'; ?></div>
+            	<a href="https://github.com/oliverw92/HawkEye/wiki"><div class="headerText"></div></a><div class="logout"><?php if ($hawkConfig["password"] != "" && !$isAuth) echo '<a href="login.php?page=logout"><button>Log Out</button></a>'; ?></div>
             </div>
         </div>
-        
+
         <div class="filterContainer">
             <div class="innerFilter">
 
@@ -52,7 +70,7 @@
                     <span id="filterMin" style="border-radius: 20px;" class="ui-state-default ui-corner-all minmax" title="<?php echo $lang["tips"]["hideFilter"]; ?>"><span class="ui-icon ui-icon-carat-1-se"></span></span>
                     <p><?php echo $lang["filter"]["title"]; ?></p>
                 </div>
-                
+
                 <div class="filter">
                     <form id="searchForm" action="">
                         <div class="actions" id="actions" title="<?php echo $lang["tips"]["actions"]; ?>">
@@ -119,7 +137,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="resultsContainer">
         	<div class="innerResults">
                 <div class="subHeader">
@@ -129,7 +147,7 @@
 
                 <div class="results">
                     <div class="ui-widget">
-                        <div class="ui-state-highlight ui-corner-all searchError"> 
+                        <div class="ui-state-highlight ui-corner-all searchError">
                             <p><span class="ui-icon ui-icon-alert"></span>
                             <?php echo $lang["messages"]["clickTo"]; ?></p>
                         </div>
@@ -138,10 +156,10 @@
             </div>
 
         </div>
-        
+
         <div class="footer">
         	<p>&copy; Oliver Woodings 2011</p>
         </div>
-    
+
     </body>
 </html>
