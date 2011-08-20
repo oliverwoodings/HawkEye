@@ -28,7 +28,7 @@ public class HawkEyeAPI {
 	 * @param data data relevant to the event
 	 */
 	public static void addCustomEntry(JavaPlugin plugin, String action, Player player, Location loc, String data) {
-		addEntry(plugin, DataType.OTHER, player, loc, data);
+		addEntry(plugin, DataType.OTHER, player, loc, action + "-" + data);
 		
 	}
 	

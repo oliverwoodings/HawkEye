@@ -163,6 +163,7 @@
 				$arr = explode("-", $fdata);
 				if (count($arr) > 0)
 					$action = array_shift($arr);
+				$action .= $entry->plugin . " - ";
 				$fdata = join("-", $arr);
 				break;
 			case 28:
