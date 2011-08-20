@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 import uk.co.oliwali.HawkEye.database.DataManager;
 import uk.co.oliwali.HawkEye.entry.ContainerEntry;
 import uk.co.oliwali.HawkEye.util.InventoryUtil;
-import uk.co.oliwali.HawkEye.util.Util;
 
 /**
  * Contains methods for managing container access
@@ -37,8 +36,6 @@ public class ContainerAccessManager {
 		//If no access, return
 		if (access == null) return;
 		
-		Util.info("close " + msg);
-		
 		//Get current inventory, create diff string and add the database
 		HashMap<String,Integer> after = InventoryUtil.compressInventory(InventoryUtil.getContainerContents(access.container));
 		String diff = InventoryUtil.createDifferenceString(access.beforeInv, after);
@@ -54,7 +51,6 @@ public class ContainerAccessManager {
 	 */
 	public void checkInventoryOpen(Player player, Block block) {
 		if (!(block.getState() instanceof ContainerBlock)) return;
-		Util.info("open");
 		ContainerBlock container = (ContainerBlock)(block.getState());
 		accessList.add(new ContainerAccess(container, player, InventoryUtil.compressInventory(InventoryUtil.getContainerContents(container)), block.getLocation()));
 	}
