@@ -23,13 +23,14 @@ public class ApplyCommand extends BaseCommand {
 		
 		//Check if player already has a rollback processing
 		if (!session.isInPreview()) {
-			Util.sendMessage(sender, "&cNo preview to cancel!");
+			Util.sendMessage(sender, "&cNo preview to apply!");
 			return true;
 		}
 		
 		//Undo local changes to the player
 		Util.sendMessage(sender, "&cAttempting to apply rollback to world...");
 		new Rollback(RollbackType.GLOBAL, session);
+		session.setInPreview(false);
 		return true;
 		
 	}

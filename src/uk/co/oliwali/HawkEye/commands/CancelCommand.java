@@ -31,6 +31,7 @@ public class CancelCommand extends BaseCommand {
 		new Undo(RollbackType.LOCAL, session);
 		
 		Util.sendMessage(sender, "&cPreview rollback cancelled");
+		session.setInPreview(false);
 		return true;
 		
 	}

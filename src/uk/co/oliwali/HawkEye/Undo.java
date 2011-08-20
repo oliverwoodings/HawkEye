@@ -71,7 +71,7 @@ public class Undo implements Runnable {
 			
 			//Global undo
 			if (undoType == RollbackType.GLOBAL) {
-				entry.getUndoState().update();
+				entry.getUndoState().update(true);
 				//Add back into database if delete data is on
 				if (Config.DeleteDataOnRollback)
 					DataManager.addEntry(entry);
@@ -97,6 +97,7 @@ public class Undo implements Runnable {
 			session.setDoingRollback(false);
 			session.setRollbackResults(null);
 			
+			Util.sendMessage(session.getSender(), "&cUndo complete, &7" + counter + " &cedits performed");
 			Util.debug("Undo complete, " + counter + " edits performed");
 			
 		}
