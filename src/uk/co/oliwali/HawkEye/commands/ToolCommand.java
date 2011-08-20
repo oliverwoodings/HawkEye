@@ -17,7 +17,7 @@ public class ToolCommand extends BaseCommand {
 	}
 	
 	public boolean execute() {
-		
+
 		//If not using tool, enable
 		if (!session.isUsingTool())
 			ToolManager.enableTool(session, player);
