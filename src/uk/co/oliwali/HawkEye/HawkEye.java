@@ -23,9 +23,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
-import uk.co.oliwali.HawkEye.commands.ApplyCommand;
+import uk.co.oliwali.HawkEye.commands.PreviewApplyCommand;
 import uk.co.oliwali.HawkEye.commands.BaseCommand;
-import uk.co.oliwali.HawkEye.commands.CancelCommand;
+import uk.co.oliwali.HawkEye.commands.PreviewCancelCommand;
 import uk.co.oliwali.HawkEye.commands.HelpCommand;
 import uk.co.oliwali.HawkEye.commands.HereCommand;
 import uk.co.oliwali.HawkEye.commands.PageCommand;
@@ -239,8 +239,8 @@ public class HawkEye extends JavaPlugin {
         commands.add(new TptoCommand());
         commands.add(new HereCommand());
         commands.add(new PreviewCommand());
-        commands.add(new ApplyCommand());
-        commands.add(new CancelCommand());
+        commands.add(new PreviewApplyCommand());
+        commands.add(new PreviewCancelCommand());
         commands.add(new RollbackCommand());
         if (worldEdit != null) commands.add(new WorldEditRollbackCommand());
         commands.add(new UndoCommand());

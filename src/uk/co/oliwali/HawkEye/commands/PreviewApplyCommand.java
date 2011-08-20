@@ -1,44 +1,43 @@
 package uk.co.oliwali.HawkEye.commands;
 
+import uk.co.oliwali.HawkEye.Rollback;
 import uk.co.oliwali.HawkEye.Rollback.RollbackType;
-import uk.co.oliwali.HawkEye.Undo;
 import uk.co.oliwali.HawkEye.util.Permission;
 import uk.co.oliwali.HawkEye.util.Util;
 
 /**
- * Cancels a rollback preview.
+ * Applies a local rollback to the world
  * Error handling for user input is done using exceptions to keep code neat.
  * @author oliverw92
  */
-public class CancelCommand extends BaseCommand {
+public class PreviewApplyCommand extends BaseCommand {
 
-	public CancelCommand() {
+	public PreviewApplyCommand() {
 		bePlayer = true;
-		name = "cancel";
+		name = "apply";
 		argLength = 0;
-		usage = "<- cancel rollback preview";
+		usage = "<- apply rollback preview";
 	}
 	
 	public boolean execute() {
 		
 		//Check if player already has a rollback processing
 		if (!session.isInPreview()) {
-			Util.sendMessage(sender, "&cNo preview to cancel!");
+			Util.sendMessage(sender, "&cNo preview to apply!");
 			return true;
 		}
 		
 		//Undo local changes to the player
-		new Undo(RollbackType.LOCAL, session);
-		
-		Util.sendMessage(sender, "&cPreview rollback cancelled");
+		Util.sendMessage(sender, "&cAttempting to apply rollback to world...");
+		new Rollback(RollbackType.GLOBAL, session);
 		session.setInPreview(false);
 		return true;
 		
 	}
 	
 	public void moreHelp() {
-		Util.sendMessage(sender, "&cCancels results of a &7/hawk preview");
-		Util.sendMessage(sender, "&cOnly affects you - no changes are seen by anyony else");
+		Util.sendMessage(sender, "&cApplies the results of a &7/hawk preview&c globally");
+		Util.sendMessage(sender, "&cUntil this command is called, the preview is only visible to you");
 	}
 	
 	public boolean permission() {
