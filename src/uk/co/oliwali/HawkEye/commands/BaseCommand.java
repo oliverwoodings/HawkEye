@@ -52,8 +52,7 @@ public abstract class BaseCommand {
 			args.add(arg);
 		
 		//Remove commands from arguments
-		Util.info(name.split(" ").length + "derp");
-		for (int i = 0; i <= name.split(" ").length && i <= args.size(); i++)
+		for (int i = 0; i < name.split(" ").length && i < args.size(); i++)
 			args.remove(0);
 		
 		//Check arg lengths
