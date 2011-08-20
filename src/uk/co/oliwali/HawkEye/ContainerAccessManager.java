@@ -12,12 +12,21 @@ import org.bukkit.entity.Player;
 import uk.co.oliwali.HawkEye.database.DataManager;
 import uk.co.oliwali.HawkEye.entry.ContainerEntry;
 import uk.co.oliwali.HawkEye.util.InventoryUtil;
+import uk.co.oliwali.HawkEye.util.Util;
 
+/**
+ * Contains methods for managing container access
+ * @author oliverw92
+ */
 public class ContainerAccessManager {
 	
 	private List<ContainerAccess> accessList = new ArrayList<ContainerAccess>();
 	
-	public void checkInventoryClose(Player player) {
+	/**
+	 * Checks whether the player's inventory was open and should now trigger a container transaction
+	 * @param player player to check
+	 */
+	public void checkInventoryClose(Player player, String msg) {
 		
 		//Get access from list
 		ContainerAccess access = null;
@@ -28,19 +37,32 @@ public class ContainerAccessManager {
 		//If no access, return
 		if (access == null) return;
 		
+		Util.info("close " + msg);
+		
 		//Get current inventory, create diff string and add the database
 		HashMap<String,Integer> after = InventoryUtil.compressInventory(InventoryUtil.getContainerContents(access.container));
 		String diff = InventoryUtil.createDifferenceString(access.beforeInv, after);
 		if (diff.length() > 1) DataManager.addEntry(new ContainerEntry(player, access.loc, diff));
 		accessList.remove(access);
+		
 	}
 	
+	/**
+	 * 'Sets' the player inventory to be open and stores the current contents of the container
+	 * @param player player to check
+	 * @param block container to store
+	 */
 	public void checkInventoryOpen(Player player, Block block) {
 		if (!(block.getState() instanceof ContainerBlock)) return;
+		Util.info("open");
 		ContainerBlock container = (ContainerBlock)(block.getState());
 		accessList.add(new ContainerAccess(container, player, InventoryUtil.compressInventory(InventoryUtil.getContainerContents(container)), block.getLocation()));
 	}
 
+	/**
+	 * Class representing a container access
+	 * @author oliverw92
+	 */
 	public class ContainerAccess {
 		public ContainerBlock container;
 		public Player player;

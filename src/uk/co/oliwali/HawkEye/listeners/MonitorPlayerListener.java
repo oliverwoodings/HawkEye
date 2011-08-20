@@ -10,7 +10,6 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -39,7 +38,7 @@ public class MonitorPlayerListener extends PlayerListener {
 	public void onPlayerChat(PlayerChatEvent event) {
 		Player player = event.getPlayer();
 		//Check for inventory close
-		HawkEye.containerManager.checkInventoryClose(event.getPlayer());
+		HawkEye.containerManager.checkInventoryClose(event.getPlayer(), "chat");
 		DataManager.addEntry(new DataEntry(player, DataType.CHAT, player.getLocation(), event.getMessage()));
 	}
 	
@@ -48,7 +47,7 @@ public class MonitorPlayerListener extends PlayerListener {
 		if (event.isCancelled()) return;
 		Player player = event.getPlayer();
 		//Check for inventory close
-		HawkEye.containerManager.checkInventoryClose(player);
+		HawkEye.containerManager.checkInventoryClose(player, "command");
 		//Check command filter
 		if (Config.CommandFilter.contains(event.getMessage().split(" ")[0])) return;
 		DataManager.addEntry(new DataEntry(player, DataType.COMMAND, player.getLocation(), event.getMessage()));
@@ -65,14 +64,14 @@ public class MonitorPlayerListener extends PlayerListener {
 		Player player = event.getPlayer();
 		Location loc  = player.getLocation();
 		//Check for inventory close
-		HawkEye.containerManager.checkInventoryClose(player);
+		HawkEye.containerManager.checkInventoryClose(player, "quit");
 		DataManager.addEntry(new DataEntry(player, DataType.QUIT, loc, Config.LogIpAddresses?player.getAddress().getAddress().getHostAddress().toString():""));
 	}
 	
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
 		if (event.isCancelled()) return;
 		//Check for inventory close
-		HawkEye.containerManager.checkInventoryClose(event.getPlayer());
+		HawkEye.containerManager.checkInventoryClose(event.getPlayer(), "tele");
 		Location from = event.getFrom();
 		Location to   = event.getTo();
 		if (Util.distance(from, to) > 5)
@@ -91,7 +90,7 @@ public class MonitorPlayerListener extends PlayerListener {
 		Block block = event.getClickedBlock();
 		
 		//Check for inventory close
-		HawkEye.containerManager.checkInventoryClose(player);
+		HawkEye.containerManager.checkInventoryClose(player, "interact");
 		
 		if (block != null) {
 			
@@ -157,11 +156,6 @@ public class MonitorPlayerListener extends PlayerListener {
 		else
 			data = stack.getAmount() + "x " + stack.getTypeId();
 		DataManager.addEntry(new DataEntry(player, DataType.ITEM_PICKUP, player.getLocation(), data));
-	}
-	
-	public void onPlayerMove(PlayerMoveEvent event) {
-		//Check for inventory close
-		HawkEye.containerManager.checkInventoryClose(event.getPlayer());
 	}
 
 }
