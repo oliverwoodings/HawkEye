@@ -13,6 +13,7 @@
 					//Do not change 'dbTable'
 					"dbHost"  => "localhost",
 					"dbDbase" => "minecraft",
+					"dbPort"  => 3306,
 					"dbUser"  => "root",
 					"dbPass"  => "",
 					"dbTable" => "hawkeye",
@@ -41,7 +42,7 @@
 					
 					);
 	
-	$con = mysql_connect($config["dbHost"], $config["dbUser"], $config["dbPass"]);
+	$con = mysql_connect($config["dbHost"] . ":" + $config["dbPort"], $config["dbUser"], $config["dbPass"]);
 	if (!$con)
 		return error("Could not connect to MySQL Database!");
 	if (!mysql_select_db($config["dbDbase"], $con))
