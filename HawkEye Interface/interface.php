@@ -22,7 +22,7 @@
 	if (!function_exists("json_decode")) return error("JSON PHP library not installed! Update to PHP 5.3 or later!");
 	
 	//If not logged in, throw an error
-	if (!isset($_SESSION["loggedin"]) && $hawkConfig["password"] != "")
+	if (!isset($_SESSION["loggedIn"]) && $hawkConfig["password"] != "")
 		return error($lang["messages"]["notLoggedIn"]);
 	
 	if (!isset($_GET["data"]))
