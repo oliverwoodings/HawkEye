@@ -155,6 +155,7 @@ public class HawkEye extends JavaPlugin {
         	int curHot = 0;
         	int updateBuild;
         	int curBuild;
+        	String info;
         	
         	//Get version file
         	URLConnection yc = new URL("https://raw.github.com/oliverw92/HawkEye/master/version.txt").openConnection();
@@ -185,11 +186,15 @@ public class HawkEye extends JavaPlugin {
 			curBuild = Integer.parseInt(matcher.group(1));
     		updateBuild = Integer.parseInt(in.readLine());
     		
+    		//Get custom info string
+    		info = in.readLine();
+    		
     		//Check versions
     		if (updateVer > curVer || updateVer == curVer && updateHot > curHot) {
 				Util.warning("New version of HawkEye available: " + updateVersion);
     			if (updateBuild > curBuild)	Util.warning("Update recommended of CraftBukkit from build " + curBuild + " to " + updateBuild + " to ensure compatibility");
     			else Util.warning("Compatible with your current version of CraftBukkit");
+    			Util.warning("New version info: " + info);
     		}
     		else Util.info("No updates available for HawkEye");
     		in.close();
