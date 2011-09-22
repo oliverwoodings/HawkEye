@@ -322,14 +322,20 @@ public class DataManager extends TimerTask {
 		PreparedStatement stmnt = null;
 		try {
 			while (!queue.isEmpty()) {
-				DataEntry entry = queue.poll();
-				if (!dbPlayers.containsKey(entry.getPlayer()))
-					if (!addPlayer(entry.getPlayer()))
-						continue;
-				if (!dbWorlds.containsKey(entry.getWorld()))
-					if (!addWorld(entry.getWorld()))
-						continue;
 				
+				DataEntry entry = queue.poll();
+				
+				//Sort out player IDs
+				if (!dbPlayers.containsKey(entry.getPlayer()) && !addPlayer(entry.getPlayer()))
+					continue;
+				if (!dbWorlds.containsKey(entry.getWorld()) && !addWorld(entry.getWorld()))
+					continue;
+				
+				//If player ID is unable to be found, continue
+				if (entry.getPlayer() == null || dbPlayers.get(entry.getPlayer()) == null)
+					continue;
+				
+				//If we are re-inserting we need to also insert the data ID
 				if (entry.getDataId() > 0) {
 					stmnt = conn.prepareStatement("INSERT into `" + Config.DbHawkEyeTable + "` (date, player_id, action, world_id, x, y, z, data, plugin, data_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
 					stmnt.setInt(10, entry.getDataId());
@@ -346,6 +352,7 @@ public class DataManager extends TimerTask {
 				stmnt.setString(8, entry.getSqlData());
 				stmnt.setString(9, entry.getPlugin());
 				stmnt.executeUpdate();
+				
 			}
 		} catch (SQLException ex) {
 			Util.severe("SQL Exception: " + ex);
