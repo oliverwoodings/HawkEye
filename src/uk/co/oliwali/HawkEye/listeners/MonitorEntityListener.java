@@ -6,7 +6,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageByProjectileEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
@@ -49,12 +48,10 @@ public class MonitorEntityListener extends EntityListener {
 		if (entity instanceof Player) {
 			
 			Player victim = (Player) entity;
-			EntityDamageEvent attackEvent = victim.getLastDamageCause();
+			
 			//Mob or PVP death
-			if (attackEvent instanceof EntityDamageByEntityEvent || attackEvent instanceof EntityDamageByProjectileEvent) {
-				Entity damager;
-				if (attackEvent instanceof EntityDamageByEntityEvent) damager = ((EntityDamageByEntityEvent)attackEvent).getDamager();
-				else damager = ((EntityDamageByProjectileEvent)attackEvent).getDamager();
+			if (victim.getLastDamageCause() instanceof EntityDamageByEntityEvent) {
+				Entity damager = ((EntityDamageByEntityEvent)(victim.getLastDamageCause())).getDamager();
 				if (damager instanceof Player) {
 					DataManager.addEntry(new DataEntry(victim, DataType.PVP_DEATH, victim.getLocation(), Util.getEntityName(damager)));
 				} else {
