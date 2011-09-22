@@ -49,7 +49,7 @@
 
 					//The type of forum that will be used.
 					//Default is phpbb3
-					//Available types are: phpbb3
+					//Available types are: phpbb3 and smf
 					"forumType" => "phpbb3"
 					
 					);
