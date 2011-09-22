@@ -69,7 +69,9 @@
 									   "28" => "Transaction coffre",
 									   "29" => "Panneau posé",
 									   "30" => "Peinture posée",
-									   "31" => "Peinture cassée"),
+									   "31" => "Peinture cassée",
+									   "32" => "Enderman Pickup",
+									   "33" => "Enderman Place"),
 					
 					"results" => array("title" => "Résultats",
 									   "id" => "ID",
