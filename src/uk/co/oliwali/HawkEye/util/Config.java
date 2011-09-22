@@ -24,6 +24,7 @@ public class Config {
 	public static String ToolBlock;
 	public static String[] DefaultToolCommand;
 	public static String CleanseAge;
+	public static boolean CheckUpdates;
 	public static boolean Debug;
 	public static boolean LogIpAddresses;
 	public static boolean DeleteDataOnRollback;
@@ -43,7 +44,7 @@ public class Config {
 	 * Loads the config from file and validates the data
 	 * @param plugin
 	 */
-	public Config (HawkEye plugin) {
+	public Config(HawkEye plugin) {
 		
 		config = plugin.getConfiguration();
 		List<String> keys = config.getKeys(null);
@@ -83,6 +84,7 @@ public class Config {
 		ToolBlock = config.getString("general.tool-block", "17");
 		DefaultToolCommand = config.getString("general.default-tool-command", "").split(" ");
 		CleanseAge = config.getString("general.cleanse-age", "0");
+		CheckUpdates = config.getBoolean("general.check-for-updates", true);
 		Debug = config.getBoolean("general.debug", false);
 		LogIpAddresses = config.getBoolean("general.log-ip-addresses", true);
 		DeleteDataOnRollback = config.getBoolean("general.delete-data-on-rollback", false);

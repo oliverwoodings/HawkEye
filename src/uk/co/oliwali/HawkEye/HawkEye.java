@@ -144,6 +144,12 @@ public class HawkEye extends JavaPlugin {
 	 */
 	private void versionCheck() {
 		
+		//Check if update checking enabled
+		if (!Config.CheckUpdates) {
+			Util.info("Update checking is disabled, this is not recommended!");
+			return;
+		}
+		
         //Perform version check
         Util.info("Performing update check...");
         try {
