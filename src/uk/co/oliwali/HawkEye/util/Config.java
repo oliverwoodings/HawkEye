@@ -24,6 +24,7 @@ public class Config {
 	public static String ToolBlock;
 	public static String[] DefaultToolCommand;
 	public static String CleanseAge;
+	public static String CleansePeriod;
 	public static boolean CheckUpdates;
 	public static boolean Debug;
 	public static boolean LogIpAddresses;
@@ -84,6 +85,7 @@ public class Config {
 		ToolBlock = config.getString("general.tool-block", "17");
 		DefaultToolCommand = config.getString("general.default-tool-command", "").split(" ");
 		CleanseAge = config.getString("general.cleanse-age", "0");
+		CleanseAge = config.getString("general.cleanse-period", "20m");
 		CheckUpdates = config.getBoolean("general.check-for-updates", true);
 		Debug = config.getBoolean("general.debug", false);
 		LogIpAddresses = config.getBoolean("general.log-ip-addresses", true);

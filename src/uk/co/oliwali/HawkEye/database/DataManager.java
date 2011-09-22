@@ -29,7 +29,7 @@ public class DataManager extends TimerTask {
 	private static LinkedBlockingQueue<DataEntry> queue = new LinkedBlockingQueue<DataEntry>();
 	private static ConnectionManager connections;
 	private static Timer loggingTimer = null;
-	private static Timer cleanseTimer = null;
+	public static Timer cleanseTimer = null;
 	public static HashMap<String, Integer> dbPlayers = new HashMap<String, Integer>();
 	public static HashMap<String, Integer> dbWorlds = new HashMap<String, Integer>();
 
@@ -52,11 +52,7 @@ public class DataManager extends TimerTask {
 
 		//Start cleansing utility
 		try {
-			CleanseUtil util = new CleanseUtil();
-			if (util.date != null) {
-				cleanseTimer = new Timer();
-				cleanseTimer.scheduleAtFixedRate(util, 0, 1200000);
-			}
+			new CleanseUtil();
 		} catch (Exception e) {
 			Util.severe("Unable to start cleansing utility - check your cleanse age");
 		}
