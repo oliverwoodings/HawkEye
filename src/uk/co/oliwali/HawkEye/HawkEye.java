@@ -163,18 +163,18 @@ public class HawkEye extends JavaPlugin {
     		//Check for hot fixes on new version
     		if (Character.isLetter(updateVersion.charAt(updateVersion.length() - 1))) {
     			updateHot = Character.getNumericValue(updateVersion.charAt(updateVersion.length() - 1));
-    			updateVer = Integer.parseInt(updateVersion.substring(0, updateVersion.length() - 2));
+    			updateVer = Integer.parseInt(updateVersion.substring(0, updateVersion.length() - 1));
     		}
     		else updateVer = Integer.parseInt(updateVersion);
-    		
+
     		//Check for hot fixes on current version
     		if (Character.isLetter(version.charAt(version.length() - 1))) {
-    			curHot = Character.getNumericValue(version.charAt(version.length() - 1));
-    			curVer = Integer.parseInt(version.substring(0, version.length() - 2));
+    			String tversion = version.replace(".", "");
+    			curHot = Character.getNumericValue(tversion.charAt(tversion.length() - 1));
+    			curVer = Integer.parseInt(tversion.substring(0, tversion.length() - 1));
     		}
-    		else curVer = Integer.parseInt(version);
-    		curVer = Integer.parseInt(version.replace(".", ""));
-    		
+    		else curVer = Integer.parseInt(version.replace(".", ""));
+
     		//Extract Bukkit build from server versions
     		Pattern pattern = Pattern.compile("-b(\\d*?)jnks", Pattern.CASE_INSENSITIVE);
 			Matcher matcher = pattern.matcher(server.getVersion());
@@ -197,6 +197,7 @@ public class HawkEye extends JavaPlugin {
     		
 		} catch (Exception e) {
 			Util.warning("Unable to perform update check!");
+			if (Config.Debug) e.printStackTrace();
 		}
 	}
 	
