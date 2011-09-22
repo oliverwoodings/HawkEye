@@ -148,24 +148,45 @@ public class HawkEye extends JavaPlugin {
         Util.info("Performing update check...");
         try {
         	
+        	//Values
+        	int updateVer;
+        	int curVer;
+        	int updateHot = 0;
+        	int curHot = 0;
+        	int updateBuild;
+        	int curBuild;
+        	
         	//Get version file
         	URLConnection yc = new URL("https://raw.github.com/oliverw92/HawkEye/master/version.txt").openConnection();
     		BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
     		
-    		//Sort out version numbers
-    		String updateVersion = in.readLine();
-    		int updateVer = Integer.parseInt(updateVersion.replace(".", ""));
-    		int curVer = Integer.parseInt(version.replace(".", ""));
+    		//Get version number
+    		String updateVersion = in.readLine().replace(".", "");
+    		
+    		//Check for hot fixes on new version
+    		if (Character.isLetter(updateVersion.charAt(updateVersion.length() - 1))) {
+    			updateHot = Character.getNumericValue(updateVersion.charAt(updateVersion.length() - 1));
+    			updateVer = Integer.parseInt(updateVersion.substring(0, updateVersion.length() - 2));
+    		}
+    		else updateVer = Integer.parseInt(updateVersion);
+    		
+    		//Check for hot fixes on current version
+    		if (Character.isLetter(version.charAt(version.length() - 1))) {
+    			curHot = Character.getNumericValue(version.charAt(version.length() - 1));
+    			curVer = Integer.parseInt(version.substring(0, version.length() - 2));
+    		}
+    		else curVer = Integer.parseInt(version);
+    		curVer = Integer.parseInt(version.replace(".", ""));
     		
     		//Extract Bukkit build from server versions
     		Pattern pattern = Pattern.compile("-b(\\d*?)jnks", Pattern.CASE_INSENSITIVE);
 			Matcher matcher = pattern.matcher(server.getVersion());
 			if (!matcher.find() || matcher.group(1) == null) throw new Exception();
-			int curBuild = Integer.parseInt(matcher.group(1));
-    		int updateBuild = Integer.parseInt(in.readLine());
+			curBuild = Integer.parseInt(matcher.group(1));
+    		updateBuild = Integer.parseInt(in.readLine());
     		
     		//Check versions
-    		if (updateVer > curVer) {
+    		if (updateVer > curVer || updateVer == curVer && updateHot > curHot) {
 				Util.warning("New version of HawkEye available: " + updateVersion);
     			if (updateBuild > curBuild)	Util.warning("Update recommended of CraftBukkit from build " + curBuild + " to " + updateBuild + " to ensure compatibility");
     			else Util.warning("Compatible with your current version of CraftBukkit");
