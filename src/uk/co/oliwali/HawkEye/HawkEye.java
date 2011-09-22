@@ -5,7 +5,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,8 +12,6 @@ import java.util.regex.Pattern;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.Plugin;
@@ -62,7 +59,6 @@ public class HawkEye extends JavaPlugin {
 	public static List<BaseCommand> commands = new ArrayList<BaseCommand>();
 	public WorldEditPlugin worldEdit = null;
 	public static ContainerAccessManager containerManager;
-	private static HashMap<CommandSender, PlayerSession> playerSessions = new HashMap<CommandSender, PlayerSession>();
 	
 	/**
 	 * Safely shuts down HawkEye
@@ -91,9 +87,7 @@ public class HawkEye extends JavaPlugin {
         
         versionCheck();
         
-        //Create player sessions
-        for (Player player : server.getOnlinePlayers())
-        	playerSessions.put(player, new PlayerSession(player));
+        new SessionManager();
         
         //Initiate database connection
         try {
@@ -103,10 +97,6 @@ public class HawkEye extends JavaPlugin {
 			pm.disablePlugin(this);
 			return;
 		}
-		
-		//Add console session
-		ConsoleCommandSender sender = new ConsoleCommandSender(getServer());
-		playerSessions.put(sender, new PlayerSession(sender));
 		
 		checkDependencies(pm);
 		
@@ -307,32 +297,6 @@ public class HawkEye extends JavaPlugin {
 			return true;
 		}
 		return false;
-	}
-	
-	/**
-	 * Get a PlayerSession from the list
-	 */
-	public static PlayerSession getSession(CommandSender player) {
-		PlayerSession session = playerSessions.get(player);
-		if (session == null)
-			session = addSession(player);
-		return session;
-	}
-	
-	/**
-	 * Adds a PlayerSession to the list
-	 */
-	public static PlayerSession addSession(CommandSender player) {
-		PlayerSession session;
-		if (playerSessions.containsKey(player)) {
-			session = playerSessions.get(player);
-			session.setSender(player);
-		}
-		else {
-			session = new PlayerSession(player);
-			playerSessions.put(player, session);
-		}
-		return session;
 	}
 
 }

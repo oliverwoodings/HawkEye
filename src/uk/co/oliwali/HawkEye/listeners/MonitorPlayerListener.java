@@ -55,8 +55,6 @@ public class MonitorPlayerListener extends PlayerListener {
 	
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		//Add session
-		HawkEye.addSession(player);
 		Location loc  = player.getLocation();
 		DataManager.addEntry(new DataEntry(player, DataType.JOIN, loc, Config.LogIpAddresses?player.getAddress().getAddress().getHostAddress().toString():""));
 	}

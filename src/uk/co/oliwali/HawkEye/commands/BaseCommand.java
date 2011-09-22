@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import uk.co.oliwali.HawkEye.HawkEye;
 import uk.co.oliwali.HawkEye.PlayerSession;
+import uk.co.oliwali.HawkEye.SessionManager;
 import uk.co.oliwali.HawkEye.util.Util;
 
 /**
@@ -43,7 +44,7 @@ public abstract class BaseCommand {
 		
 		plugin = instace;
 		sender = csender;
-		session = HawkEye.getSession(sender);
+		session = SessionManager.getSession(sender);
 		usedCommand = cmd;
 		
 		//Sort out arguments

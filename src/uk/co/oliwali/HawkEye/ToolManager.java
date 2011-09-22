@@ -71,7 +71,7 @@ public class ToolManager {
 	 */
 	public static void toolSearch(Player player, Location loc) {
 		
-		PlayerSession session = HawkEye.getSession(player);
+		PlayerSession session = SessionManager.getSession(player);
 		SearchParser parser;
 		
 		//If parameters aren't bound, do some default
@@ -87,7 +87,7 @@ public class ToolManager {
 		
 		parser.loc = Util.getSimpleLocation(loc).toVector();
 		parser.worlds = new String[]{ loc.getWorld().getName() };
-		new SearchQuery(new SearchCallback(HawkEye.getSession(player)), parser, SearchDir.DESC);
+		new SearchQuery(new SearchCallback(SessionManager.getSession(player)), parser, SearchDir.DESC);
 	
 	}
 	
