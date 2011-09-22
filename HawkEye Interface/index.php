@@ -108,9 +108,9 @@
                                 <div><input type="checkbox" name="action" class="act" value="28" /> <?php echo $lang["actions"][28]; ?></div><br />
                         		<div><input type="checkbox" name="action" class="act" value="29" /> <?php echo $lang["actions"][29]; ?></div><br />
                         		<div><input type="checkbox" name="action" class="act" value="30" /> <?php echo $lang["actions"][30]; ?></div><br />
-                        		<div><input type="checkbox" name="action" class="act" value="29" /> <?php echo $lang["actions"][31]; ?></div><br />
-                        		<div><input type="checkbox" name="action" class="act" value="30" /> <?php echo $lang["actions"][32]; ?></div><br />
-                        		<div><input type="checkbox" name="action" class="act" value="31" /> <?php echo $lang["actions"][33]; ?></div>
+                        		<div><input type="checkbox" name="action" class="act" value="31" /> <?php echo $lang["actions"][31]; ?></div><br />
+                        		<div><input type="checkbox" name="action" class="act" value="32" /> <?php echo $lang["actions"][32]; ?></div><br />
+                        		<div><input type="checkbox" name="action" class="act" value="33" /> <?php echo $lang["actions"][33]; ?></div>
                             </div>
                         </div>
                         <div class="parameters1">
