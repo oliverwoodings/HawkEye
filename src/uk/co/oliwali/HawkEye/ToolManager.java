@@ -33,8 +33,8 @@ public class ToolManager {
 		session.setUsingTool(true);
 		ItemStack stack = BlockUtil.itemStringToStack(Config.ToolBlock, 1);
 		
-		//If player doesn't have a tool, give them on
-		if (!inv.contains(stack)) {
+		//If player doesn't have a tool, give them one if enabled in config
+		if (!inv.contains(stack) && Config.GiveTool) {
 			int first = inv.firstEmpty();
 			if (first == -1)
 				player.getWorld().dropItem(player.getLocation(), stack);
