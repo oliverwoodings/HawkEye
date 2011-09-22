@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -42,12 +41,12 @@ public class ToolManager {
 		}
 		
 		//If they aren't holding a tool, move the tool to their hand
-		if (player.getItemInHand().getType() != Material.LOG && inv.first(Material.LOG) != -1){ 
+		int first = inv.first(BlockUtil.getIdFromString(Config.ToolBlock));
+		if (!BlockUtil.getItemString(player.getItemInHand()).equals(Config.ToolBlock) && first != -1){ 
 			ItemStack back = player.getItemInHand().clone();
-			int slot = inv.first(Material.LOG);
-			player.setItemInHand(inv.getItem(inv.first(Material.LOG)));
-			if (back.getAmount() == 0) inv.clear(slot);
-			else inv.setItem(slot, back);
+			player.setItemInHand(inv.getItem(first));
+			if (back.getAmount() == 0) inv.clear(first);
+			else inv.setItem(first, back);
 		}
 		
 		Util.sendMessage(player, "&cHawkEye tool enabled! &7Left click a block or place the tool to get information");
