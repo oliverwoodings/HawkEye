@@ -277,6 +277,7 @@ public class HawkEye extends JavaPlugin {
 		PlayerSession session = playerSessions.get(player);
 		if (session == null)
 			session = addSession(player);
+		session.setSender(player);
 		return session;
 	}
 	
@@ -285,14 +286,8 @@ public class HawkEye extends JavaPlugin {
 	 */
 	public static PlayerSession addSession(CommandSender player) {
 		PlayerSession session;
-		if (playerSessions.containsKey(player)) {
-			session = playerSessions.get(player);
-			session.setSender(player);
-		}
-		else {
-			session = new PlayerSession(player);
-			playerSessions.put(player, session);
-		}
+		session = new PlayerSession(player);
+		playerSessions.put(player, session);
 		return session;
 	}
 
