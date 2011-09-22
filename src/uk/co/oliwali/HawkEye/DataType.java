@@ -48,7 +48,9 @@ public enum DataType {
 	CONTAINER_TRANSACTION(28, ContainerEntry.class, "container-transaction", true, true),
 	SIGN_BREAK(29, SignEntry.class, "sign-break", true, true),
 	PAINTING_BREAK(30, DataEntry.class, "painting-break", true, false),
-	PAINTING_PLACE(31, DataEntry.class, "painting-place", true, false);
+	PAINTING_PLACE(31, DataEntry.class, "painting-place", true, false),
+	ENDERMAN_PICKUP(32, BlockEntry.class, "enderman-pickup", true, true),
+	ENDERMAN_PLACE(33, BlockChangeEntry.class, "enderman-place", true, true);
 
 	private int id;
 	private boolean canHere;

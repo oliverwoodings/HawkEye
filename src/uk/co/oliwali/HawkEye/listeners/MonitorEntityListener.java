@@ -2,9 +2,15 @@ package uk.co.oliwali.HawkEye.listeners;
 
 import java.util.Arrays;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Enderman;
+import org.bukkit.event.entity.EndermanPickupEvent;
+import org.bukkit.event.entity.EndermanPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -20,8 +26,10 @@ import uk.co.oliwali.HawkEye.HawkEye;
 import uk.co.oliwali.HawkEye.DataType;
 import uk.co.oliwali.HawkEye.PlayerSession;
 import uk.co.oliwali.HawkEye.database.DataManager;
+import uk.co.oliwali.HawkEye.entry.BlockChangeEntry;
 import uk.co.oliwali.HawkEye.entry.BlockEntry;
 import uk.co.oliwali.HawkEye.entry.DataEntry;
+import uk.co.oliwali.HawkEye.entry.SignEntry;
 import uk.co.oliwali.HawkEye.util.Config;
 import uk.co.oliwali.HawkEye.util.Util;
 
@@ -99,6 +107,29 @@ public class MonitorEntityListener extends EntityListener {
 	public void onPaintingPlace(PaintingPlaceEvent event) {
 		if (event.isCancelled()) return;
 		DataManager.addEntry(new DataEntry(event.getPlayer(), DataType.PAINTING_PLACE, event.getPainting().getLocation(), ""));
+	}
+	
+	public void onEndermanPickup(EndermanPickupEvent event) {
+		if (event.isCancelled()) return;
+		Block block = event.getBlock();
+		if (block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST)
+			DataManager.addEntry(new SignEntry("Environment", DataType.SIGN_BREAK, event.getBlock()));
+		DataManager.addEntry(new BlockEntry("Environment", DataType.ENDERMAN_PICKUP, block));
+	}
+	
+	public void onEndermanPlace(EndermanPlaceEvent event) {
+		if (event.isCancelled()) return;
+		
+		//Get the enderman and the block being replaced
+		Enderman enderman = (Enderman) event.getEntity();
+		Block block = enderman.getWorld().getBlockAt(event.getLocation());
+		
+		//Create a new state for the block
+		BlockState newState = block.getState();
+		newState.setData(enderman.getCarriedMaterial());
+		newState.setType(enderman.getCarriedMaterial().getItemType());
+		
+		DataManager.addEntry(new BlockChangeEntry("Environment", DataType.ENDERMAN_PLACE, event.getLocation(), block.getState(), newState));
 	}
 
 }

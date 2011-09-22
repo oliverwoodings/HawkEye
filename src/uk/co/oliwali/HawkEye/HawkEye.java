@@ -253,6 +253,8 @@ public class HawkEye extends JavaPlugin {
         if (Config.isLogged(DataType.EXPLOSION)) pm.registerEvent(Type.ENTITY_EXPLODE, monitorEntityListener, Event.Priority.Monitor, this);
         if (Config.isLogged(DataType.PAINTING_BREAK)) pm.registerEvent(Type.PAINTING_BREAK, monitorEntityListener, Event.Priority.Monitor, this);
         if (Config.isLogged(DataType.PAINTING_BREAK)) pm.registerEvent(Type.PAINTING_PLACE, monitorEntityListener, Event.Priority.Monitor, this);
+        if (Config.isLogged(DataType.ENDERMAN_PICKUP)) pm.registerEvent(Type.ENDERMAN_PICKUP, monitorEntityListener, Event.Priority.Monitor, this);
+        if (Config.isLogged(DataType.ENDERMAN_PLACE)) pm.registerEvent(Type.ENDERMAN_PLACE, monitorEntityListener, Event.Priority.Monitor, this);
         
         //Register tool events
         pm.registerEvent(Type.BLOCK_PLACE, toolBlockListener, Event.Priority.Highest, this);
