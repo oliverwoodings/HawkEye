@@ -19,7 +19,7 @@
 			$_SESSION["loggedIn"] = true;
 			$_SESSION["forumAuth"] = true;
 		}
-		elseif (isset($_SESSION["forumAuth"]) && !$isAuth)
+		else if (isset($_SESSION["forumAuth"]) && !$isAuth)
 		{
 			//They're not authed, yet the forumAuth variable is set
 			//Log them out!
@@ -91,10 +91,10 @@
                                 <div><input type="checkbox" name="action" class="act" value="13" /> <?php echo $lang["actions"][13]; ?></div><br />
                                 <div><input type="checkbox" name="action" class="act" value="14" /> <?php echo $lang["actions"][14]; ?></div><br />
                                 <div><input type="checkbox" name="action" class="act" value="15" /> <?php echo $lang["actions"][15]; ?></div><br />
-                                <div><input type="checkbox" name="action" class="act" value="16" /> <?php echo $lang["actions"][16]; ?></div><br />
-                                <div><input type="checkbox" name="action" class="act" value="17" /> <?php echo $lang["actions"][17]; ?></div><br />
+                                <div><input type="checkbox" name="action" class="act" value="16" /> <?php echo $lang["actions"][16]; ?></div>
                             </div>
                             <div>
+                                <div><input type="checkbox" name="action" class="act" value="17" /> <?php echo $lang["actions"][17]; ?></div><br />
                                 <div><input type="checkbox" name="action" class="act" value="18" /> <?php echo $lang["actions"][18]; ?></div><br />
                                 <div><input type="checkbox" name="action" class="act" value="19" /> <?php echo $lang["actions"][19]; ?></div><br />
                                 <div><input type="checkbox" name="action" class="act" value="20" /> <?php echo $lang["actions"][20]; ?></div><br />
