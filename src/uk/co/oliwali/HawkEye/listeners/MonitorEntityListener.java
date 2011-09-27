@@ -125,9 +125,10 @@ public class MonitorEntityListener extends EntityListener {
 		
 		//Create a new state for the block
 		BlockState newState = block.getState();
-		newState.setData(enderman.getCarriedMaterial());
-		if (enderman.getCarriedMaterial().getItemType() != null)
+		if (enderman.getCarriedMaterial() != null) {
+			newState.setData(enderman.getCarriedMaterial());
 			newState.setType(enderman.getCarriedMaterial().getItemType());
+		}
 		
 		DataManager.addEntry(new BlockChangeEntry("Environment", DataType.ENDERMAN_PLACE, event.getLocation(), block.getState(), newState));
 	}
