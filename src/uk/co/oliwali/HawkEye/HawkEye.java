@@ -103,8 +103,7 @@ public class HawkEye extends JavaPlugin {
 		}
 		
 		//Add console session
-		ConsoleCommandSender sender = new ConsoleCommandSender(getServer());
-		playerSessions.put(sender, new PlayerSession(sender));
+        playerSessions.put(getServer().getConsoleSender(), new PlayerSession(getServer().getConsoleSender()));
 		
 		checkDependencies(pm);
 		
