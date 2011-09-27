@@ -18,8 +18,7 @@ public class SessionManager {
 	public SessionManager() {
 		
 		//Add console session
-		ConsoleCommandSender sender = new ConsoleCommandSender(Bukkit.getServer());
-		addSession(sender);
+		addSession(Bukkit.getServer().getConsoleSender());
 		
         //Create player sessions
         for (Player player : Bukkit.getServer().getOnlinePlayers()) addSession(player);
