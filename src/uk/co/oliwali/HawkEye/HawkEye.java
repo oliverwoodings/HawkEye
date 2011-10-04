@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Type;
@@ -103,8 +102,7 @@ public class HawkEye extends JavaPlugin {
 		}
 		
 		//Add console session
-		ConsoleCommandSender sender = new ConsoleCommandSender(getServer());
-		playerSessions.put(sender, new PlayerSession(sender));
+		playerSessions.put(server.getConsoleSender(), new PlayerSession(server.getConsoleSender()));
 		
 		checkDependencies(pm);
 		
@@ -252,7 +250,7 @@ public class HawkEye extends JavaPlugin {
 	 * @param sender - {@link CommandSender}
 	 * @param cmd - {@link Command}
 	 * @param commandLabel - String
-	 * @param args[] - String[]
+	 * @param args - String[]
 	 */
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String args[]) {
 		if (cmd.getName().equalsIgnoreCase("hawk")) {
