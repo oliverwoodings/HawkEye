@@ -1,0 +1,66 @@
+log:
+    lava-bucket: true
+    painting-place: true
+    other: true
+    pvp-death: true
+    block-fade: true
+    chat: true
+    quit: true
+    sign-place: true
+    painting-break: true
+    lava-flow: false
+    flint-steel: true
+    button: true
+    command: true
+    block-form: true
+    teleport: true
+    lever: true
+    item-drop: true
+    water-bucket: true
+    block-burn: true
+    sign-break: true
+    block-break: true
+    leaf-decay: true
+    water-flow: false
+    join: true
+    door-interact: true
+    block-place: true
+    open-container: true
+    item-pickup: true
+    explosion: true
+    container-transaction: true
+    mob-death: true
+    other-death: true
+    enderman-pickup: true
+    enderman-place: true
+general:
+    max-lines: 0
+    tool-block: '17'
+    log-item-drops-on-death: false
+    cleanse-period: 20m
+    cleanse-age: 0
+    delete-data-on-rollback: true
+    log-ip-addresses: true
+    debug: true
+    max-radius: 0
+    default-here-radius: 5
+    default-tool-command: ''
+    check-for-updates: true
+mysql:
+    hawkeye-table: hawkeye
+    port: 3306
+    player-table: hawk_players
+    username: root
+    world-table: hawk_worlds
+    hostname: localhost
+    max-connections: 10
+    password: ''
+    database: minecraft
+version: 1.0.5a
+command-filter:
+- /login
+- /restartsrv
+- /register
+block-filter:
+- 140
+- 150
