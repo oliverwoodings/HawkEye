@@ -22,7 +22,6 @@ public class RollbackCommand extends BaseCommand {
 	public RollbackCommand() {
 		name = "rollback";
 		argLength = 1;
-		bePlayer = true;
 		usage = "<parameters> <- rollback changes";
 	}
 	

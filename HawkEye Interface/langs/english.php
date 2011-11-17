@@ -74,7 +74,9 @@
 									   "28" => "Chest Transaction",
 									   "29" => "Sign Break",
 									   "30" => "Painting Break",
-									   "31" => "Painting Break"),
+									   "31" => "Painting Break",
+									   "32" => "Enderman Pickup",
+									   "33" => "Enderman Place"),
 					
 					"results" => array("title" => "Results",
 									   "id" => "ID",

@@ -5,7 +5,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,8 +12,6 @@ import java.util.regex.Pattern;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.Plugin;
@@ -32,7 +29,9 @@ import uk.co.oliwali.HawkEye.commands.PageCommand;
 import uk.co.oliwali.HawkEye.commands.PreviewCommand;
 import uk.co.oliwali.HawkEye.commands.RollbackCommand;
 import uk.co.oliwali.HawkEye.commands.SearchCommand;
+import uk.co.oliwali.HawkEye.commands.ToolBindCommand;
 import uk.co.oliwali.HawkEye.commands.ToolCommand;
+import uk.co.oliwali.HawkEye.commands.ToolResetCommand;
 import uk.co.oliwali.HawkEye.commands.TptoCommand;
 import uk.co.oliwali.HawkEye.commands.UndoCommand;
 import uk.co.oliwali.HawkEye.commands.WorldEditRollbackCommand;
@@ -60,7 +59,6 @@ public class HawkEye extends JavaPlugin {
 	public static List<BaseCommand> commands = new ArrayList<BaseCommand>();
 	public WorldEditPlugin worldEdit = null;
 	public static ContainerAccessManager containerManager;
-	private static HashMap<CommandSender, PlayerSession> playerSessions = new HashMap<CommandSender, PlayerSession>();
 	
 	/**
 	 * Safely shuts down HawkEye
@@ -74,24 +72,22 @@ public class HawkEye extends JavaPlugin {
 	 * Starts up HawkEye initiation process
 	 */
 	public void onEnable() {
-		
-		Util.info("Starting HawkEye initiation process...");
 
 		//Set up config and permissions
         PluginManager pm = getServer().getPluginManager();
 		server = getServer();
 		name = this.getDescription().getName();
         version = this.getDescription().getVersion();
+        
+		Util.info("Starting HawkEye " + version + " initiation process...");
+		
+		//Load config and permissions
         config = new Config(this);
         new Permission(this);
         
-        datalogCheck(pm);
-        
         versionCheck();
         
-        //Create player sessions
-        for (Player player : server.getOnlinePlayers())
-        	playerSessions.put(player, new PlayerSession(player));
+        new SessionManager();
         
         //Initiate database connection
         try {
@@ -101,10 +97,6 @@ public class HawkEye extends JavaPlugin {
 			pm.disablePlugin(this);
 			return;
 		}
-		
-		//Add console session
-		ConsoleCommandSender sender = new ConsoleCommandSender(getServer());
-		playerSessions.put(sender, new PlayerSession(sender));
 		
 		checkDependencies(pm);
 		
@@ -119,60 +111,75 @@ public class HawkEye extends JavaPlugin {
 	}
 	
 	/**
-	 * Checks if HawkEye needs to update config files from existing DataLog installation
-	 * @param pm PluginManager
-	 */
-	private void datalogCheck(PluginManager pm) {
-		
-        //Check if we need to update from DataLog
-        Plugin dl = pm.getPlugin("DataLog");
-        if (dl != null) {
-        	Util.warning("DataLog found, disabling it. Please remove DataLog.jar!");
-        	Util.info("Importing DataLog configuration");
-        	Config.importOldConfig(dl.getConfiguration());
-        	config = new Config(this);
-        	pm.disablePlugin(dl);
-        }
-        
-	}
-	
-	/**
 	 * Checks if any updates are available for HawkEye
 	 * Outputs console warning if updates are needed
 	 */
 	private void versionCheck() {
 		
+		//Check if update checking enabled
+		if (!Config.CheckUpdates) {
+			Util.warning("Update checking is disabled, this is not recommended!");
+			return;
+		}
+		
         //Perform version check
         Util.info("Performing update check...");
         try {
+        	
+        	//Values
+        	int updateVer;
+        	int curVer;
+        	int updateHot = 0;
+        	int curHot = 0;
+        	int updateBuild;
+        	int curBuild;
+        	String info;
         	
         	//Get version file
         	URLConnection yc = new URL("https://raw.github.com/oliverw92/HawkEye/master/version.txt").openConnection();
     		BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
     		
-    		//Sort out version numbers
-    		String updateVersion = in.readLine();
-    		int updateVer = Integer.parseInt(updateVersion.replace(".", ""));
-    		int curVer = Integer.parseInt(version.replace(".", ""));
+    		//Get version number
+    		String updateVersion = in.readLine().replace(".", "");
     		
+    		//Check for hot fixes on new version
+    		if (Character.isLetter(updateVersion.charAt(updateVersion.length() - 1))) {
+    			updateHot = Character.getNumericValue(updateVersion.charAt(updateVersion.length() - 1));
+    			updateVer = Integer.parseInt(updateVersion.substring(0, updateVersion.length() - 1));
+    		}
+    		else updateVer = Integer.parseInt(updateVersion);
+
+    		//Check for hot fixes on current version
+    		if (Character.isLetter(version.charAt(version.length() - 1))) {
+    			String tversion = version.replace(".", "");
+    			curHot = Character.getNumericValue(tversion.charAt(tversion.length() - 1));
+    			curVer = Integer.parseInt(tversion.substring(0, tversion.length() - 1));
+    		}
+    		else curVer = Integer.parseInt(version.replace(".", ""));
+
     		//Extract Bukkit build from server versions
     		Pattern pattern = Pattern.compile("-b(\\d*?)jnks", Pattern.CASE_INSENSITIVE);
 			Matcher matcher = pattern.matcher(server.getVersion());
 			if (!matcher.find() || matcher.group(1) == null) throw new Exception();
-			int curBuild = Integer.parseInt(matcher.group(1));
-    		int updateBuild = Integer.parseInt(in.readLine());
+			curBuild = Integer.parseInt(matcher.group(1));
+    		updateBuild = Integer.parseInt(in.readLine());
+    		
+    		//Get custom info string
+    		info = in.readLine();
     		
     		//Check versions
-    		if (updateVer > curVer) {
+    		if (updateVer > curVer || updateVer == curVer && updateHot > curHot) {
 				Util.warning("New version of HawkEye available: " + updateVersion);
     			if (updateBuild > curBuild)	Util.warning("Update recommended of CraftBukkit from build " + curBuild + " to " + updateBuild + " to ensure compatibility");
     			else Util.warning("Compatible with your current version of CraftBukkit");
+    			Util.warning("New version info: " + info);
     		}
     		else Util.info("No updates available for HawkEye");
     		in.close();
     		
 		} catch (Exception e) {
 			Util.warning("Unable to perform update check!");
+			if (Config.Debug) e.printStackTrace();
 		}
 	}
 	
@@ -219,6 +226,8 @@ public class HawkEye extends JavaPlugin {
         if (Config.isLogged(DataType.EXPLOSION)) pm.registerEvent(Type.ENTITY_EXPLODE, monitorEntityListener, Event.Priority.Monitor, this);
         if (Config.isLogged(DataType.PAINTING_BREAK)) pm.registerEvent(Type.PAINTING_BREAK, monitorEntityListener, Event.Priority.Monitor, this);
         if (Config.isLogged(DataType.PAINTING_BREAK)) pm.registerEvent(Type.PAINTING_PLACE, monitorEntityListener, Event.Priority.Monitor, this);
+        if (Config.isLogged(DataType.ENDERMAN_PICKUP)) pm.registerEvent(Type.ENDERMAN_PICKUP, monitorEntityListener, Event.Priority.Monitor, this);
+        if (Config.isLogged(DataType.ENDERMAN_PLACE)) pm.registerEvent(Type.ENDERMAN_PLACE, monitorEntityListener, Event.Priority.Monitor, this);
         
         //Register tool events
         pm.registerEvent(Type.BLOCK_PLACE, toolBlockListener, Event.Priority.Highest, this);
@@ -233,14 +242,16 @@ public class HawkEye extends JavaPlugin {
 		
         //Add commands
         commands.add(new HelpCommand());
+        commands.add(new ToolBindCommand());
+        commands.add(new ToolResetCommand());
         commands.add(new ToolCommand());
         commands.add(new SearchCommand());
         commands.add(new PageCommand());
         commands.add(new TptoCommand());
         commands.add(new HereCommand());
-        commands.add(new PreviewCommand());
         commands.add(new PreviewApplyCommand());
         commands.add(new PreviewCancelCommand());
+        commands.add(new PreviewCommand());
         commands.add(new RollbackCommand());
         if (worldEdit != null) commands.add(new WorldEditRollbackCommand());
         commands.add(new UndoCommand());
@@ -258,37 +269,18 @@ public class HawkEye extends JavaPlugin {
 		if (cmd.getName().equalsIgnoreCase("hawk")) {
 			if (args.length == 0)
 				args = new String[]{"help"};
-			BaseCommand help = null;
+			outer:
 			for (BaseCommand command : commands.toArray(new BaseCommand[0])) {
-				if (command.name.equalsIgnoreCase("help"))
-					help = command;
-				if (command.name.equalsIgnoreCase(args[0]))
-					return command.run(this, sender, args, commandLabel);
+				String[] cmds = command.name.split(" ");
+				for (int i = 0; i < cmds.length; i++)
+					if (i >= args.length || !cmds[i].equalsIgnoreCase(args[i])) continue outer;
+				return command.run(this, sender, args, commandLabel);
 			}
-			return help.run(this, sender, args, commandLabel);
+			new HelpCommand().run(this, sender, args, commandLabel);
+			return true;
 		}
 		return false;
-	}
-	
-	/**
-	 * Get a PlayerSession from the list
-	 */
-	public static PlayerSession getSession(CommandSender player) {
-		PlayerSession session = playerSessions.get(player);
-		if (session == null)
-			session = addSession(player);
-		session.setSender(player);
-		return session;
-	}
-	
-	/**
-	 * Adds a PlayerSession to the list
-	 */
-	public static PlayerSession addSession(CommandSender player) {
-		PlayerSession session;
-		session = new PlayerSession(player);
-		playerSessions.put(player, session);
-		return session;
+
 	}
 
 }

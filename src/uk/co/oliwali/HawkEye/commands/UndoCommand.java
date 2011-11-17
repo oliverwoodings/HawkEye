@@ -13,7 +13,6 @@ public class UndoCommand extends BaseCommand {
 
 	public UndoCommand() {
 		name = "undo";
-		bePlayer = true;
 		usage = "<- reverses your previous rollback";
 	}
 	

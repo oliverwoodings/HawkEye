@@ -1,9 +1,9 @@
 name: HawkEye
 main: uk.co.oliwali.HawkEye.HawkEye
 author: oliverw92
-version: 1.0.4b
+version: 1.0.5a
 description: Track those griefers like a bird of prey!
-softdepend: [WorldEdit,PermissionsEx,Permissions,GroupManager]
+softdepend: [WorldEdit,PermissionsEx,Permissions,GroupManager,bPermissions]
 commands:
   hawk:
     description: Track those griefers like a bird of prey!
@@ -19,3 +19,7 @@ permissions:
             hawkeye.tool: true
             hawkeye.notify: true
             hawkeye.preview: true
+    hawkeye.tool.*:
+        description: Permission to use the HawkEye tool
+        children:
+            hawkeye.tool.bind: true

@@ -10,6 +10,7 @@ import uk.co.oliwali.HawkEye.util.Util;
 public class HelpCommand extends BaseCommand {
 
 	public HelpCommand() {
+		bePlayer = false;
 		name = "help";
 		argLength = 0;
 		usage = "<- lists all HawkEye commands";

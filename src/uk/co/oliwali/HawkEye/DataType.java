@@ -4,50 +4,59 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
+import uk.co.oliwali.HawkEye.entry.BlockChangeEntry;
+import uk.co.oliwali.HawkEye.entry.BlockEntry;
+import uk.co.oliwali.HawkEye.entry.ContainerEntry;
+import uk.co.oliwali.HawkEye.entry.DataEntry;
+import uk.co.oliwali.HawkEye.entry.SignEntry;
+import uk.co.oliwali.HawkEye.entry.SimpleRollbackEntry;
+
 /**
  * Enumeration class representing all the different actions that HawkEye can handle
  * @author oliverw92
  */
 public enum DataType {
 	
-	BLOCK_BREAK(0, "BlockEntry", true, "block-break", true),
-	BLOCK_PLACE(1, "BlockChangeEntry", true, "block-place", true),
-	SIGN_PLACE(2, "SignEntry", true, "sign-place", true),
-	CHAT(3, "DataEntry", "chat"),
-	COMMAND(4, "DataEntry", true, "command"),
-	JOIN(5, "DataEntry", "join"),
-    QUIT(6, "DataEntry", "quit"),
-    TELEPORT(7, "DataEntry", "teleport"),
-    LAVA_BUCKET(8, "SimpleRollbackEntry", true, "lava-bucket", true),
-    WATER_BUCKET(9, "SimpleRollbackEntry", true, "water-bucket", true),
-    OPEN_CONTAINER(10, "DataEntry", true, "open-container"),
-    DOOR_INTERACT(11, "DataEntry", true, "door-interact"),
-    PVP_DEATH(12, "DataEntry", "pvp-death"),
-	FLINT_AND_STEEL(13, "SimpleRollbackEntry", true, "flint-steel"),
-	LEVER(14, "DataEntry", true, "lever"),
-	STONE_BUTTON(15, "DataEntry", true, "button"),
-	OTHER(16, "DataEntry", "other"),
-	EXPLOSION(17, "BlockEntry", true, "explosion", true),
-	BLOCK_BURN(18, "BlockEntry", true, "block-burn", true),
-	BLOCK_FORM(19, "BlockChangeEntry", true, "block-form", true),
-	LEAF_DECAY(20, "BlockEntry", true, "leaf-decay", true),
-	MOB_DEATH(21, "DataEntry", "mob-death"),
-	OTHER_DEATH(22, "DataEntry", "other-death"),
-	ITEM_DROP(23, "DataEntry", "item-drop"),
-	ITEM_PICKUP(24, "DataEntry", "item-pickup"),
-	BLOCK_FADE(25, "BlockChangeEntry", "block-fade", true),
-	LAVA_FLOW(26, "BlockChangeEntry", true, "lava-flow", true),
-	WATER_FLOW(27, "BlockChangeEntry", true, "water-flow", true),
-	CONTAINER_TRANSACTION(28, "ContainerEntry", true, "container-transaction", true),
-	SIGN_BREAK(29, "SignEntry", true, "sign-break", true),
-	PAINTING_BREAK(30, "DataEntry", "painting-break"),
-	PAINTING_PLACE(31, "DataEntry", "painting-place");
-	
+	BLOCK_BREAK(0, BlockEntry.class, "block-break", true, true),
+	BLOCK_PLACE(1, BlockChangeEntry.class, "block-place", true, true),
+	SIGN_PLACE(2, SignEntry.class, "sign-place", true, true),
+	CHAT(3, DataEntry.class, "chat", false, false),
+	COMMAND(4, DataEntry.class, "command", false, false),
+	JOIN(5, DataEntry.class, "join", false, false),
+	QUIT(6, DataEntry.class, "quit", false, false),
+	TELEPORT(7, DataEntry.class, "teleport", false, false),
+	LAVA_BUCKET(8, SimpleRollbackEntry.class, "lava-bucket", true, true),
+	WATER_BUCKET(9, SimpleRollbackEntry.class, "water-bucket", true, true),
+	OPEN_CONTAINER(10, DataEntry.class, "open-container", true, false),
+	DOOR_INTERACT(11, DataEntry.class, "door-interact", true, false),
+	PVP_DEATH(12, DataEntry.class, "pvp-death", false, false),
+	FLINT_AND_STEEL(13, SimpleRollbackEntry.class, "flint-steel", true, true),
+	LEVER(14, DataEntry.class, "lever", true, false),
+	STONE_BUTTON(15, DataEntry.class, "button", true, false),
+	OTHER(16, DataEntry.class, "other", false, false),
+	EXPLOSION(17, BlockEntry.class, "explosion", true, true),
+	BLOCK_BURN(18, BlockEntry.class, "block-burn", true, true),
+	BLOCK_FORM(19, BlockChangeEntry.class, "block-form", true, true),
+	LEAF_DECAY(20, BlockEntry.class, "leaf-decay", true, true),
+	MOB_DEATH(21, DataEntry.class, "mob-death", false, false),
+	OTHER_DEATH(22, DataEntry.class, "other-death", false, false),
+	ITEM_DROP(23, DataEntry.class, "item-drop", true, false),
+	ITEM_PICKUP(24, DataEntry.class, "item-pickup", true, false),
+	BLOCK_FADE(25, BlockChangeEntry.class, "block-fade", true, true),
+	LAVA_FLOW(26, BlockChangeEntry.class, "lava-flow", true, true),
+	WATER_FLOW(27, BlockChangeEntry.class, "water-flow", true, true),
+	CONTAINER_TRANSACTION(28, ContainerEntry.class, "container-transaction", true, true),
+	SIGN_BREAK(29, SignEntry.class, "sign-break", true, true),
+	PAINTING_BREAK(30, DataEntry.class, "painting-break", true, false),
+	PAINTING_PLACE(31, DataEntry.class, "painting-place", true, false),
+	ENDERMAN_PICKUP(32, BlockEntry.class, "enderman-pickup", true, true),
+	ENDERMAN_PLACE(33, BlockChangeEntry.class, "enderman-place", true, true);
+
 	private int id;
 	private boolean canHere;
 	private String configName;
 	private boolean canRollback;
-	private String entryClass;
+	private Class<?> entryClass;
 	
 	private static final Map<String, DataType> nameMapping = new HashMap<String, DataType>();
 	private static final Map<Integer, DataType> idMapping = new HashMap<Integer, DataType>();
@@ -62,27 +71,7 @@ public enum DataType {
 		}
 	}
 	
-	private DataType(int id, String entryClass, String configName) {
-		this.id = id;
-		this.entryClass = entryClass;
-		this.canHere = false;
-		this.configName = configName;
-		this.canRollback = false;
-	}
-	private DataType(int id, String entryClass, String configName, boolean canRollback) {
-		this.id = id;
-		this.entryClass = entryClass;
-		this.configName = configName;
-		this.canRollback = canRollback;
-	}
-	private DataType(int id, String entryClass, boolean canHere, String configName) {
-		this.id = id;
-		this.entryClass = entryClass;
-		this.canHere = canHere;
-		this.configName = configName;
-		this.canRollback = false;
-	}
-	private DataType(int id, String entryClass, boolean canHere, String configName, boolean canRollback) {
+	private DataType(int id, Class<?> entryClass, String configName, boolean canHere, boolean canRollback) {
 		this.id = id;
 		this.entryClass = entryClass;
 		this.canHere = canHere;
@@ -110,8 +99,8 @@ public enum DataType {
 	 * Get the class to be used for DataEntry
 	 * @return String name of entry class
 	 */
-	public String getEntryClass() {
-		return "uk.co.oliwali.HawkEye.entry." + entryClass;
+	public Class<?> getEntryClass() {
+		return entryClass;
 	}
 	
 	/**

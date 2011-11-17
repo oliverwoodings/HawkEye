@@ -11,6 +11,7 @@ import uk.co.oliwali.HawkEye.util.Util;
 public class PageCommand extends BaseCommand {
 
 	public PageCommand() {
+		bePlayer = false;
 		name = "page";
 		argLength = 1;
 		usage = "<page> <- display a page from your last search";

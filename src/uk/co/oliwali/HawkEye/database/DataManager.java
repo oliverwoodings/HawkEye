@@ -11,18 +11,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-
 import uk.co.oliwali.HawkEye.HawkEye;
 import uk.co.oliwali.HawkEye.DataType;
-import uk.co.oliwali.HawkEye.SearchParser;
 import uk.co.oliwali.HawkEye.util.BlockUtil;
 import uk.co.oliwali.HawkEye.util.Config;
 import uk.co.oliwali.HawkEye.util.Util;
-import uk.co.oliwali.HawkEye.callbacks.SearchCallback;
 import uk.co.oliwali.HawkEye.database.JDCConnection;
-import uk.co.oliwali.HawkEye.database.SearchQuery.SearchDir;
 import uk.co.oliwali.HawkEye.entry.DataEntry;
 
 /**
@@ -35,7 +29,7 @@ public class DataManager extends TimerTask {
 	private static LinkedBlockingQueue<DataEntry> queue = new LinkedBlockingQueue<DataEntry>();
 	private static ConnectionManager connections;
 	private static Timer loggingTimer = null;
-	private static Timer cleanseTimer = null;
+	public static Timer cleanseTimer = null;
 	public static HashMap<String, Integer> dbPlayers = new HashMap<String, Integer>();
 	public static HashMap<String, Integer> dbWorlds = new HashMap<String, Integer>();
 
@@ -58,12 +52,9 @@ public class DataManager extends TimerTask {
 
 		//Start cleansing utility
 		try {
-			CleanseUtil util = new CleanseUtil();
-			if (util.date != null) {
-				cleanseTimer = new Timer();
-				cleanseTimer.scheduleAtFixedRate(util, 0, 1200000);
-			}
+			new CleanseUtil();
 		} catch (Exception e) {
+			Util.severe(e.getMessage());
 			Util.severe("Unable to start cleansing utility - check your cleanse age");
 		}
 
@@ -170,21 +161,6 @@ public class DataManager extends TimerTask {
 	}
 	
 	/**
-	 * Performs a HawkEye tool search at the specified location
-	 * @param player
-	 * @param loc
-	 */
-	public static void toolSearch(Player player, Location loc) {
-		SearchParser parser = new SearchParser(player);
-		for (DataType type : DataType.values())
-			if (type.canHere()) parser.actions.add(type);
-		loc = Util.getSimpleLocation(loc);
-		parser.loc = loc.toVector();
-		parser.worlds = new String[]{ loc.getWorld().getName() };
-		new SearchQuery(new SearchCallback(HawkEye.getSession(player)), parser, SearchDir.DESC);
-	}
-	
-	/**
 	 * Returns a database connection from the pool
 	 * @return {JDCConnection}
 	 */
@@ -205,7 +181,7 @@ public class DataManager extends TimerTask {
 	 */
 	public static DataEntry createEntryFromRes(ResultSet res) throws Exception {
 		DataType type = DataType.fromId(res.getInt("action"));
-		DataEntry entry = (DataEntry)Class.forName(type.getEntryClass()).newInstance();
+		DataEntry entry = (DataEntry)type.getEntryClass().newInstance();
 		entry.setPlayer(DataManager.getPlayer(res.getInt("player_id")));
 		entry.setDate(res.getString("date"));
 		entry.setDataId(res.getInt("data_id"));
@@ -343,14 +319,20 @@ public class DataManager extends TimerTask {
 		PreparedStatement stmnt = null;
 		try {
 			while (!queue.isEmpty()) {
-				DataEntry entry = queue.poll();
-				if (!dbPlayers.containsKey(entry.getPlayer()))
-					if (!addPlayer(entry.getPlayer()))
-						continue;
-				if (!dbWorlds.containsKey(entry.getWorld()))
-					if (!addWorld(entry.getWorld()))
-						continue;
 				
+				DataEntry entry = queue.poll();
+				
+				//Sort out player IDs
+				if (!dbPlayers.containsKey(entry.getPlayer()) && !addPlayer(entry.getPlayer()))
+					continue;
+				if (!dbWorlds.containsKey(entry.getWorld()) && !addWorld(entry.getWorld()))
+					continue;
+				
+				//If player ID is unable to be found, continue
+				if (entry.getPlayer() == null || dbPlayers.get(entry.getPlayer()) == null)
+					continue;
+				
+				//If we are re-inserting we need to also insert the data ID
 				if (entry.getDataId() > 0) {
 					stmnt = conn.prepareStatement("INSERT into `" + Config.DbHawkEyeTable + "` (date, player_id, action, world_id, x, y, z, data, plugin, data_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
 					stmnt.setInt(10, entry.getDataId());
@@ -367,6 +349,7 @@ public class DataManager extends TimerTask {
 				stmnt.setString(8, entry.getSqlData());
 				stmnt.setString(9, entry.getPlugin());
 				stmnt.executeUpdate();
+				
 			}
 		} catch (SQLException ex) {
 			Util.severe("SQL Exception: " + ex);

@@ -25,7 +25,7 @@ public class ContainerAccessManager {
 	 * Checks whether the player's inventory was open and should now trigger a container transaction
 	 * @param player player to check
 	 */
-	public void checkInventoryClose(Player player, String msg) {
+	public void checkInventoryClose(Player player) {
 		
 		//Get access from list
 		ContainerAccess access = null;

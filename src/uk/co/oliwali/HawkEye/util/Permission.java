@@ -121,8 +121,22 @@ public class Permission {
 		return hasPermission(player, "hawkeye.notify");
 	}
 	
+	/**
+	 * Permission to preview rollbacks
+	 * @param player
+	 * @return
+	 */
 	public static boolean preview(CommandSender player) {
 		return hasPermission(player, "hawkeye.preview");
+	}
+	
+    /**
+     * 
+     * @param player
+     * @return
+     */
+	public static boolean toolBind(CommandSender player) {
+		return hasPermission(player, "hawkeye.tool.bind");
 	}
 	
 	/**

@@ -10,7 +10,7 @@
 	
 	//Include config, lang pack and MySQL connector
 	include("config.php");
-	include("langs/" . $config["langFile"]);	
+	include("langs/" . $hawkConfig["langFile"]);	
 	
 	//Set up output array
 	$output = array(
@@ -20,10 +20,10 @@
 	);
 	
 	//Check if required functions are here
-	if (!function_exists("json_decode")) return error("JSON PHP library not installed! Update to PHP 5.3 or later!");
+	if (!function_exists("json_decode")) require('json.php');
 	
 	//If not logged in, throw an error
-	if (!isset($_SESSION["loggedin"]) && $config["password"] != "")
+	if (!isset($_SESSION["loggedIn"]) && $hawkConfig["password"] != "")
 		return error($lang["messages"]["notLoggedIn"]);
 	
 	if (!isset($_GET["data"]))
@@ -33,7 +33,7 @@
 		
 	//Get players
 	$players = array();
-	$res = mysql_query("SELECT * FROM `" . $config["dbPlayerTable"] . "`");
+	$res = mysql_query("SELECT * FROM `" . $hawkConfig["dbPlayerTable"] . "`");
 	if (!$res)
 		return error(mysql_error());
 	if (mysql_num_rows($res) == 0)
@@ -43,7 +43,7 @@
 	
 	//Get worlds
 	$worlds = array();
-	$res = mysql_query("SELECT * FROM `" . $config["dbWorldTable"] . "`");
+	$res = mysql_query("SELECT * FROM `" . $hawkConfig["dbWorldTable"] . "`");
 	if (!$res)
 		return error(mysql_error());
 	if (mysql_num_rows($res) == 0)
@@ -51,7 +51,7 @@
 	while ($world = mysql_fetch_object($res))
 		$worlds[$world->world_id] = $world->world;
 	
-	$sql = "SELECT * FROM `" . $config["dbTable"] . "` WHERE ";
+	$sql = "SELECT * FROM `" . $hawkConfig["dbTable"] . "` WHERE ";
 	$args = array();
 	
 	if ($data["players"][0] != "") {
@@ -81,7 +81,7 @@
 	else
 		array_push($args, "`action` IN (" . join(",", $data["actions"]) . ")");
 	
-	$range = $config["radius"];
+	$range = $hawkConfig["radius"];
 	if ($data["range"] != "")
 		$range = $data["range"];
 	if ($data["loc"][0] != "")
@@ -114,12 +114,12 @@
 	
 	//Compile SQL statement
 	$sql .= join(" AND ", $args);
-	if ($config["maxResults"] > 0)
-		$sql .= " LIMIT " . $config["maxResults"];
+	if ($hawkConfig["maxResults"] > 0)
+		$sql .= " LIMIT " . $hawkConfig["maxResults"];
 		
 	//Log query
 	set_error_handler('handleError');
-	if ($config["logQueries"] == true) {
+	if ($hawkConfig["logQueries"] == true) {
 		try {
 			if (!file_put_contents("log.txt", date("m.d.y G:i:s") . " - " . $_SERVER["REMOTE_ADDR"] . " - " . $sql . "\n", FILE_APPEND))
 				return error("Unable to open/write to log.txt!");

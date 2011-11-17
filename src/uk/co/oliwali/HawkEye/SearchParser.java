@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -50,13 +51,28 @@ public class SearchParser {
 			if (arg.equalsIgnoreCase("")) continue;
 			String param = arg.substring(0,1).toLowerCase();
 			if (!arg.substring(1,2).equals(":"))
-				throw new IllegalArgumentException("Invalid argument format!");
+				throw new IllegalArgumentException("Invalid argument format: &7" + arg);
 			String[] values = arg.substring(2).split(",");
 			
-			//Check different parameters
+			//Players
 			if (param.equals("p")) players = values;
+			//Worlds
 			else if (param.equals("w")) worlds = values;
-			else if (param.equals("f")) filters = values;
+			//Filters
+			else if (param.equals("f")) {
+				if (filters != null) filters = Util.concat(filters, values);
+				else filters = values;
+			}
+			//Blocks
+			else if (param.equals("b")) {
+				for (int i = 1; i < values.length; i++) {
+					if (Material.getMaterial(values[i]) != null)
+						values[i] = Integer.toString(Material.getMaterial(values[i]).getId());
+				}
+				if (filters != null) filters = Util.concat(filters, values);
+				else filters = values;
+			}
+			//Actions
 			else if (param.equals("a")) {
 				for (String value : values) {
 					DataType type = DataType.fromName(value);
@@ -65,6 +81,7 @@ public class SearchParser {
 					actions.add(type);
 				}
 			}
+			//Location
 			else if (param.equals("l")) {
 				if (values[0].equalsIgnoreCase("here")) 
 					loc = player.getLocation().toVector();
@@ -75,12 +92,14 @@ public class SearchParser {
 					loc.setZ(Integer.parseInt(values[2]));
 				}
 			}
+			//Radius
 			else if (param.equals("r")) {
 				if (!Util.isInteger(values[0])) throw new IllegalArgumentException("Invalid radius supplied: &7" + values[0]);
 				radius = Integer.parseInt(values[0]);
 			}
+			//Time
 			else if (param.equals("t")) {
-				//Handler for different time formats
+				
 				int type = 2;
 				for (int i = 0; i < arg.length(); i++) {
 					String c = arg.substring(i, i+1);

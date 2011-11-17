@@ -5,6 +5,7 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 
 import uk.co.oliwali.HawkEye.entry.DataEntry;
+import uk.co.oliwali.HawkEye.util.Config;
 
 /**
  * Stores data specific to each player on the server.
@@ -18,6 +19,7 @@ public class PlayerSession {
 	private List<DataEntry> rollbackResults  = null;
 	private boolean usingTool = false;
 	private boolean doingRollback = false;
+	private String[] toolCommand = Config.DefaultToolCommand;
 	private boolean inPreview = false;
 	
 	public PlayerSession(CommandSender sender) {
@@ -57,6 +59,13 @@ public class PlayerSession {
 	}
 	public void setDoingRollback(boolean doingRollback) {
 		this.doingRollback = doingRollback;
+	}
+	
+	public String[] getToolCommand() {
+		return toolCommand;
+	}
+	public void setToolCommand(String[] toolCommand) {
+		this.toolCommand = toolCommand;
 	}
 	
 	public boolean isInPreview() {

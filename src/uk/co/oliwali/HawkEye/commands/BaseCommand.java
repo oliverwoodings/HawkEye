@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import uk.co.oliwali.HawkEye.HawkEye;
 import uk.co.oliwali.HawkEye.PlayerSession;
+import uk.co.oliwali.HawkEye.SessionManager;
 import uk.co.oliwali.HawkEye.util.Util;
 
 /**
@@ -24,7 +25,7 @@ public abstract class BaseCommand {
 	public String name;
 	public int argLength = 0;
 	public String usage;
-	public boolean bePlayer = false;
+	public boolean bePlayer = true;
 	public Player player;
 	public String usedCommand;
 	public PlayerSession session;
@@ -40,19 +41,28 @@ public abstract class BaseCommand {
 	 * @return true on success, false if there is an error in the checks or if the extending command returns false
 	 */
 	public boolean run(HawkEye instace, CommandSender csender, String[] preArgs, String cmd) {
+		
 		plugin = instace;
 		sender = csender;
-		session = HawkEye.getSession(sender);
+		session = SessionManager.getSession(sender);
+		usedCommand = cmd;
+		
+		//Sort out arguments
 		args.clear();
 		for (String arg : preArgs)
 			args.add(arg);
-		args.remove(0);
-		usedCommand = cmd;
 		
+		//Remove commands from arguments
+		for (int i = 0; i < name.split(" ").length && i < args.size(); i++)
+			args.remove(0);
+		
+		//Check arg lengths
 		if (argLength > args.size()) {
 			sendUsage();
 			return true;
 		}
+		
+		//Check if sender should be a player
 		if (bePlayer && !(sender instanceof Player))
 			return false;
 		if (sender instanceof Player)
@@ -61,6 +71,7 @@ public abstract class BaseCommand {
 			Util.sendMessage(sender, "&cYou do not have permission to do that!");
 			return false;
 		}
+		
 		return execute();
 	}
 	

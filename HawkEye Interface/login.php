@@ -4,19 +4,41 @@
 	
 	//Include config and lang pack
 	include("config.php");
-	include("langs/" . $config["langFile"]);
+	include("langs/" . $hawkConfig["langFile"]);
+	
+	if ($hawkConfig["forumAuth"])
+	{
+		//The user wants to use forum authentication.  Let's check if the user's authenticated.
+		if ($isAuth)
+		{
+			//They're authenticated! Let's log them in and tie them to a session
+			$_SESSION["loggedIn"] = true;
+			$_SESSION["forumAuth"] = true;
+			header("Location: index.php");
+		}
+		else
+		{
+			//Okay, they don't have authentication did they previously?
+			if(isset($_SESSION["forumAuth"]))
+			{
+				//They did, we need to log them out for security's sake.
+				unset($_SESSION["forumAuth"]);
+				unset($_SESSION["loggedIn"]);
+			}
+		}
+	}
 
-	if (isset($_SESSION["loggedin"]))
+	if (isset($_SESSION["loggedIn"]))
 		header("Location: index.php");
 		
 	if (isset($_GET["page"]) && $_GET["page"] == "logout") {
-        unset($_SESSION["loggedin"]);
+        unset($_SESSION["loggedIn"]);
         header("Location: index.php");
 	}
 	
 	if (isset($_GET["page"]) && $_GET["page"] == "login") {
-	    if (isset($_POST["pass"]) && $_POST["pass"] == $config["password"]) {
-	    	$_SESSION["loggedin"] = true;
+	    if (isset($_POST["pass"]) && $_POST["pass"] == $hawkConfig["password"]) {
+	    	$_SESSION["loggedIn"] = true;
 	    	header("Location: index.php");
 	    }
 	}
@@ -54,7 +76,7 @@
         	
         	<?php
         	
-        		if (isset($_POST["pass"]) && $_POST["pass"] != $config["password"]) {
+        		if (isset($_POST["pass"]) && $_POST["pass"] != $hawkConfig["password"]) {
 	        		echo '<div class="ui-widget">
 							<div class="ui-state-highlight ui-corner-all searchError"> 
 							<p><span class="ui-icon ui-icon-alert"></span>

@@ -19,7 +19,6 @@ import uk.co.oliwali.HawkEye.util.Util;
 public class SearchCommand extends BaseCommand {
 
 	public SearchCommand() {
-		bePlayer = true;
 		name = "search";
 		argLength = 1;
 		usage = "<parameters> <- search HawkEye database";

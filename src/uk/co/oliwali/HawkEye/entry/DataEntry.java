@@ -25,7 +25,7 @@ public class DataEntry {
 
     private String date;
 
-    private String player;
+    private String player = null;
 
     private String world;
 
@@ -37,7 +37,7 @@ public class DataEntry {
     
     private BlockState undoState;
 
-    protected DataType type;
+    protected DataType type = null;
     
     protected String data = null;
     

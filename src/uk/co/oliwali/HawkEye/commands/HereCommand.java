@@ -18,7 +18,6 @@ public class HereCommand extends BaseCommand {
 	public HereCommand() {
 		name = "here";
 		argLength = 0;
-		bePlayer = true;
 		usage = "[radius] [player] <- search around you";
 	}
 	
