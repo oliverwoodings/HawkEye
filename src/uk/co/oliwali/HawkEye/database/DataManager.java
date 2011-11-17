@@ -54,6 +54,7 @@ public class DataManager extends TimerTask {
 		try {
 			new CleanseUtil();
 		} catch (Exception e) {
+			Util.severe(e.getMessage());
 			Util.severe("Unable to start cleansing utility - check your cleanse age");
 		}
 

@@ -72,14 +72,16 @@ public class HawkEye extends JavaPlugin {
 	 * Starts up HawkEye initiation process
 	 */
 	public void onEnable() {
-		
-		Util.info("Starting HawkEye initiation process...");
 
 		//Set up config and permissions
         PluginManager pm = getServer().getPluginManager();
 		server = getServer();
 		name = this.getDescription().getName();
         version = this.getDescription().getVersion();
+        
+		Util.info("Starting HawkEye " + version + " initiation process...");
+		
+		//Load config and permissions
         config = new Config(this);
         new Permission(this);
         

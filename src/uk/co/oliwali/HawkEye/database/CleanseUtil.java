@@ -3,7 +3,9 @@ package uk.co.oliwali.HawkEye.database;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -28,8 +30,11 @@ public class CleanseUtil extends TimerTask {
 	 */
 	public CleanseUtil() throws Exception {
 		
-		//If no age set then we aren't running the utility
-		if (Config.CleanseAge.equalsIgnoreCase("0") || Config.CleanseAge.equalsIgnoreCase("0d0h0s")) return;
+		//Check for invalid ages/periods
+		List<String> arr = Arrays.asList(new String[]{"0", "0s"});
+		if (Config.CleanseAge == null || Config.CleansePeriod == null || arr.contains(Config.CleanseAge) || arr.contains(Config.CleansePeriod)) {
+			return;
+		}
 		
 		//Parse cleanse age
 		ageToDate();
@@ -37,8 +42,8 @@ public class CleanseUtil extends TimerTask {
 		//Parse interval
         int temp = 0;
 		String nums = "";
-		for (int i = 0; i < Config.CleanseAge.length(); i++) {
-			String c = Config.CleanseAge.substring(i, i+1);
+		for (int i = 0; i < Config.CleansePeriod.length(); i++) {
+			String c = Config.CleansePeriod.substring(i, i+1);
 			if (Util.isInteger(c)) {
 				nums += c;
 				continue;
@@ -70,11 +75,13 @@ public class CleanseUtil extends TimerTask {
 		JDCConnection conn = null;
 		Statement stmnt = null;
 		try {
+			ageToDate();
 			conn = DataManager.getConnection();
 			stmnt = conn.createStatement();
+			Util.debug("DELETE FROM `" + Config.DbHawkEyeTable + "` WHERE `date` < '" + date + "'");
 			int affected = stmnt.executeUpdate("DELETE FROM `" + Config.DbHawkEyeTable + "` WHERE `date` < '" + date + "'");
 			Util.info("Deleted " + affected + " row(s) from database");
-		} catch (SQLException ex) {
+		} catch (Exception ex) {
 			Util.severe("Unable to execute cleanse utility: " + ex);
 		}
 		finally {
