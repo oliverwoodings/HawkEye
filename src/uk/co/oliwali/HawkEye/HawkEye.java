@@ -83,8 +83,6 @@ public class HawkEye extends JavaPlugin {
         config = new Config(this);
         new Permission(this);
         
-        datalogCheck(pm);
-        
         versionCheck();
         
         new SessionManager();
@@ -107,24 +105,6 @@ public class HawkEye extends JavaPlugin {
 	    registerCommands();
         
         Util.info("Version " + version + " enabled!");
-        
-	}
-	
-	/**
-	 * Checks if HawkEye needs to update config files from existing DataLog installation
-	 * @param pm PluginManager
-	 */
-	private void datalogCheck(PluginManager pm) {
-		
-        //Check if we need to update from DataLog
-        Plugin dl = pm.getPlugin("DataLog");
-        if (dl != null) {
-        	Util.warning("DataLog found, disabling it. Please remove DataLog.jar!");
-        	Util.info("Importing DataLog configuration");
-        	Config.importOldConfig(dl.getConfiguration());
-        	config = new Config(this);
-        	pm.disablePlugin(dl);
-        }
         
 	}
 	
