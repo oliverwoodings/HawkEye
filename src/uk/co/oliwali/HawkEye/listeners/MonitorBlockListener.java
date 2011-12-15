@@ -92,12 +92,7 @@ public class MonitorBlockListener extends BlockListener {
 		
 		//Lava
 		if (from.getTypeId() == 10 || from.getTypeId() == 11) {
-			
-			/////
-			//Memory errors are causing lava flow logging to be ridiculous. Temporary 'fix' for now is to just ignore it
-			/////
-			
-			/*
+
 			//Flowing into a normal block
 			if (fluidBlocks.contains(to.getTypeId())) {
 				data.setData((byte)(from.getRawData() + 1));
@@ -110,7 +105,7 @@ public class MonitorBlockListener extends BlockListener {
 				data.setData((byte)0);
 				from.setData(data);
 			}
-			DataManager.addEntry(new BlockChangeEntry("Environment", DataType.LAVA_FLOW, loc, to, from));*/
+			DataManager.addEntry(new BlockChangeEntry("Environment", DataType.LAVA_FLOW, loc, to, from));
 		
 		}
 		
