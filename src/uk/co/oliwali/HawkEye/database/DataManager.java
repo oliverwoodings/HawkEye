@@ -349,8 +349,9 @@ public class DataManager extends TimerTask {
 				stmnt.setString(8, entry.getSqlData());
 				stmnt.setString(9, entry.getPlugin());
 				stmnt.executeUpdate();
-				
+				stmnt.close();
 			}
+			conn.close();
 		} catch (SQLException ex) {
 			Util.severe("SQL Exception: " + ex);
 		} finally {
