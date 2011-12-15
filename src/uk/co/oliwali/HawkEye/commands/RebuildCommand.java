@@ -51,7 +51,7 @@ public class RebuildCommand extends BaseCommand {
 		}
 		
 		//Create new SearchQuery with data
-		new SearchQuery(new RebuildCallback(session), parser, SearchDir.DESC);
+		new SearchQuery(new RebuildCallback(session), parser, SearchDir.ASC);
 		return true;
 		
 	}

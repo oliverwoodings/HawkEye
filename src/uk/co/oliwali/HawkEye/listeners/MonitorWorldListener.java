@@ -1,6 +1,7 @@
 package uk.co.oliwali.HawkEye.listeners;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.event.world.WorldListener;
@@ -28,6 +29,10 @@ public class MonitorWorldListener extends WorldListener {
 		
 		//Loop through blocks
 		for (BlockState block : event.getBlocks()) {
+			
+			//Don't log the bottom block
+			if (block.getType() == Material.MYCEL || block.getType() == Material.DIRT || block.getType() == Material.GRASS) continue;
+			
 			Location loc = new Location(event.getWorld(), block.getX(), block.getY(), block.getZ());
 			//If a player did it
 			if (event.getPlayer() != null) {

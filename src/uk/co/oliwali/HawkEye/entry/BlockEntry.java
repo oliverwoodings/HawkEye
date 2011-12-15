@@ -44,7 +44,7 @@ public class BlockEntry extends DataEntry {
 	@Override
 	public boolean rebuild(Block block) {
 		if (data == null) return false;
-		else BlockUtil.setBlockString(block, data);
+		else block.setTypeId(0);
 		return true;
 	}
 
