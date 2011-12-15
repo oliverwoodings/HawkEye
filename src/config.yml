@@ -27,6 +27,8 @@ log:
     block-fade: true
     block-form: true
     leaf-decay: true
+    mushroom-grow: true
+    tree-grow: true
     water-flow: false
     lava-flow: false
     explosion: true

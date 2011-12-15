@@ -39,6 +39,7 @@ import uk.co.oliwali.HawkEye.database.DataManager;
 import uk.co.oliwali.HawkEye.listeners.MonitorBlockListener;
 import uk.co.oliwali.HawkEye.listeners.MonitorEntityListener;
 import uk.co.oliwali.HawkEye.listeners.MonitorPlayerListener;
+import uk.co.oliwali.HawkEye.listeners.MonitorWorldListener;
 import uk.co.oliwali.HawkEye.listeners.ToolBlockListener;
 import uk.co.oliwali.HawkEye.listeners.ToolPlayerListener;
 import uk.co.oliwali.HawkEye.util.Config;
@@ -54,6 +55,7 @@ public class HawkEye extends JavaPlugin {
 	public MonitorBlockListener monitorBlockListener = new MonitorBlockListener(this);
 	public MonitorEntityListener monitorEntityListener = new MonitorEntityListener(this);
 	public MonitorPlayerListener monitorPlayerListener = new MonitorPlayerListener(this);
+	public MonitorWorldListener monitorWorldListener = new MonitorWorldListener(this);
 	public ToolBlockListener toolBlockListener = new ToolBlockListener();
 	public ToolPlayerListener toolPlayerListener = new ToolPlayerListener();
 	public static List<BaseCommand> commands = new ArrayList<BaseCommand>();
@@ -228,6 +230,7 @@ public class HawkEye extends JavaPlugin {
         if (Config.isLogged(DataType.PAINTING_BREAK)) pm.registerEvent(Type.PAINTING_PLACE, monitorEntityListener, Event.Priority.Monitor, this);
         if (Config.isLogged(DataType.ENDERMAN_PICKUP)) pm.registerEvent(Type.ENDERMAN_PICKUP, monitorEntityListener, Event.Priority.Monitor, this);
         if (Config.isLogged(DataType.ENDERMAN_PLACE)) pm.registerEvent(Type.ENDERMAN_PLACE, monitorEntityListener, Event.Priority.Monitor, this);
+        if (Config.isLogged(DataType.TREE_GROW) || Config.isLogged(DataType.MUSHROOM_GROW)) pm.registerEvent(Type.STRUCTURE_GROW, monitorWorldListener, Event.Priority.Monitor, this);
         
         //Register tool events
         pm.registerEvent(Type.BLOCK_PLACE, toolBlockListener, Event.Priority.Highest, this);
