@@ -62,9 +62,17 @@ public class MonitorPlayerListener extends PlayerListener {
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
 		Location loc  = player.getLocation();
+		
 		//Check for inventory close
 		HawkEye.containerManager.checkInventoryClose(player);
-		DataManager.addEntry(new DataEntry(player, DataType.QUIT, loc, Config.LogIpAddresses?player.getAddress().getAddress().getHostAddress().toString():""));
+		
+		//Hackish workaround for random NPE given off by the address system
+		String ip = "";
+		try {
+			ip = player.getAddress().getAddress().getHostAddress().toString();
+		} catch (Exception e) { }
+		
+		DataManager.addEntry(new DataEntry(player, DataType.QUIT, loc, Config.LogIpAddresses?ip:""));
 	}
 	
 	public void onPlayerTeleport(PlayerTeleportEvent event) {

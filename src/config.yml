@@ -56,7 +56,10 @@ mysql:
     max-connections: 10
     password: ''
     database: minecraft
-version: 1.0.5a
+ignore-worlds:
+- thisworldisignored
+- soisthisone
+version: 1.0.5b
 command-filter:
 - /login
 - /restartsrv
