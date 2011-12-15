@@ -71,7 +71,9 @@
 									   "30" => "Peinture posée",
 									   "31" => "Peinture cassée",
 									   "32" => "Enderman Pickup",
-									   "33" => "Enderman Place"),
+									   "33" => "Enderman Place",
+									   "34" => "Tree Grow",
+									   "35" => "Mushroom Grow"),
 					
 					"results" => array("title" => "Résultats",
 									   "id" => "ID",
