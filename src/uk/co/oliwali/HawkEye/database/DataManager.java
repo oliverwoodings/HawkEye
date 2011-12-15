@@ -355,14 +355,14 @@ public class DataManager extends TimerTask {
 				stmnt.close();
 			}
 			conn.close();
-		} catch (SQLException ex) {
-			Util.severe("SQL Exception: " + ex);
+		} catch (Exception ex) {
+			Util.severe("Exception: " + ex);
 		} finally {
 			try {
 				if (stmnt != null)
 					stmnt.close();
 				conn.close();
-			} catch (SQLException ex) {
+			} catch (Exception ex) {
 				Util.severe("Unable to close SQL connection: " + ex);
 			}
 				
