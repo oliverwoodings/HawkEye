@@ -96,6 +96,9 @@ public class DataManager extends TimerTask {
 					return;
 		}
 		
+		//Check world ignore list
+		if (Config.IgnoreWorlds.contains(entry.getWorld())) return;
+		
 		if (Config.isLogged(entry.getType()))
 			queue.add(entry);
 	}

@@ -16,6 +16,7 @@ import uk.co.oliwali.HawkEye.DataType;
 public class Config {
 	
 	public static List<String> CommandFilter = new ArrayList<String>();
+	public static List<String> IgnoreWorlds = new ArrayList<String>();
 	public static List<Integer> BlockFilter = new ArrayList<Integer>();
 	public static int MaxLines = 0;
 	public static int MaxRadius;
@@ -56,6 +57,7 @@ public class Config {
 		//Load values
 		CommandFilter = config.getList("command-filter");
 		BlockFilter = config.getList("block-filter");
+		IgnoreWorlds = config.getList("ignore-worlds");
 		MaxLines = config.getInt("general.max-lines");
 		MaxRadius = config.getInt("general.max-radius");
 		DefaultHereRadius = config.getInt("general.default-here-radius");
