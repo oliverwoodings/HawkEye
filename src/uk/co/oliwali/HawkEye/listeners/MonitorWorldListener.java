@@ -8,7 +8,7 @@ import org.bukkit.event.world.WorldListener;
 import uk.co.oliwali.HawkEye.DataType;
 import uk.co.oliwali.HawkEye.HawkEye;
 import uk.co.oliwali.HawkEye.database.DataManager;
-import uk.co.oliwali.HawkEye.entry.SimpleRollbackEntry;
+import uk.co.oliwali.HawkEye.entry.BlockChangeEntry;
 import uk.co.oliwali.HawkEye.util.BlockUtil;
 
 public class MonitorWorldListener extends WorldListener {
@@ -31,11 +31,11 @@ public class MonitorWorldListener extends WorldListener {
 			Location loc = new Location(event.getWorld(), block.getX(), block.getY(), block.getZ());
 			//If a player did it
 			if (event.getPlayer() != null) {
-				DataManager.addEntry(new SimpleRollbackEntry(event.getPlayer(), type, loc, BlockUtil.getBlockString(block)));
+				DataManager.addEntry(new BlockChangeEntry(event.getPlayer(), type, loc, "0", BlockUtil.getBlockString(block)));
 			}
 			//If the environment did it
 			else {
-				DataManager.addEntry(new SimpleRollbackEntry("Environment", type, loc, BlockUtil.getBlockString(block)));
+				DataManager.addEntry(new BlockChangeEntry("Environment", type, loc, "0", BlockUtil.getBlockString(block)));
 			}
 		}
 		

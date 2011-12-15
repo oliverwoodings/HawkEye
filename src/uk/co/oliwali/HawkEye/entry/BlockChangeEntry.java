@@ -30,6 +30,16 @@ public class BlockChangeEntry extends DataEntry {
 		this.from = BlockUtil.getBlockString(from);
 		this.to = BlockUtil.getBlockString(to);
 	}
+	public BlockChangeEntry(Player player, DataType type, Location loc, String from, String to) {
+		setInfo(player, type, loc);
+		this.from = from;
+		this.to = to;
+	}
+	public BlockChangeEntry(String player, DataType type, Location loc, String from, String to) {
+		setInfo(player, type, loc);
+		this.from = from;
+		this.to = to;
+	}
 	
 	@Override
 	public String getStringData() {
