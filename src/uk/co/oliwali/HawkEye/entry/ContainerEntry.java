@@ -30,10 +30,12 @@ public class ContainerEntry extends DataEntry {
 		setInfo(player, DataType.CONTAINER_TRANSACTION, location);
 	}
 	
+	@Override
 	public String getStringData() {
 		return InventoryUtil.createChangeString(InventoryUtil.interpretDifferenceString(data));
 	}
-
+	
+	@Override
 	public boolean rollback(Block block) {
 		if (!(block instanceof ContainerBlock)) return false;
 		Inventory inv = ((ContainerBlock)block.getState()).getInventory();
@@ -47,6 +49,24 @@ public class ContainerEntry extends DataEntry {
 		if (ops.size() > 1) {
 			for (ItemStack stack : InventoryUtil.uncompressInventory(ops.get(1)))
 				inv.addItem(stack);
+		}
+		return true;
+	}
+	
+	@Override
+	public boolean rebuild(Block block) {
+		if (!(block instanceof ContainerBlock)) return false;
+		Inventory inv = ((ContainerBlock)block.getState()).getInventory();
+		List<HashMap<String,Integer>> ops = InventoryUtil.interpretDifferenceString(data);
+		//Handle the additions
+		if (ops.size() > 0) {
+			for (ItemStack stack : InventoryUtil.uncompressInventory(ops.get(0)))
+				inv.addItem(stack);
+		}
+		//Handle subtractions
+		if (ops.size() > 1) {
+			for (ItemStack stack : InventoryUtil.uncompressInventory(ops.get(1)))
+				inv.removeItem(stack);
 		}
 		return true;
 	}

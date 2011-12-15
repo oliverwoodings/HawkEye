@@ -16,7 +16,7 @@ public class PlayerSession {
 
 	private CommandSender sender;
 	private List<DataEntry> searchResults = null;
-	private List<DataEntry> rollbackResults  = null;
+	private List<DataEntry> rollbackResults = null;
 	private boolean usingTool = false;
 	private boolean doingRollback = false;
 	private String[] toolCommand = Config.DefaultToolCommand;

@@ -173,6 +173,16 @@ public class DataEntry {
 	public boolean rollbackPlayer(Block block, Player player) {
 		return false;
 	}
+	
+	/**
+	 * Rebuilds the entry (reapplies it)
+	 * Extending classes can implement this method to do custom things
+	 * @param block
+	 * @return true if rebuild is performed, false it if isn't
+	 */
+	public boolean rebuild(Block block) {
+		return false;
+	}
     
     /**
      * Parses the inputted action into the DataEntry instance

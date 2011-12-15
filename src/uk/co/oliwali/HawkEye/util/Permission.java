@@ -131,12 +131,21 @@ public class Permission {
 	}
 	
     /**
-     * 
+     * Permission to bind a tool
      * @param player
      * @return
      */
 	public static boolean toolBind(CommandSender player) {
 		return hasPermission(player, "hawkeye.tool.bind");
+	}
+	
+	/**
+	 * Permission to rebuild
+	 * @param player
+	 * @return
+	 */
+	public static boolean rebuild(CommandSender player) {
+		return hasPermission(player, "hawkeye.rebuild");
 	}
 	
 	/**

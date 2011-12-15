@@ -67,6 +67,13 @@ public class BlockChangeEntry extends DataEntry {
 		else player.sendBlockChange(block.getLocation(), BlockUtil.getIdFromString(from), BlockUtil.getDataFromString(from));
 		return true;
 	}
+	
+	@Override
+	public boolean rebuild(Block block) {
+		if (to == null) return false;
+		else BlockUtil.setBlockString(block, to);
+		return true;
+	}
 
 	@Override
 	public void interpretSqlData(String data) {

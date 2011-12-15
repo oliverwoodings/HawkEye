@@ -96,6 +96,23 @@ public class SignEntry extends DataEntry {
 		else player.sendBlockChange(block.getLocation(), wallSign?Material.WALL_SIGN:Material.SIGN_POST, (byte)0);
 		return true;
 	}
+	
+	@Override
+	public boolean rebuild(Block block) {
+		
+		if (type == DataType.SIGN_BREAK) block.setTypeId(0);
+		else {
+			if (wallSign) block.setType(Material.WALL_SIGN);
+			else block.setType(Material.SIGN_POST);
+			Sign sign = (Sign)(block.getState());
+			for (int i = 0; i < lines.length; i++) if (lines[i] != null) sign.setLine(i, lines[i]);
+			if (wallSign) ((org.bukkit.material.Sign)sign.getData()).setFacingDirection(facing.getOppositeFace());
+			else ((org.bukkit.material.Sign)sign.getData()).setFacingDirection(facing);
+			sign.update();
+		}
+		return true;
+		
+	}
 
 	@Override
 	public void interpretSqlData(String data) {

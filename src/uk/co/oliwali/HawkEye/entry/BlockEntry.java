@@ -40,5 +40,12 @@ public class BlockEntry extends DataEntry {
 		player.sendBlockChange(block.getLocation(), BlockUtil.getIdFromString(data), BlockUtil.getDataFromString(data));
 		return true;
 	}
+	
+	@Override
+	public boolean rebuild(Block block) {
+		if (data == null) return false;
+		else BlockUtil.setBlockString(block, data);
+		return true;
+	}
 
 }

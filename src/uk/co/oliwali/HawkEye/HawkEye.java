@@ -27,6 +27,7 @@ import uk.co.oliwali.HawkEye.commands.HelpCommand;
 import uk.co.oliwali.HawkEye.commands.HereCommand;
 import uk.co.oliwali.HawkEye.commands.PageCommand;
 import uk.co.oliwali.HawkEye.commands.PreviewCommand;
+import uk.co.oliwali.HawkEye.commands.RebuildCommand;
 import uk.co.oliwali.HawkEye.commands.RollbackCommand;
 import uk.co.oliwali.HawkEye.commands.SearchCommand;
 import uk.co.oliwali.HawkEye.commands.ToolBindCommand;
@@ -258,6 +259,7 @@ public class HawkEye extends JavaPlugin {
         commands.add(new RollbackCommand());
         if (worldEdit != null) commands.add(new WorldEditRollbackCommand());
         commands.add(new UndoCommand());
+        commands.add(new RebuildCommand());
         
 	}
 	
