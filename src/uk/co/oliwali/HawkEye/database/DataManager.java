@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -128,15 +129,12 @@ public class DataManager extends TimerTask {
 	 * @param dataid id to delete
 	 */
 	public static void deleteEntry(int dataid) {
-		JDCConnection conn = null;
-		try {
-			conn = getConnection();
-			conn.createStatement().executeUpdate("DELETE FROM `" + Config.DbHawkEyeTable + "` WHERE `data_id` = " + dataid);
-		} catch (SQLException ex) {
-			Util.severe("Unable to delete data entry from MySQL Server: " + ex);
-		} finally {
-			conn.close();
-		}
+		Thread thread = new Thread(new DeleteEntry(dataid));
+		thread.run();
+	}
+	public static void deleteEntries(List<?> entries) {
+		Thread thread = new Thread(new DeleteEntry(entries));
+		thread.run();
 	}
 	
 	/**

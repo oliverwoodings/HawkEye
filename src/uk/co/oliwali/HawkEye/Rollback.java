@@ -27,7 +27,6 @@ public class Rollback implements Runnable {
 	private Iterator<DataEntry> rollbackQueue;
 	private List<DataEntry> undo = new ArrayList<DataEntry>();
 	private int timerID;
-	private int counter = 0;
 	private RollbackType rollbackType = RollbackType.GLOBAL;
 	
 	/**
@@ -84,18 +83,11 @@ public class Rollback implements Runnable {
 			if (rollbackType == RollbackType.GLOBAL && entry.rollback(world.getBlockAt(loc))) {
 				entry.setUndoState(state);
 				undo.add(entry);
-				
-				//Delete data if told to
-				if (Config.DeleteDataOnRollback)
-					DataManager.deleteEntry(entry.getDataId());
-				
-				counter++;
 			}
 			//Local rollback preview
 			else if (rollbackType == RollbackType.LOCAL && entry.rollbackPlayer(block, (Player)session.getSender())) {
 				entry.setUndoState(state);
 				undo.add(entry);
-				counter++;
 			}
 			
 		}
@@ -111,15 +103,18 @@ public class Rollback implements Runnable {
 			
 			//Store undo results and notify player
 			if (rollbackType == RollbackType.GLOBAL) {
-				Util.sendMessage(session.getSender(), "&cRollback complete, &7" + counter + "&c edits performed");
+				Util.sendMessage(session.getSender(), "&cRollback complete, &7" + undo.size() + "&c edits performed");
 				Util.sendMessage(session.getSender(), "&cUndo this rollback using &7/hawk undo");
+				//Delete data if told to
+				if (Config.DeleteDataOnRollback)
+					DataManager.deleteEntries(undo);
 			}
 			else {
-				Util.sendMessage(session.getSender(), "&cRollback preview complete, &7" + counter + "&c edits performed to you");
+				Util.sendMessage(session.getSender(), "&cRollback preview complete, &7" + undo.size() + "&c edits performed to you");
 				Util.sendMessage(session.getSender(), "&cType &7/hawk apply&c to make these changes permanent or &7/hawk cancel&c to cancel");
 			}
 			
-			Util.debug("Rollback complete, " + counter + " edits performed");
+			Util.debug("Rollback complete, " + undo.size() + " edits performed");
 			
 		}
 		
