@@ -1,0 +1,115 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>uk.co.oliwali.HawkEye</groupId>
+  <artifactId>HawkEye</artifactId>
+  <version>1.05b-ar-0.1</version>
+  <packaging>jar</packaging>
+
+  <name>HawkEye</name>
+  <description>Bukkit data logging plugin and web-based data browser.</description>
+  <url>https://github.com/balr0g/HawkEye</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.plugin.name>${project.name}</project.plugin.name>
+    <project.plugin.author>oliverw92, modified by Tulonsae and armed_troop</project.plugin.author>
+    <project.plugin.depend>[WorldEdit,PermissionsEx,Permissions,GroupManager,bPermissions]</project.plugin.depend>
+    <project.plugin.main>${project.groupId}.${project.name}</project.plugin.main>
+    <project.plugin.version>${project.version}-${buildNumber}</project.plugin.version>
+    <project.plugin.description>Track those griefers like a bird of prey!</project.plugin.description>
+  </properties>
+
+  <scm>
+    <connection>scm:git:file:${basedir}/.git</connection>
+  </scm>
+
+  <repositories>
+    <repository>
+      <id>spout-repo</id>
+      <url>http://repo.spout.org</url>
+    </repository>
+    <repository>
+      <id>sk89q-mvn2</id>
+      <url>http://mvn2.sk89q.com/repo</url>
+    </repository>
+    <repository>
+      <id>tehkode-repo</id>
+      <url>http://repo.tehkode.ru</url>
+    </repository>
+    <repository>
+	  <id>tehcode-repo</id>
+	  <url>http://repo.tehkode.ru/repository/repo</url>
+    </repository>
+
+  </repositories>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.bukkit</groupId>
+      <artifactId>bukkit</artifactId>
+      <version>1.1-R3-SNAPSHOT</version>
+      <type>jar</type>
+      <scope>compile</scope>
+      <optional>false</optional>
+    </dependency>
+    <dependency>
+      <groupId>com.sk89q</groupId>
+      <artifactId>worldedit</artifactId>
+      <version>5.1</version>
+    </dependency>
+    <dependency>
+      <groupId>ru.tehkode</groupId>
+      <artifactId>PermissionsEx</artifactId>
+      <version>1.18</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <sourceDirectory>${basedir}/src</sourceDirectory>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>buildnumber-maven-plugin</artifactId>
+        <version>1.0</version>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>create</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <doCheck>false</doCheck>
+          <doUpdate>false</doUpdate>
+          <format>{0,number}</format>
+          <items>
+            <item>buildNumber</item>
+          </items>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.3.1</version>
+        <configuration>
+          <manifest>
+            <Class-Path>WorldEdit.jar HawkEye/WorldEdit.jar lib/WorldEdit.jar ../lib/WorldEdit.jar ../WorldEdit.jar</Class-Path>
+          </manifest>
+        </configuration>
+      </plugin>
+    </plugins>
+    <resources>
+	    <resource>
+		    <targetPath>.</targetPath>
+		    <directory>${basedir}/src</directory>
+		    <filtering>true</filtering>
+		    <includes>
+		            <include>plugin.yml</include>
+		    </includes>
+	    </resource>
+    </resources>
+  </build>
+</project>
