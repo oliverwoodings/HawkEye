@@ -12,8 +12,6 @@ import java.util.regex.Pattern;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -41,8 +39,7 @@ import uk.co.oliwali.HawkEye.listeners.MonitorBlockListener;
 import uk.co.oliwali.HawkEye.listeners.MonitorEntityListener;
 import uk.co.oliwali.HawkEye.listeners.MonitorPlayerListener;
 import uk.co.oliwali.HawkEye.listeners.MonitorWorldListener;
-import uk.co.oliwali.HawkEye.listeners.ToolBlockListener;
-import uk.co.oliwali.HawkEye.listeners.ToolPlayerListener;
+import uk.co.oliwali.HawkEye.listeners.ToolListener;
 import uk.co.oliwali.HawkEye.util.Config;
 import uk.co.oliwali.HawkEye.util.Permission;
 import uk.co.oliwali.HawkEye.util.Util;
@@ -57,8 +54,7 @@ public class HawkEye extends JavaPlugin {
 	public MonitorEntityListener monitorEntityListener = new MonitorEntityListener(this);
 	public MonitorPlayerListener monitorPlayerListener = new MonitorPlayerListener(this);
 	public MonitorWorldListener monitorWorldListener = new MonitorWorldListener(this);
-	public ToolBlockListener toolBlockListener = new ToolBlockListener();
-	public ToolPlayerListener toolPlayerListener = new ToolPlayerListener();
+	public ToolListener toolListener = new ToolListener();
 	public static List<BaseCommand> commands = new ArrayList<BaseCommand>();
 	public WorldEditPlugin worldEdit = null;
 	public static ContainerAccessManager containerManager;
@@ -208,35 +204,12 @@ public class HawkEye extends JavaPlugin {
 	 */
 	private void registerListeners(PluginManager pm) {
 		
-        // Register monitor events
-        if (Config.isLogged(DataType.BLOCK_BREAK)) pm.registerEvent(Type.BLOCK_BREAK, monitorBlockListener, Event.Priority.Monitor, this);
-        if (Config.isLogged(DataType.BLOCK_PLACE)) pm.registerEvent(Type.BLOCK_PLACE, monitorBlockListener, Event.Priority.Monitor, this);
-        if (Config.isLogged(DataType.BLOCK_BURN)) pm.registerEvent(Type.BLOCK_BURN, monitorBlockListener, Event.Priority.Monitor, this);
-        if (Config.isLogged(DataType.LEAF_DECAY)) pm.registerEvent(Type.LEAVES_DECAY, monitorBlockListener, Event.Priority.Monitor, this);
-        if (Config.isLogged(DataType.BLOCK_FORM)) pm.registerEvent(Type.BLOCK_FORM, monitorBlockListener, Event.Priority.Monitor, this);
-        if (Config.isLogged(DataType.LAVA_FLOW) || Config.isLogged(DataType.WATER_FLOW)) pm.registerEvent(Type.BLOCK_FROMTO, monitorBlockListener, Event.Priority.Monitor, this);
-        if (Config.isLogged(DataType.SIGN_PLACE)) pm.registerEvent(Type.SIGN_CHANGE, monitorBlockListener, Event.Priority.Monitor, this);
-        if (Config.isLogged(DataType.BLOCK_FADE)) pm.registerEvent(Type.BLOCK_FADE, monitorBlockListener, Event.Priority.Monitor, this);
-        if (Config.isLogged(DataType.COMMAND)) pm.registerEvent(Type.PLAYER_COMMAND_PREPROCESS, monitorPlayerListener, Event.Priority.Monitor, this);
-        if (Config.isLogged(DataType.CHAT)) pm.registerEvent(Type.PLAYER_CHAT, monitorPlayerListener, Event.Priority.Monitor, this);
-        if (Config.isLogged(DataType.JOIN)) pm.registerEvent(Type.PLAYER_JOIN, monitorPlayerListener, Event.Priority.Monitor, this);
-        if (Config.isLogged(DataType.QUIT)) pm.registerEvent(Type.PLAYER_QUIT, monitorPlayerListener, Event.Priority.Monitor, this);
-        if (Config.isLogged(DataType.TELEPORT)) pm.registerEvent(Type.PLAYER_TELEPORT, monitorPlayerListener, Event.Priority.Monitor, this);
-        pm.registerEvent(Type.PLAYER_INTERACT, monitorPlayerListener, Event.Priority.Monitor, this);
-        if (Config.isLogged(DataType.ITEM_DROP)) pm.registerEvent(Type.PLAYER_DROP_ITEM, monitorPlayerListener, Event.Priority.Monitor, this);
-        if (Config.isLogged(DataType.ITEM_PICKUP)) pm.registerEvent(Type.PLAYER_PICKUP_ITEM, monitorPlayerListener, Event.Priority.Monitor, this);
-        if (Config.isLogged(DataType.PVP_DEATH) || Config.isLogged(DataType.MOB_DEATH) || Config.isLogged(DataType.OTHER_DEATH)) pm.registerEvent(Type.ENTITY_DEATH, monitorEntityListener, Event.Priority.Monitor, this);
-        if (Config.isLogged(DataType.EXPLOSION)) pm.registerEvent(Type.ENTITY_EXPLODE, monitorEntityListener, Event.Priority.Monitor, this);
-        if (Config.isLogged(DataType.PAINTING_BREAK)) pm.registerEvent(Type.PAINTING_BREAK, monitorEntityListener, Event.Priority.Monitor, this);
-        if (Config.isLogged(DataType.PAINTING_BREAK)) pm.registerEvent(Type.PAINTING_PLACE, monitorEntityListener, Event.Priority.Monitor, this);
-        if (Config.isLogged(DataType.ENDERMAN_PICKUP)) pm.registerEvent(Type.ENDERMAN_PICKUP, monitorEntityListener, Event.Priority.Monitor, this);
-        if (Config.isLogged(DataType.ENDERMAN_PLACE)) pm.registerEvent(Type.ENDERMAN_PLACE, monitorEntityListener, Event.Priority.Monitor, this);
-        if (Config.isLogged(DataType.TREE_GROW) || Config.isLogged(DataType.MUSHROOM_GROW)) pm.registerEvent(Type.STRUCTURE_GROW, monitorWorldListener, Event.Priority.Monitor, this);
-        
-        //Register tool events
-        pm.registerEvent(Type.BLOCK_PLACE, toolBlockListener, Event.Priority.Highest, this);
-        pm.registerEvent(Type.PLAYER_INTERACT, toolPlayerListener, Event.Priority.Highest, this);
-		
+		pm.registerEvents(monitorBlockListener, this);
+		pm.registerEvents(monitorPlayerListener, this);
+		pm.registerEvents(monitorEntityListener, this);
+		pm.registerEvents(monitorWorldListener, this);
+		pm.registerEvents(toolListener, this);
+       
 	}
 	
 	/**
