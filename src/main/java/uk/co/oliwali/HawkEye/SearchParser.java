@@ -104,7 +104,7 @@ public class SearchParser {
 				for (int i = 0; i < arg.length(); i++) {
 					String c = arg.substring(i, i+1);
 					if (!Util.isInteger(c)) {
-						if (c.equals("m") || c .equals("s") || c.equals("h"))
+						if (c.equals("m") || c .equals("s") || c.equals("h") || c.equals("d") || c.equals("w"))
 							type = 0;
 						if (c.equals("-") || c.equals(":"))
 							type = 1;
