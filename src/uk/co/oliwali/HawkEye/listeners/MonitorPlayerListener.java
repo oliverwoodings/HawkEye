@@ -3,13 +3,15 @@ package uk.co.oliwali.HawkEye.listeners;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -27,7 +29,7 @@ import uk.co.oliwali.HawkEye.util.Util;
  * Player listener class for HawkEye
  * @author oliverw92
  */
-public class MonitorPlayerListener extends PlayerListener {
+public class MonitorPlayerListener implements Listener {
 	
 	public HawkEye plugin;
 
@@ -35,15 +37,19 @@ public class MonitorPlayerListener extends PlayerListener {
 		plugin = HawkEye;	
 	}
 	
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerChat(PlayerChatEvent event) {
+		if (!Config.isLogged(DataType.CHAT)) return;
+		if (event.isCancelled()) return;
 		Player player = event.getPlayer();
 		//Check for inventory close
 		HawkEye.containerManager.checkInventoryClose(event.getPlayer());
 		DataManager.addEntry(new DataEntry(player, DataType.CHAT, player.getLocation(), event.getMessage()));
 	}
 
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-
+		if (!Config.isLogged(DataType.COMMAND)) return;
 		if (event.isCancelled()) return;
 		Player player = event.getPlayer();
 		//Check for inventory close
@@ -53,13 +59,17 @@ public class MonitorPlayerListener extends PlayerListener {
 		DataManager.addEntry(new DataEntry(player, DataType.COMMAND, player.getLocation(), event.getMessage()));
 	}
 	
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerJoin(PlayerJoinEvent event) {
+		if (!Config.isLogged(DataType.JOIN)) return;
 		Player player = event.getPlayer();
 		Location loc  = player.getLocation();
 		DataManager.addEntry(new DataEntry(player, DataType.JOIN, loc, Config.LogIpAddresses?player.getAddress().getAddress().getHostAddress().toString():""));
 	}
 	
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerQuit(PlayerQuitEvent event) {
+		if (!Config.isLogged(DataType.QUIT)) return;
 		Player player = event.getPlayer();
 		Location loc  = player.getLocation();
 		
@@ -75,7 +85,9 @@ public class MonitorPlayerListener extends PlayerListener {
 		DataManager.addEntry(new DataEntry(player, DataType.QUIT, loc, Config.LogIpAddresses?ip:""));
 	}
 	
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
+		if (!Config.isLogged(DataType.TELEPORT)) return;
 		if (event.isCancelled()) return;
 		//Check for inventory close
 		HawkEye.containerManager.checkInventoryClose(event.getPlayer());
@@ -89,6 +101,7 @@ public class MonitorPlayerListener extends PlayerListener {
 	 * Handles several actions: 
 	 * OPEN_CHEST, DOOR_INTERACT, LEVER, STONE_BUTTON, FLINT_AND_STEEL, LAVA_BUCKET, WATER_BUCKET
 	 */
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 
 		if (event.isCancelled()) return;
@@ -143,7 +156,10 @@ public class MonitorPlayerListener extends PlayerListener {
 		
 	}
 	
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerDropItem(PlayerDropItemEvent event) {
+		if (!Config.isLogged(DataType.ITEM_DROP)) return;
+		if (event.isCancelled()) return;
 		Player player = event.getPlayer();
 		ItemStack stack = event.getItemDrop().getItemStack();
 		String data = null;
@@ -154,7 +170,10 @@ public class MonitorPlayerListener extends PlayerListener {
 		DataManager.addEntry(new DataEntry(player, DataType.ITEM_DROP, player.getLocation(), data));
 	}
 	
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerPickupItem(PlayerPickupItemEvent event) {
+		if (!Config.isLogged(DataType.ITEM_PICKUP)) return;
+		if (event.isCancelled()) return;
 		Player player = event.getPlayer();
 		ItemStack stack = event.getItem().getItemStack();
 		String data = null;
