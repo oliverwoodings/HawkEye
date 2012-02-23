@@ -9,12 +9,12 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 
+import uk.co.oliwali.HawkEye.HawkEvent;
 import uk.co.oliwali.HawkEye.HawkEye;
 import uk.co.oliwali.HawkEye.DataType;
 import uk.co.oliwali.HawkEye.database.DataManager;
@@ -27,14 +27,13 @@ import uk.co.oliwali.HawkEye.util.Util;
  * Player listener class for HawkEye
  * @author oliverw92
  */
-public class MonitorPlayerListener extends PlayerListener {
+public class MonitorPlayerListener extends HawkEyeListener {
 	
-	public HawkEye plugin;
-
 	public MonitorPlayerListener(HawkEye HawkEye) {
-		plugin = HawkEye;	
+		super(HawkEye);
 	}
 	
+	@HawkEvent(dataType = DataType.CHAT)
 	public void onPlayerChat(PlayerChatEvent event) {
 		Player player = event.getPlayer();
 		//Check for inventory close
@@ -42,9 +41,8 @@ public class MonitorPlayerListener extends PlayerListener {
 		DataManager.addEntry(new DataEntry(player, DataType.CHAT, player.getLocation(), event.getMessage()));
 	}
 
+	@HawkEvent(dataType = DataType.COMMAND)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-
-		if (event.isCancelled()) return;
 		Player player = event.getPlayer();
 		//Check for inventory close
 		HawkEye.containerManager.checkInventoryClose(player);
@@ -53,12 +51,14 @@ public class MonitorPlayerListener extends PlayerListener {
 		DataManager.addEntry(new DataEntry(player, DataType.COMMAND, player.getLocation(), event.getMessage()));
 	}
 	
+	@HawkEvent(dataType = DataType.JOIN)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		Location loc  = player.getLocation();
 		DataManager.addEntry(new DataEntry(player, DataType.JOIN, loc, Config.LogIpAddresses?player.getAddress().getAddress().getHostAddress().toString():""));
 	}
 	
+	@HawkEvent(dataType = DataType.QUIT)
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
 		Location loc  = player.getLocation();
@@ -75,8 +75,8 @@ public class MonitorPlayerListener extends PlayerListener {
 		DataManager.addEntry(new DataEntry(player, DataType.QUIT, loc, Config.LogIpAddresses?ip:""));
 	}
 	
+	@HawkEvent(dataType = DataType.TELEPORT)
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
-		if (event.isCancelled()) return;
 		//Check for inventory close
 		HawkEye.containerManager.checkInventoryClose(event.getPlayer());
 		Location from = event.getFrom();
@@ -89,10 +89,8 @@ public class MonitorPlayerListener extends PlayerListener {
 	 * Handles several actions: 
 	 * OPEN_CHEST, DOOR_INTERACT, LEVER, STONE_BUTTON, FLINT_AND_STEEL, LAVA_BUCKET, WATER_BUCKET
 	 */
-	public void onPlayerInteract(PlayerInteractEvent event) {
-
-		if (event.isCancelled()) return;
-		
+	@HawkEvent(dataType = {DataType.OPEN_CONTAINER, DataType.DOOR_INTERACT, DataType.LEVER, DataType.STONE_BUTTON, DataType.LAVA_BUCKET, DataType.WATER_BUCKET})
+	public void onPlayerInteract(PlayerInteractEvent event) {		
 		Player player = event.getPlayer();
 		Block block = event.getClickedBlock();
 		
@@ -143,6 +141,7 @@ public class MonitorPlayerListener extends PlayerListener {
 		
 	}
 	
+	@HawkEvent(dataType = DataType.ITEM_DROP)
 	public void onPlayerDropItem(PlayerDropItemEvent event) {
 		Player player = event.getPlayer();
 		ItemStack stack = event.getItemDrop().getItemStack();
@@ -154,6 +153,7 @@ public class MonitorPlayerListener extends PlayerListener {
 		DataManager.addEntry(new DataEntry(player, DataType.ITEM_DROP, player.getLocation(), data));
 	}
 	
+	@HawkEvent(dataType = DataType.ITEM_PICKUP)
 	public void onPlayerPickupItem(PlayerPickupItemEvent event) {
 		Player player = event.getPlayer();
 		ItemStack stack = event.getItem().getItemStack();

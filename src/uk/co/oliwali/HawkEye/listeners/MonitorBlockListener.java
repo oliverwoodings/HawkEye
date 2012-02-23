@@ -13,12 +13,12 @@ import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockFromToEvent;
-import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.material.MaterialData;
 
+import uk.co.oliwali.HawkEye.HawkEvent;
 import uk.co.oliwali.HawkEye.HawkEye;
 import uk.co.oliwali.HawkEye.DataType;
 import uk.co.oliwali.HawkEye.database.DataManager;
@@ -31,58 +31,54 @@ import uk.co.oliwali.HawkEye.entry.SimpleRollbackEntry;
  * Block listener class for HawkEye
  * @author oliverw92
  */
-public class MonitorBlockListener extends BlockListener {
+public class MonitorBlockListener extends HawkEyeListener {
 	
-	public HawkEye plugin;
-
 	public MonitorBlockListener(HawkEye HawkEye) {
-		plugin = HawkEye;
+		super(HawkEye);
 	}
 	
+	@HawkEvent(dataType = DataType.BLOCK_BREAK)
 	public void onBlockBreak(BlockBreakEvent event) {
-		if (event.isCancelled()) return;
 		Block block = event.getBlock();
 		if (block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST)
 			DataManager.addEntry(new SignEntry(event.getPlayer(), DataType.SIGN_BREAK, event.getBlock()));
 		DataManager.addEntry(new BlockEntry(event.getPlayer(), DataType.BLOCK_BREAK, block));
 	}
 	
+	@HawkEvent(dataType = DataType.BLOCK_PLACE)
 	public void onBlockPlace(BlockPlaceEvent event) {
-		if (event.isCancelled()) return;
 		Block block = event.getBlock();
 		if (block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST) return;
 		DataManager.addEntry(new BlockChangeEntry(event.getPlayer(), DataType.BLOCK_PLACE, block.getLocation(), event.getBlockReplacedState(), block.getState()));
 	}
 	
+	@HawkEvent(dataType = DataType.SIGN_PLACE)
 	public void onSignChange(SignChangeEvent event) {
-		if (event.isCancelled()) return;
         DataManager.addEntry(new SignEntry(event.getPlayer(), DataType.SIGN_PLACE, event.getBlock()));
 	}
 	
+	@HawkEvent(dataType = DataType.BLOCK_FORM)
 	public void onBlockForm(BlockFormEvent event) {
-		if (event.isCancelled()) return;
 		DataManager.addEntry(new BlockChangeEntry("Environment", DataType.BLOCK_FORM, event.getBlock().getLocation(), event.getBlock().getState(), event.getNewState()));
 	}
 	
+	@HawkEvent(dataType = DataType.BLOCK_FADE)
 	public void onBlockFade(BlockFadeEvent event) {
-		if (event.isCancelled()) return;
 		DataManager.addEntry(new BlockChangeEntry("Environment", DataType.BLOCK_FADE, event.getBlock().getLocation(), event.getBlock().getState(), event.getNewState()));
 	}
 	
+	@HawkEvent(dataType = DataType.BLOCK_BURN)
 	public void onBlockBurn(BlockBurnEvent event) {
-		if (event.isCancelled()) return;
 		DataManager.addEntry(new BlockEntry("Environment", DataType.BLOCK_BURN, event.getBlock()));
 	}
 	
+	@HawkEvent(dataType = DataType.LEAF_DECAY)
 	public void onLeavesDecay(LeavesDecayEvent event) {
-		if (event.isCancelled()) return;
 		DataManager.addEntry(new SimpleRollbackEntry("Environment", DataType.LEAF_DECAY, event.getBlock().getLocation(), ""));
 	}
 	
+	@HawkEvent(dataType = {DataType.LAVA_FLOW, DataType.WATER_FLOW})
 	public void onBlockFromTo(BlockFromToEvent event) {
-		
-		if (event.isCancelled()) return;
-		
 		List<Integer> fluidBlocks = Arrays.asList(0, 27, 28, 31, 32, 37, 38, 39, 40, 50, 51, 55, 59, 66, 69, 70, 75, 76, 78, 93, 94);
 		
 		Location loc = event.getToBlock().getLocation();
