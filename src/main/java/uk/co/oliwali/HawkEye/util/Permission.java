@@ -68,6 +68,15 @@ public class Permission {
 	}
 	
 	/**
+	 * Permission to view different pages
+	 * @param player
+	 * @return
+	 */
+	public static boolean page(CommandSender player) {
+		return hasPermission(player, "hawkeye.page");
+	}
+	
+	/**
 	 * Permission to search the logs
 	 * @param player
 	 * @return
