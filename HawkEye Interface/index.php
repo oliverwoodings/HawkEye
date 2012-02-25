@@ -14,12 +14,12 @@
 	if ($hawkConfig["forumAuth"])
 	{
 		//If they're not logged in, and they're authed, let's log them in!
-		if (!isset($_SESSION["loggedIn"]) && $isAuth)
+		if (!isset($_SESSION["loggedIn"]) && $isAuth === true)
 		{
 			$_SESSION["loggedIn"] = true;
 			$_SESSION["forumAuth"] = true;
 		}
-		else if (isset($_SESSION["forumAuth"]) && !$isAuth)
+		else if (isset($_SESSION["forumAuth"]) && $isAuth === false)
 		{
 			//They're not authed, yet the forumAuth variable is set
 			//Log them out!
@@ -59,7 +59,7 @@
     
         <div class="header">
         	<div class="innerHeader">
-            	<a href="https://github.com/oliverw92/HawkEye/wiki"><div class="headerText"></div></a><div class="logout"><?php if ($hawkConfig["password"] != "" && !$isAuth) echo '<a href="login.php?page=logout"><button>Log Out</button></a>'; ?></div>
+            	<a href="https://github.com/oliverw92/HawkEye/wiki"><div class="headerText"></div></a><div class="logout"><?php if ($hawkConfig["password"] != "" && $isAuth === false) echo '<a href="login.php?page=logout"><button>Log Out</button></a>'; ?></div>
             </div>
         </div>
         
