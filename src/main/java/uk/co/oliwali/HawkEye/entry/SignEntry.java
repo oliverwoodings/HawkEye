@@ -44,8 +44,8 @@ public class SignEntry extends DataEntry {
 	 * @param block
 	 */
 	private void interpretSignBlock(Block block) {
-		if (!(block instanceof Sign)) return;
-		Sign sign = (Sign)block;
+		if (!(block.getState() instanceof Sign)) return;
+		Sign sign = (Sign)(block.getState());
 		org.bukkit.material.Sign signData = ((org.bukkit.material.Sign)sign.getData());
 		if (signData.isWallSign()) this.facing = signData.getAttachedFace();
 		else this.facing = signData.getFacing();
