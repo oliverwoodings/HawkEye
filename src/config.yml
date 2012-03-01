@@ -46,6 +46,7 @@ general:
     max-radius: 0
     tool-block: '17'
     default-here-radius: 5
+    give-user-tool: true
     default-tool-command: ''
     check-for-updates: true
 mysql:

@@ -130,11 +130,11 @@ public class DataManager extends TimerTask {
 	 */
 	public static void deleteEntry(int dataid) {
 		Thread thread = new Thread(new DeleteEntry(dataid));
-		thread.run();
+		thread.start();
 	}
 	public static void deleteEntries(List<?> entries) {
 		Thread thread = new Thread(new DeleteEntry(entries));
-		thread.run();
+		thread.start();
 	}
 	
 	/**
