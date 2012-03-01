@@ -4,6 +4,7 @@ import org.bukkit.util.Vector;
 
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.LocalPlayer;
+import com.sk89q.worldedit.LocalWorld;
 import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldedit.regions.Region;
 
@@ -47,7 +48,8 @@ public class WorldEditRollbackCommand extends BaseCommand {
 		Region region = null;
 		try {
 			LocalPlayer lp = new BukkitPlayer(plugin.worldEdit, plugin.worldEdit.getWorldEdit().getServer(), player);
-			region = plugin.worldEdit.getWorldEdit().getSession(lp).getRegionSelector().getRegion();
+			LocalWorld lw = lp.getWorld();
+			region = plugin.worldEdit.getWorldEdit().getSession(lp).getSelection(lw);
 		} catch (IncompleteRegionException e) {
 			Util.sendMessage(sender, "&cPlease complete your selection before doing a &7WorldEdit&c rollback!");
 			return true;

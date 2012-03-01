@@ -8,19 +8,18 @@ import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Enderman;
-import org.bukkit.event.entity.EndermanPickupEvent;
-import org.bukkit.event.entity.EndermanPlaceEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.painting.PaintingBreakByEntityEvent;
 import org.bukkit.event.painting.PaintingBreakEvent;
 import org.bukkit.event.painting.PaintingPlaceEvent;
 import org.bukkit.event.painting.PaintingBreakEvent.RemoveCause;
 import org.bukkit.inventory.ItemStack;
 
+import uk.co.oliwali.HawkEye.HawkEvent;
 import uk.co.oliwali.HawkEye.HawkEye;
 import uk.co.oliwali.HawkEye.DataType;
 import uk.co.oliwali.HawkEye.PlayerSession;
@@ -37,19 +36,17 @@ import uk.co.oliwali.HawkEye.util.Util;
  * Contains system for managing player deaths
  * @author oliverw92
  */
-public class MonitorEntityListener extends EntityListener {
+public class MonitorEntityListener extends HawkEyeListener {
 	
-	public HawkEye plugin;
-
 	public MonitorEntityListener(HawkEye HawkEye) {
-		plugin = HawkEye;
+		super(HawkEye);
 	}
 	
 	/**
 	 * Uses the lastAttacker field in the players {@link PlayerSession} to log the death and cause
 	 */
-	public void onEntityDeath(EntityDeathEvent event) {
-		
+	@HawkEvent(dataType = {DataType.PVP_DEATH, DataType.MOB_DEATH, DataType.OTHER_DEATH})
+	public void onEntityDeath(EntityDeathEvent event) {		
 		Entity entity = event.getEntity();
 		//Only interested if it is a player death
 		if (entity instanceof Player) {
@@ -90,49 +87,49 @@ public class MonitorEntityListener extends EntityListener {
 		}
 	}
 	
+	@HawkEvent(dataType = DataType.EXPLOSION)
 	public void onEntityExplode(EntityExplodeEvent event) {
-		if (event.isCancelled()) return;
 		for (Block b : event.blockList().toArray(new Block[0]))
 			DataManager.addEntry(new BlockEntry("Environment", DataType.EXPLOSION, b));
 	}
 	
+	@HawkEvent(dataType = DataType.PAINTING_BREAK)
 	public void onPaintingBreak(PaintingBreakEvent event) {
-		if (event.isCancelled() || event.getCause() != RemoveCause.ENTITY) return;
+		if (event.getCause() != RemoveCause.ENTITY) return;
 		PaintingBreakByEntityEvent e = (PaintingBreakByEntityEvent)event;
 		if (e.getRemover() instanceof Player)
 			DataManager.addEntry(new DataEntry((Player)e.getRemover(), DataType.PAINTING_BREAK, e.getPainting().getLocation(), ""));
 	}
 	
+	@HawkEvent(dataType = DataType.PAINTING_PLACE)
 	public void onPaintingPlace(PaintingPlaceEvent event) {
-		if (event.isCancelled()) return;
 		DataManager.addEntry(new DataEntry(event.getPlayer(), DataType.PAINTING_PLACE, event.getPainting().getLocation(), ""));
 	}
 	
-	public void onEndermanPickup(EndermanPickupEvent event) {
-		if (event.isCancelled()) return;
+	@HawkEvent(dataType = {DataType.ENDERMAN_PICKUP, DataType.ENDERMAN_PLACE})
+	public void onEntityChangeBlock(EntityChangeBlockEvent event) {
 		Block block = event.getBlock();
-		if (block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST)
-			DataManager.addEntry(new SignEntry("Environment", DataType.SIGN_BREAK, event.getBlock()));
-		DataManager.addEntry(new BlockEntry("Environment", DataType.ENDERMAN_PICKUP, block));
-	}
-	
-	public void onEndermanPlace(EndermanPlaceEvent event) {
-		if (event.isCancelled()) return;
 		
-		//Get the enderman and the block being replaced
-		Enderman enderman = (Enderman) event.getEntity();
-		Block block = enderman.getWorld().getBlockAt(event.getLocation());
+		if (!(event.getEntity() instanceof Enderman)) return;
 		
-		//Create a new state for the block
-		BlockState newState = block.getState();
-		if (enderman.getCarriedMaterial() != null) {
-			try {
-				newState.setData(enderman.getCarriedMaterial());
-			} catch (Exception e) { }
-			newState.setType(enderman.getCarriedMaterial().getItemType());
+		// Enderman picking up block
+		if (event.getTo() == Material.AIR && Config.isLogged(DataType.ENDERMAN_PICKUP)) {
+			if (block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST)
+				DataManager.addEntry(new SignEntry("Environment", DataType.SIGN_BREAK, event.getBlock()));
+			DataManager.addEntry(new BlockEntry("Environment", DataType.ENDERMAN_PICKUP, block));	
+		} else if (Config.isLogged(DataType.ENDERMAN_PLACE)) {
+			// Enderman placing block
+			Enderman enderman = (Enderman) event.getEntity();
+			BlockState newState = block.getState();
+			if (enderman.getCarriedMaterial() != null) {
+				try {
+					newState.setData(enderman.getCarriedMaterial());
+				} catch (Exception e) { }
+				newState.setType(enderman.getCarriedMaterial().getItemType());
+			}
+			
+			DataManager.addEntry(new BlockChangeEntry("Environment", DataType.ENDERMAN_PLACE, block.getLocation(), block.getState(), newState));
 		}
-		
-		DataManager.addEntry(new BlockChangeEntry("Environment", DataType.ENDERMAN_PLACE, event.getLocation(), block.getState(), newState));
 	}
 
 }
