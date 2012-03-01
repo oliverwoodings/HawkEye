@@ -108,10 +108,11 @@ public class MonitorEntityListener extends HawkEyeListener {
 	
 	@HawkEvent(dataType = {DataType.ENDERMAN_PICKUP, DataType.ENDERMAN_PLACE})
 	public void onEntityChangeBlock(EntityChangeBlockEvent event) {
-		Block block = event.getBlock();
-		
+
 		if (!(event.getEntity() instanceof Enderman)) return;
 		
+		Block block = event.getBlock();
+				
 		// Enderman picking up block
 		if (event.getTo() == Material.AIR && Config.isLogged(DataType.ENDERMAN_PICKUP)) {
 			if (block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST)

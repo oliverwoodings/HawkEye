@@ -50,6 +50,8 @@ public class SearchParser {
 			//Check if argument has a valid prefix
 			if (arg.equalsIgnoreCase("")) continue;
 			String param = arg.substring(0,1).toLowerCase();
+			if (!arg.contains(":"))
+				throw new IllegalArgumentException("Invalid argument format: &7" + arg);
 			if (!arg.substring(1,2).equals(":"))
 				throw new IllegalArgumentException("Invalid argument format: &7" + arg);
 			String[] values = arg.substring(2).split(",");
@@ -104,7 +106,7 @@ public class SearchParser {
 				for (int i = 0; i < arg.length(); i++) {
 					String c = arg.substring(i, i+1);
 					if (!Util.isInteger(c)) {
-						if (c.equals("m") || c .equals("s") || c.equals("h"))
+						if (c.equals("m") || c .equals("s") || c.equals("h") || c.equals("d") || c.equals("w"))
 							type = 0;
 						if (c.equals("-") || c.equals(":"))
 							type = 1;

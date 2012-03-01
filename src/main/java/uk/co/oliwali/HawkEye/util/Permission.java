@@ -68,6 +68,15 @@ public class Permission {
 	}
 	
 	/**
+	 * Permission to view different pages
+	 * @param player
+	 * @return
+	 */
+	public static boolean page(CommandSender player) {
+		return hasPermission(player, "hawkeye.page");
+	}
+	
+	/**
 	 * Permission to search the logs
 	 * @param player
 	 * @return
@@ -161,7 +170,7 @@ public class Permission {
 	public static boolean inGroup(String world, String player, String group) {
 		switch (handler) {
 			case PERMISSIONSEX:
-				return permissionsEx.getUser(player).inGroup(group, true);
+				return permissionsEx.getUser(player).inGroup(group);
 			case PERMISSIONS:
 				return permissionPlugin.inGroup(world, player, group);
 		}

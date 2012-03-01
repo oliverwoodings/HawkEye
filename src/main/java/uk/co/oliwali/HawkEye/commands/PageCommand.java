@@ -27,7 +27,7 @@ public class PageCommand extends BaseCommand {
 	}
 	
 	public boolean permission() {
-		return Permission.search(sender);
+		return Permission.page(sender);
 	}
 	
 }
