@@ -1,3 +1,3 @@
-1.0.5b
-1597
-1.0 UPDATE: * Fixed lots of bugs  * Added rebuild command  * Added world ignoring  * Added tree and mushroom logging  * Re-enable flow logging
+1.0.6
+2034
+1.2 UPDATE: * Compatibility with Bukkit 1.1-R5 changes * Separate permission node for page command * Bug fixes

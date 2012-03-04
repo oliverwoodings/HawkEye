@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>uk.co.oliwali</groupId>
   <artifactId>HawkEye</artifactId>
-  <version>1.1-SNAPSHOT</version>
+  <version>1.0.6</version>
   <name>HawkEye</name>
   <description>Bukkit data logging plugin with web-based data browser</description>
   
