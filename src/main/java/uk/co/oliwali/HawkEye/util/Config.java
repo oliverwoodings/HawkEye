@@ -55,9 +55,9 @@ public class Config {
         plugin.saveConfig();
 
 		//Load values
-		CommandFilter = config.getList("command-filter");
-		BlockFilter = config.getList("block-filter");
-		IgnoreWorlds = config.getList("ignore-worlds");
+		CommandFilter = config.getStringList("command-filter");
+		BlockFilter = config.getIntegerList("block-filter");
+		IgnoreWorlds = config.getStringList("ignore-worlds");
 		MaxLines = config.getInt("general.max-lines");
 		MaxRadius = config.getInt("general.max-radius");
 		DefaultHereRadius = config.getInt("general.default-here-radius");
