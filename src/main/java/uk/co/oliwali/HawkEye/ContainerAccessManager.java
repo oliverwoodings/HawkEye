@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.block.ContainerBlock;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.InventoryHolder;
 
 import uk.co.oliwali.HawkEye.database.DataManager;
 import uk.co.oliwali.HawkEye.entry.ContainerEntry;
@@ -50,8 +50,8 @@ public class ContainerAccessManager {
 	 * @param block container to store
 	 */
 	public void checkInventoryOpen(Player player, Block block) {
-		if (!(block.getState() instanceof ContainerBlock)) return;
-		ContainerBlock container = (ContainerBlock)(block.getState());
+		if (!(block.getState() instanceof InventoryHolder)) return;
+		InventoryHolder container = (InventoryHolder) block.getState();
 		accessList.add(new ContainerAccess(container, player, InventoryUtil.compressInventory(InventoryUtil.getContainerContents(container)), block.getLocation()));
 	}
 
@@ -60,11 +60,11 @@ public class ContainerAccessManager {
 	 * @author oliverw92
 	 */
 	public class ContainerAccess {
-		public ContainerBlock container;
+		public InventoryHolder container;
 		public Player player;
 		public HashMap<String,Integer> beforeInv;
 		public Location loc;
-		public ContainerAccess(ContainerBlock container, Player player, HashMap<String,Integer> beforeInv, Location loc) {
+		public ContainerAccess(InventoryHolder container, Player player, HashMap<String,Integer> beforeInv, Location loc) {
 			this.container = container;
 			this.player = player;
 			this.beforeInv = beforeInv;

@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
-import org.bukkit.block.ContainerBlock;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 public class InventoryUtil {
@@ -126,7 +126,7 @@ public class InventoryUtil {
 	 * @return ItemStack[] of both inventories merged
 	 * @author N3X15
 	 */
-    public static ItemStack[] getContainerContents(ContainerBlock container) {
+    public static ItemStack[] getContainerContents(InventoryHolder container) {
     	
     	//If it isn't a chest, there is no issue!
     	if (!(container instanceof Chest)) return container.getInventory().getContents();

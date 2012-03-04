@@ -46,7 +46,6 @@ public class Config {
 	 * Loads the config from file and validates the data
 	 * @param plugin
 	 */
-	@SuppressWarnings("unchecked")
 	public Config(HawkEye plugin) {
 		
 		config = plugin.getConfig().getRoot();
