@@ -112,6 +112,8 @@ public class MonitorPlayerListener extends HawkEyeListener {
 					}
 					break;
 				case WOODEN_DOOR:
+				case TRAP_DOOR:
+				case FENCE_GATE:
 					DataManager.addEntry(new DataEntry(player, DataType.DOOR_INTERACT, loc, ""));
 					break;
 				case LEVER:
