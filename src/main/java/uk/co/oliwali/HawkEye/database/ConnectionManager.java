@@ -9,6 +9,7 @@ import java.util.Vector;
 import java.sql.Connection;
 
 import uk.co.oliwali.HawkEye.util.Config;
+import uk.co.oliwali.HawkEye.util.Util;
 
 /**
  * Manages the MySQL connection pool.
@@ -34,6 +35,7 @@ public class ConnectionManager implements Closeable {
 	 */
 	public ConnectionManager(String url, String user, String password) throws ClassNotFoundException {
 		Class.forName("com.mysql.jdbc.Driver");
+		Util.debug("Attempting to connecting to database at: " + url);
 		this.url = url;
 		this.user = user;
 		this.password = password;
@@ -48,6 +50,7 @@ public class ConnectionManager implements Closeable {
 	 */
 	@Override
 	public synchronized void close() {
+		Util.debug("Closing all MySQL connections");
 		final Enumeration<JDCConnection> conns = connections.elements();
 		while (conns.hasMoreElements()) {
 			final JDCConnection conn = conns.nextElement();
@@ -68,10 +71,12 @@ public class ConnectionManager implements Closeable {
 			if (conn.lease()) {
 				if (conn.isValid())
 					return conn;
+				Util.debug("Removing dead MySQL connection");
 				connections.remove(conn);
 				conn.terminate();
 			}
 		}
+		Util.debug("No available MySQL connections, attempting to create new one");
 		conn = new JDCConnection(DriverManager.getConnection(url, user, password));
 		conn.lease();
 		if (!conn.isValid()) {
@@ -94,19 +99,27 @@ public class ConnectionManager implements Closeable {
 	 * Loops through connections, reaping old ones
 	 */
 	private synchronized void reapConnections() {
+		Util.debug("Attempting to reap dead connections");
 		final long stale = System.currentTimeMillis() - timeToLive;
 		final Enumeration<JDCConnection> conns = connections.elements();
+		int count = 0;
 		int i = 1;
 		while (conns.hasMoreElements()) {
 			final JDCConnection conn = conns.nextElement();
-			if (conn.inUse() && stale > conn.getLastUse() && !conn.isValid())
+			
+			if (conn.inUse() && stale > conn.getLastUse() && !conn.isValid()) {
 				connections.remove(conn);
+				count++;
+			}
+			
 			if (i > poolsize) {
 				connections.remove(conn);
-				conn.close();
+				count++;
+				conn.terminate();
 			}
 			i++;
 		}
+		Util.debug(count + " connections reaped");
 	}
 	
 	/**
