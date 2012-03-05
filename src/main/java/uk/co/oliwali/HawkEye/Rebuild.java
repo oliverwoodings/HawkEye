@@ -57,6 +57,7 @@ public class Rebuild implements Runnable {
 		//Start rollback process
 		int i = 0;
 		while (i < 200 && rebuildQueue.hasNext()) {
+			i++;
 			
 			DataEntry entry = rebuildQueue.next();
 			
