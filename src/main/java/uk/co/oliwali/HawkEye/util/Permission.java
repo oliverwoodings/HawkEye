@@ -56,6 +56,8 @@ public class Permission {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = (Player)sender;
+		if (Config.OpPermissions && player.isOp())
+			return true;
 		switch (handler) {
 			case PERMISSIONSEX:
 				return permissionsEx.has(player, node);
