@@ -30,13 +30,7 @@
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
-      <version>1.1-R5-SNAPSHOT</version>
-    </dependency>
-    
-    <dependency>
-      <groupId>org.bukkit</groupId>
-      <artifactId>craftbukkit</artifactId>
-      <version>1.1-R5-SNAPSHOT</version>
+      <version>1.2.3-R0.1</version>
     </dependency>
     
     <dependency>
