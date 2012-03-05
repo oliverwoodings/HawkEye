@@ -44,6 +44,7 @@ general:
     log-ip-addresses: true
     debug: false
     max-radius: 0
+    give-user-tool: true
     tool-block: '17'
     default-here-radius: 5
     default-tool-command: ''
