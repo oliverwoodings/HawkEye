@@ -71,6 +71,27 @@
       
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.2-beta-2</version>
+        <configuration>
+          <descriptors>
+            <descriptor>${basedir}/src/main/assembly/interface.xml</descriptor>
+            <descriptor>${basedir}/src/main/assembly/release.xml</descriptor>
+          </descriptors>
+        </configuration>
+        <executions>
+          <execution>
+            <id>release</id>
+            <phase>install</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <version>2.3.1</version>
       </plugin>
