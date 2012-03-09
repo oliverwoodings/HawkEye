@@ -81,6 +81,8 @@ public class DataManager extends TimerTask {
 	 */
 	public static void addEntry(DataEntry entry) {
 		
+		if (!Config.isLogged(entry.getType())) return;
+		
 		//Check block filter
 		switch (entry.getType()) {
 			case BLOCK_BREAK:
@@ -100,8 +102,7 @@ public class DataManager extends TimerTask {
 		//Check world ignore list
 		if (Config.IgnoreWorlds.contains(entry.getWorld())) return;
 		
-		if (Config.isLogged(entry.getType()))
-			queue.add(entry);
+		queue.add(entry);
 	}
 	
 	/**

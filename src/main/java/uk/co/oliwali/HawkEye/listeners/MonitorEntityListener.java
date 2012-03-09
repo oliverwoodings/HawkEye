@@ -56,12 +56,15 @@ public class MonitorEntityListener extends HawkEyeListener {
 			if (victim.getLastDamageCause() instanceof EntityDamageByEntityEvent) {
 				Entity damager = ((EntityDamageByEntityEvent)(victim.getLastDamageCause())).getDamager();
 				if (damager instanceof Player) {
+					if (!Config.isLogged(DataType.PVP_DEATH) && !Config.LogDeathDrops) return;
 					DataManager.addEntry(new DataEntry(victim, DataType.PVP_DEATH, victim.getLocation(), Util.getEntityName(damager)));
 				} else {
+					if (!Config.isLogged(DataType.MOB_DEATH) && !Config.LogDeathDrops) return;
 					DataManager.addEntry(new DataEntry(victim, DataType.MOB_DEATH, victim.getLocation(), Util.getEntityName(damager)));
 				}
 			//Other death
 			} else {
+				if (!Config.isLogged(DataType.OTHER_DEATH) && !Config.LogDeathDrops) return;
 				EntityDamageEvent dEvent = victim.getLastDamageCause();
 				String cause = dEvent == null?"Unknown":victim.getLastDamageCause().getCause().name();
 				String[] words = cause.split("_");
@@ -83,6 +86,8 @@ public class MonitorEntityListener extends HawkEyeListener {
 				}
 			}
 		} else { //Mob Death
+			if (!Config.isLogged(DataType.ENTITY_KILL)) return;
+			
 			if (entity.getLastDamageCause() instanceof EntityDamageByEntityEvent) {
 				Entity damager = ((EntityDamageByEntityEvent) entity.getLastDamageCause()).getDamager();
 				
