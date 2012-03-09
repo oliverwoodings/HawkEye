@@ -14,22 +14,8 @@ import java.util.logging.Logger;
 
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Chicken;
-import org.bukkit.entity.Cow;
-import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Ghast;
-import org.bukkit.entity.Giant;
-import org.bukkit.entity.Pig;
-import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Sheep;
-import org.bukkit.entity.Skeleton;
-import org.bukkit.entity.Slime;
-import org.bukkit.entity.Spider;
-import org.bukkit.entity.Squid;
-import org.bukkit.entity.Wolf;
-import org.bukkit.entity.Zombie;
 
 /**
  * Utility class for HawkEye.
@@ -289,26 +275,8 @@ public class Util {
 		
 		//Player
 		if (entity instanceof Player) return ((Player) entity).getName();
-		
-		//Creature
-		else if (entity instanceof Pig)	return "Pig";
-		else if (entity instanceof Cow)	return "Cow";
-		else if (entity instanceof Squid) return "Squid";
-		else if (entity instanceof Sheep) return "Sheep";
-		else if (entity instanceof Chicken) return "Chicken";
-		else if (entity instanceof PigZombie) return "PigZombie";
-		else if (entity instanceof Giant) return "Giant";
-		else if (entity instanceof Zombie) return "Zombie";
-		else if (entity instanceof Skeleton) return "Skeleton";
-		else if (entity instanceof Spider) return "Spider";
-		else if (entity instanceof Creeper)	return "Creeper";
-		else if (entity instanceof Ghast) return "Ghast";
-		else if (entity instanceof Slime) return "Slime";
-		else if (entity instanceof Wolf) return "Wolf";
-		
-		//Unknown
-		else return "Unknown";
-		
+		//Other
+		else return entity.getType().getName();
 	}
     
     /**

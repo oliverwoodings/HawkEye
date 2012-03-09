@@ -45,12 +45,11 @@ public class MonitorEntityListener extends HawkEyeListener {
 	/**
 	 * Uses the lastAttacker field in the players {@link PlayerSession} to log the death and cause
 	 */
-	@HawkEvent(dataType = {DataType.PVP_DEATH, DataType.MOB_DEATH, DataType.OTHER_DEATH})
+	@HawkEvent(dataType = {DataType.PVP_DEATH, DataType.MOB_DEATH, DataType.OTHER_DEATH, DataType.ENTITY_KILL})
 	public void onEntityDeath(EntityDeathEvent event) {		
 		Entity entity = event.getEntity();
-		//Only interested if it is a player death
-		if (entity instanceof Player) {
-			
+
+		if (entity instanceof Player) { //Player death	
 			Player victim = (Player) entity;
 			
 			//Mob or PVP death
@@ -83,7 +82,16 @@ public class MonitorEntityListener extends HawkEyeListener {
 				    DataManager.addEntry(new DataEntry(victim, DataType.ITEM_DROP, victim.getLocation(), data));                           
 				}
 			}
-	
+		} else { //Mob Death
+			if (entity.getLastDamageCause() instanceof EntityDamageByEntityEvent) {
+				Entity damager = ((EntityDamageByEntityEvent) entity.getLastDamageCause()).getDamager();
+				
+				//Only interested in player kills
+				if (!(damager instanceof Player)) return;
+				
+				Player player = (Player) damager;
+				DataManager.addEntry(new DataEntry(player, DataType.ENTITY_KILL, entity.getLocation(), Util.getEntityName(entity)));
+			}
 		}
 	}
 	
