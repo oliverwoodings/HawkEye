@@ -44,6 +44,12 @@
       <artifactId>PermissionsEx</artifactId>
       <version>1.20-SNAPSHOT</version>
     </dependency>
+    
+    <dependency>
+      <groupId>net.milkbowl.vault</groupId>
+      <artifactId>Vault</artifactId>
+      <version>1.2.12</version>
+    </dependency>
   </dependencies>
   
   <build>
