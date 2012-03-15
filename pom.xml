@@ -90,7 +90,7 @@
         <executions>
           <execution>
             <id>release</id>
-            <phase>install</phase>
+            <phase>package</phase>
             <goals>
               <goal>single</goal>
             </goals>
