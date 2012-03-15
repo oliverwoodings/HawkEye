@@ -1,10 +1,10 @@
 package uk.co.oliwali.HawkEye.database;
 
 import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.PreparedStatement;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -12,13 +12,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import uk.co.oliwali.HawkEye.HawkEye;
 import uk.co.oliwali.HawkEye.DataType;
+import uk.co.oliwali.HawkEye.HawkEye;
+import uk.co.oliwali.HawkEye.entry.DataEntry;
 import uk.co.oliwali.HawkEye.util.BlockUtil;
 import uk.co.oliwali.HawkEye.util.Config;
 import uk.co.oliwali.HawkEye.util.Util;
-import uk.co.oliwali.HawkEye.database.JDCConnection;
-import uk.co.oliwali.HawkEye.entry.DataEntry;
 
 /**
  * Handler for everything to do with the database.
@@ -26,7 +25,7 @@ import uk.co.oliwali.HawkEye.entry.DataEntry;
  * @author oliverw92
  */
 public class DataManager extends TimerTask {
-	
+
 	private static LinkedBlockingQueue<DataEntry> queue = new LinkedBlockingQueue<DataEntry>();
 	private static ConnectionManager connections;
 	private static Timer loggingTimer = null;
@@ -41,10 +40,10 @@ public class DataManager extends TimerTask {
 	 * @throws Exception
 	 */
 	public DataManager(HawkEye instance) throws Exception {
-		
+
 		connections = new ConnectionManager(Config.DbUrl, Config.DbUser, Config.DbPassword);
 		getConnection().close();
-		
+
 		//Check tables and update player/world lists
 		if (!checkTables())
 			throw new Exception();
@@ -63,7 +62,7 @@ public class DataManager extends TimerTask {
 		loggingTimer = new Timer();
 		loggingTimer.scheduleAtFixedRate(this, 2000, 2000);
 	}
-	
+
 	/**
 	 * Closes down all connections
 	 */
@@ -72,7 +71,7 @@ public class DataManager extends TimerTask {
 		if (cleanseTimer != null) cleanseTimer.cancel();
 		if (loggingTimer != null) loggingTimer.cancel();
 	}
-	
+
 	/**
 	 * Adds a {@link DataEntry} to the database queue.
 	 * {Rule}s are checked at this point
@@ -80,9 +79,9 @@ public class DataManager extends TimerTask {
 	 * @return
 	 */
 	public static void addEntry(DataEntry entry) {
-		
+
 		if (!Config.isLogged(entry.getType())) return;
-		
+
 		//Check block filter
 		switch (entry.getType()) {
 			case BLOCK_BREAK:
@@ -98,13 +97,13 @@ public class DataManager extends TimerTask {
 				if (Config.BlockFilter.contains(txt))
 					return;
 		}
-		
+
 		//Check world ignore list
 		if (Config.IgnoreWorlds.contains(entry.getWorld())) return;
-		
+
 		queue.add(entry);
 	}
-	
+
 	/**
 	 * Retrieves an entry from the database
 	 * @param id id of entry to return
@@ -124,7 +123,7 @@ public class DataManager extends TimerTask {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Deletes an entry from the database
 	 * @param dataid id to delete
@@ -137,7 +136,7 @@ public class DataManager extends TimerTask {
 		Thread thread = new Thread(new DeleteEntry(entries));
 		thread.start();
 	}
-	
+
 	/**
 	 * Get a players name from the database player list
 	 * @param id
@@ -149,7 +148,7 @@ public class DataManager extends TimerTask {
 				return entry.getKey();
 		return null;
 	}
-	
+
 	/**
 	 * Get a world name from the database world list
 	 * @param id
@@ -161,7 +160,7 @@ public class DataManager extends TimerTask {
 				return entry.getKey();
 		return null;
 	}
-	
+
 	/**
 	 * Returns a database connection from the pool
 	 * @return {JDCConnection}
@@ -174,7 +173,7 @@ public class DataManager extends TimerTask {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Creates a {@link DataEntry} from the inputted {ResultSet}
 	 * @param res
@@ -196,13 +195,14 @@ public class DataManager extends TimerTask {
 		entry.setZ(res.getInt("z"));
 		return entry;
 	}
-	
+
 	/**
 	 * Adds a player to the database
 	 */
 	private boolean addPlayer(String name) {
 		JDCConnection conn = null;
 		try {
+			Util.debug("Attempting to add player '" + name + "' to database");
 			conn = getConnection();
 			conn.createStatement().execute("INSERT IGNORE INTO `" + Config.DbPlayerTable + "` (player) VALUES ('" + name + "');");
 		} catch (SQLException ex) {
@@ -215,13 +215,14 @@ public class DataManager extends TimerTask {
 			return false;
 		return true;
 	}
-	
+
 	/**
 	 * Adds a world to the database
 	 */
 	private boolean addWorld(String name) {
 		JDCConnection conn = null;
 		try {
+			Util.debug("Attempting to add world '" + name + "' to database");
 			conn = getConnection();
 			conn.createStatement().execute("INSERT IGNORE INTO `" + Config.DbWorldTable + "` (world) VALUES ('" + name + "');");
 		} catch (SQLException ex) {
@@ -234,7 +235,7 @@ public class DataManager extends TimerTask {
 			return false;
 		return true;
 	}
-	
+
 	/**
 	 * Updates world and player local lists
 	 * @return true on success, false on failure
@@ -262,24 +263,24 @@ public class DataManager extends TimerTask {
 			} catch (SQLException ex) {
 				Util.severe("Unable to close SQL connection: " + ex);
 			}
-				
+
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Checks that all tables are up to date and exist
 	 * @return true on success, false on failure
 	 */
 	private boolean checkTables() {
-		
+
 		JDCConnection conn = null;
 		Statement stmnt = null;
 		try {
 			conn = getConnection();
 			stmnt = conn.createStatement();
 			DatabaseMetaData dbm = conn.getMetaData();
-	        
+
 			//Check if tables exist
 			if (!JDBCUtil.tableExists(dbm, Config.DbPlayerTable)) {
 				Util.info("Table `" + Config.DbPlayerTable + "` not found, creating...");
@@ -293,7 +294,7 @@ public class DataManager extends TimerTask {
 				Util.info("Table `" + Config.DbHawkEyeTable + "` not found, creating...");
 				stmnt.execute("CREATE TABLE IF NOT EXISTS `" + Config.DbHawkEyeTable + "` (`data_id` int(11) NOT NULL AUTO_INCREMENT, `date` varchar(255) NOT NULL, `player_id` int(11) NOT NULL, `action` int(11) NOT NULL, `world_id` varchar(255) NOT NULL, `x` double NOT NULL, `y` double NOT NULL, `z` double NOT NULL, `data` varchar(500) DEFAULT NULL, `plugin` varchar(255) DEFAULT 'HawkEye', PRIMARY KEY (`data_id`), KEY `player_action_world` (`player_id`,`action`,`world_id`), KEY `x_y_z` (`x`,`y`,`z` ));");
 			}
-			
+
 		} catch (SQLException ex) {
 			Util.severe("Error checking HawkEye tables: " + ex);
 			return false;
@@ -305,15 +306,16 @@ public class DataManager extends TimerTask {
 			} catch (SQLException ex) {
 				Util.severe("Unable to close SQL connection: " + ex);
 			}
-				
+
 		}
 		return true;
-		
+
 	}
-	
+
 	/**
 	 * Empty the {@link DataEntry} queue into the database
 	 */
+	@Override
 	public void run() {
 		if (queue.isEmpty())
 			return;
@@ -321,19 +323,25 @@ public class DataManager extends TimerTask {
 		PreparedStatement stmnt = null;
 		try {
 			while (!queue.isEmpty()) {
-				
+
 				DataEntry entry = queue.poll();
-				
+
 				//Sort out player IDs
-				if (!dbPlayers.containsKey(entry.getPlayer()) && !addPlayer(entry.getPlayer()))
+				if (!dbPlayers.containsKey(entry.getPlayer()) && !addPlayer(entry.getPlayer())) {
+					Util.debug("Player '" + entry.getPlayer() + "' not found, skipping entry");
 					continue;
-				if (!dbWorlds.containsKey(entry.getWorld()) && !addWorld(entry.getWorld()))
+				}
+				if (!dbWorlds.containsKey(entry.getWorld()) && !addWorld(entry.getWorld())) {
+					Util.debug("World '" + entry.getWorld() + "' not found, skipping entry");
 					continue;
-				
+				}
+
 				//If player ID is unable to be found, continue
-				if (entry.getPlayer() == null || dbPlayers.get(entry.getPlayer()) == null)
+				if (entry.getPlayer() == null || dbPlayers.get(entry.getPlayer()) == null) {
+					Util.debug("No player found, skipping entry");
 					continue;
-				
+				}
+
 				//If we are re-inserting we need to also insert the data ID
 				if (entry.getDataId() > 0) {
 					stmnt = conn.prepareStatement("INSERT into `" + Config.DbHawkEyeTable + "` (date, player_id, action, world_id, x, y, z, data, plugin, data_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
@@ -364,9 +372,9 @@ public class DataManager extends TimerTask {
 			} catch (Exception ex) {
 				Util.severe("Unable to close SQL connection: " + ex);
 			}
-				
+
 		}
-		
+
 	}
-	
+
 }
