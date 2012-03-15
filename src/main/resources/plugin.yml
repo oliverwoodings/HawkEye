@@ -3,7 +3,7 @@ main: uk.co.oliwali.HawkEye.HawkEye
 authors: [oliverw92, GoalieGuy6]
 version: ${project.version}
 description: Track those griefers like a bird of prey!
-softdepend: [WorldEdit,PermissionsEx,Permissions,GroupManager,bPermissions]
+softdepend: [WorldEdit,PermissionsEx,Permissions,GroupManager,bPermissions,Vault]
 commands:
   hawk:
     description: Track those griefers like a bird of prey!
