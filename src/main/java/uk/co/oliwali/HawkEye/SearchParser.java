@@ -22,7 +22,7 @@ import com.sk89q.worldedit.bukkit.selections.Selection;
 public class SearchParser {
 
 	public Player player = null;
-	public String[] players = null;
+	public List<String> players = new ArrayList<String>();
 	public Vector loc = null;
 	public Vector minLoc = null;
 	public Vector maxLoc = null;
@@ -59,8 +59,15 @@ public class SearchParser {
 			if (!paramSet) {
 				if (arg.length() < 2)
 					throw new IllegalArgumentException("Invalid argument format: &7" + arg);
-				if (!arg.substring(1,2).equals(":"))
-					throw new IllegalArgumentException("Invalid argument format: &7" + arg);
+				if (!arg.substring(1,2).equals(":")) {
+					if (arg.contains(":"))
+						throw new IllegalArgumentException("Invalid argument format: &7" + arg);
+
+					// No arg specified, treat as player
+					players.add(arg);
+					continue;
+				}
+
 
 				lastParam = arg.substring(0,1).toLowerCase();
 				paramSet = true;
@@ -84,7 +91,7 @@ public class SearchParser {
 				String[] values = arg.split(",");
 
 				// Players
-				if (lastParam.equals("p")) players = values;
+				if (lastParam.equals("p")) for (String p : values) players.add(p);
 				// Worlds
 				else if (lastParam.equals("w")) worlds = values;
 				// Filters

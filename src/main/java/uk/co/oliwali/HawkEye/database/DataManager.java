@@ -30,8 +30,8 @@ public class DataManager extends TimerTask {
 	private static ConnectionManager connections;
 	private static Timer loggingTimer = null;
 	private static Timer cleanseTimer = null;
-	private static final HashMap<String, Integer> dbPlayers = new HashMap<String, Integer>();
-	private static final HashMap<String, Integer> dbWorlds = new HashMap<String, Integer>();
+	public static final HashMap<String, Integer> dbPlayers = new HashMap<String, Integer>();
+	public static final HashMap<String, Integer> dbWorlds = new HashMap<String, Integer>();
 
 	/**
 	 * Initiates database connection pool, checks tables, starts cleansing utility
