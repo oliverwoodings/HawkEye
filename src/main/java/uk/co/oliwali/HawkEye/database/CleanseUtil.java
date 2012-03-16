@@ -19,26 +19,26 @@ import uk.co.oliwali.HawkEye.util.Util;
  * @author oliverw92
  */
 public class CleanseUtil extends TimerTask {
-	
+
 	private String date = null;
 	private int interval = 1200;
-	
+
 	/**
 	 * Initiates utility.
 	 * Throws exception if there are any errors processing the config time value
 	 * @throws Exception
 	 */
 	public CleanseUtil() throws Exception {
-		
+
 		//Check for invalid ages/periods
 		List<String> arr = Arrays.asList(new String[]{"0", "0s"});
 		if (Config.CleanseAge == null || Config.CleansePeriod == null || arr.contains(Config.CleanseAge) || arr.contains(Config.CleansePeriod)) {
 			return;
 		}
-		
+
 		//Parse cleanse age
 		ageToDate();
-		
+
 		//Parse interval
         int temp = 0;
 		String nums = "";
@@ -63,14 +63,15 @@ public class CleanseUtil extends TimerTask {
 		Util.info("Starting database cleanse thread with a period of " + interval + " seconds");
 		DataManager.cleanseTimer = new Timer();
 		DataManager.cleanseTimer.scheduleAtFixedRate(this, 0, interval * 1000);
-	
+
 	}
-	
+
 	/**
 	 * Runs the cleansing utility
 	 */
+	@Override
 	public void run() {
-		
+
 		Util.info("Running cleanse utility for logs older than " + date);
 		JDCConnection conn = null;
 		Statement stmnt = null;
@@ -92,20 +93,20 @@ public class CleanseUtil extends TimerTask {
 			}
 			conn.close();
 		}
-		
+
 	}
-	
+
 	/**
 	 * Converts the cleanse age into date string
 	 */
 	private void ageToDate() throws Exception {
-		
+
 		int weeks = 0;
 		int days = 0;
 		int hours = 0;
 		int mins = 0;
 		int secs = 0;
-		
+
 		String nums = "";
 		for (int i = 0; i < Config.CleanseAge.length(); i++) {
 			String c = Config.CleanseAge.substring(i, i+1);
@@ -122,7 +123,7 @@ public class CleanseUtil extends TimerTask {
 			else throw new Exception();
 			nums = "";
 		}
-		
+
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.WEEK_OF_YEAR, -1 * weeks);
 		cal.add(Calendar.DAY_OF_MONTH, -1 * days);
@@ -131,7 +132,7 @@ public class CleanseUtil extends TimerTask {
 		cal.add(Calendar.SECOND, -1 * secs);
 		SimpleDateFormat form = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date = form.format(cal.getTime());
-		
+
 	}
 
 }

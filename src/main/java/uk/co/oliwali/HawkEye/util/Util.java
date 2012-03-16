@@ -24,10 +24,10 @@ import org.bukkit.entity.Player;
  * @author oliverw92
  */
 public class Util {
-	
+
 	private static final Logger log = Logger.getLogger("Minecraft");
 	private static int maxLength = 105;
-	
+
 	/**
 	 * Send an info level log message to console
 	 * @param msg message to send
@@ -49,7 +49,7 @@ public class Util {
 	public static void severe(String msg) {
 		log.severe("[HawkEye] " + msg);
 	}
-	
+
 	/**
 	 * Send an debug message to console if debug is enabled
 	 * @param msg message to send
@@ -58,23 +58,23 @@ public class Util {
 		if (Config.Debug)
 			Util.info("DEBUG: " + msg);
 	}
-	
+
 	/**
 	 * Deletes a file or directory
 	 * @param dir File to delete
 	 * @return true on success
 	 */
 	public static boolean deleteFile(File file) {
-		
+
 		if (file.isDirectory()) {
 			String[] children = file.list();
 			for (int i=0; i<children.length; i++)
 				if (!deleteFile(new File(file, children[i])))	return false;
 		}
 		return file.delete();
-		
+
 	}
-	
+
 	/**
 	 * Downloads a file from the internet
 	 * @param url URL of the file to download
@@ -106,7 +106,7 @@ public class Util {
 	    out.close();
 	    Util.info("Download finished");
 	}
-	
+
 	/**
 	 * Send a message to a CommandSender (can be a player or console).
 	 * Has parsing built in for &a colours, as well as `n for new line
@@ -130,7 +130,7 @@ public class Util {
 			}
 		}
 	}
-	
+
 	/**
 	 * Turns supplied location into a simplified (1 decimal point) version
 	 * @param location location to simplify
@@ -142,7 +142,7 @@ public class Util {
 		location.setZ((double)Math.round(location.getZ() * 10) / 10);
 		return location;
 	}
-	
+
 	/**
 	 * Checks if inputted string is an integer
 	 * @param str string to check
@@ -156,7 +156,7 @@ public class Util {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Java version of PHP's join(array, delimiter)
 	 * Takes any kind of collection (List, HashMap etc)
@@ -174,19 +174,19 @@ public class Util {
 	    }
 	    return buffer.toString();
 	}
-	
+
 	/**
 	 * Concatenate any number of arrays of the same type
 	 * @return
 	 */
 	public static <T> T[] concat(T[] first, T[]... rest) {
-		
+
 		//Read rest
 		int totalLength = first.length;
 		for (T[] array : rest) {
 			totalLength += array.length;
 		}
-		
+
 		//Concat with arraycopy
 		T[] result = Arrays.copyOf(first, totalLength);
 		int offset = first.length;
@@ -195,10 +195,10 @@ public class Util {
 		    offset += array.length;
 		}
 		return result;
-	
+
 	}
 
-	
+
 	/**
 	* Returns the distance between two {Location}s
 	* @param from
@@ -207,8 +207,8 @@ public class Util {
 	**/
 	public static double distance(Location from, Location to) {
 	    return Math.sqrt(Math.pow(from.getX() - to.getX(), 2) + Math.pow(from.getY() - to.getY(), 2) + Math.pow(from.getZ() - to.getZ(), 2));
-	} 
-	
+	}
+
 	/**
 	 * Strips colours from inputted string
 	 * @param str
@@ -219,7 +219,7 @@ public class Util {
 		str = str.replaceAll("(?i)&[0-F]", "");
 		return str;
 	}
-	
+
 	/**
 	 * Finds the last colour in the string
 	 * @param str
@@ -237,7 +237,7 @@ public class Util {
 		}
 		return lastColor;
 	}
-	
+
 	/**
 	 * Replaces custom colours with actual colour values
 	 * @param str input
@@ -248,7 +248,7 @@ public class Util {
     		str = str.replace(color.getCustom(), color.getString());
         return str;
     }
-    
+
     /**
      * Finds the max length of the inputted string for outputting
      * @param str
@@ -265,27 +265,27 @@ public class Util {
     	}
     	return str;
     }
-    
+
 	/**
 	 * Returns the name of the supplied entity
 	 * @param entity to get name of
 	 * @return String name
 	 */
 	public static String getEntityName(Entity entity) {
-		
+
 		//Player
 		if (entity instanceof Player) return ((Player) entity).getName();
 		//Other
 		else return entity.getType().getName();
 	}
-    
+
     /**
      * Custom colour class.
      * Created to allow for easier colouring of text
      * @author oliverw92
      */
     public enum CustomColor {
-    	
+
     	RED("c", 0xC),
     	DARK_RED("4", 0x4),
     	YELLOW("e", 0xE),
@@ -303,10 +303,10 @@ public class Util {
     	DARK_GRAY("8", 0x8),
     	GRAY("7", 0x7),
     	WHITE("f", 0xf);
-    	
-    	private String custom;
-    	private int code;
-    	
+
+    	private final String custom;
+    	private final int code;
+
     	private CustomColor(String custom, int code) {
     		this.custom = custom;
     		this.code = code;
@@ -317,7 +317,7 @@ public class Util {
     	public String getString() {
     		return String.format("\u00A7%x", code);
     	}
-    	
+
     }
 
 }

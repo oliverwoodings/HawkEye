@@ -22,31 +22,31 @@ import uk.co.oliwali.HawkEye.util.Util;
  * @author oliverw92
  */
 public class SignEntry extends DataEntry {
-	
+
 	private BlockFace facing = BlockFace.NORTH;
 	private boolean wallSign = true;
 	private String[] lines = new String[4];
-	
+
 	public SignEntry() { }
-	
+
 	public SignEntry(Player player, DataType type, Block block) {
 		interpretSignBlock(block);
 		setInfo(player, type, block.getLocation());
 	}
-	
+
 	public SignEntry(String player, DataType type, Block block) {
 		interpretSignBlock(block);
 		setInfo(player, type, block.getLocation());
 	}
-	
+
 	/**
 	 * Extracts the sign data from a block
 	 * @param block
 	 */
 	private void interpretSignBlock(Block block) {
 		if (!(block.getState() instanceof Sign)) return;
-		Sign sign = (Sign)(block.getState());
-		org.bukkit.material.Sign signData = ((org.bukkit.material.Sign)sign.getData());
+		Sign sign = (Sign) block.getState();
+		org.bukkit.material.Sign signData = (org.bukkit.material.Sign) sign.getData();
 		if (signData.isWallSign()) this.facing = signData.getAttachedFace();
 		else this.facing = signData.getFacing();
 		this.wallSign = signData.isWallSign();
@@ -70,10 +70,10 @@ public class SignEntry extends DataEntry {
 
 	@Override
 	public boolean rollback(Block block) {
-		
+
 		//If it is a sign place
 		if (type == DataType.SIGN_PLACE) block.setTypeId(0);
-		
+
 		//if it is a sign break
 		else {
 			if (wallSign) block.setType(Material.WALL_SIGN);
@@ -84,11 +84,11 @@ public class SignEntry extends DataEntry {
 			else ((org.bukkit.material.Sign)sign.getData()).setFacingDirection(facing);
 			sign.update();
 		}
-		
+
 		return true;
-		
+
 	}
-	
+
 	@Override
 	public boolean rollbackPlayer(Block block, Player player) {
 		//If it is a sign place
@@ -96,10 +96,10 @@ public class SignEntry extends DataEntry {
 		else player.sendBlockChange(block.getLocation(), wallSign?Material.WALL_SIGN:Material.SIGN_POST, (byte)0);
 		return true;
 	}
-	
+
 	@Override
 	public boolean rebuild(Block block) {
-		
+
 		if (type == DataType.SIGN_BREAK) block.setTypeId(0);
 		else {
 			if (wallSign) block.setType(Material.WALL_SIGN);
@@ -111,23 +111,23 @@ public class SignEntry extends DataEntry {
 			sign.update();
 		}
 		return true;
-		
+
 	}
 
 	@Override
 	public void interpretSqlData(String data) {
-		
+
 		if (data.indexOf("@") == -1) return;
-		
+
 		String[] arr = data.split("@");
 		//Parse wall sign or not
 		if (arr[0].equals("true")) wallSign = true;
 		else wallSign = false;
-		
+
 		//Parse sign direction
 		for (BlockFace face : BlockFace.values())
 			if (face.toString().equalsIgnoreCase(arr[1])) facing = face;
-		
+
 		//Parse lines
 		if (arr.length != 3) return;
 		BASE64Decoder decoder = new BASE64Decoder();
@@ -141,7 +141,7 @@ public class SignEntry extends DataEntry {
 			}
 		}
 		lines = decoded.toArray(new String[0]);
-		
+
 	}
 
 }

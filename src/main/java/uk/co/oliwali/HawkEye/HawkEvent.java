@@ -9,10 +9,10 @@ import org.bukkit.event.EventPriority;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface HawkEvent {	
+public @interface HawkEvent {
 	DataType[] dataType();
-	
+
 	boolean ignoreCancelled() default true;
-	
+
 	EventPriority priority() default EventPriority.MONITOR;
 }

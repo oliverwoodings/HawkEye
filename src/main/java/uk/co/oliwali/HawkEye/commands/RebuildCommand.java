@@ -18,22 +18,23 @@ public class RebuildCommand extends BaseCommand {
 		argLength = 1;
 		usage = "<parameters> <- re-applies changes";
 	}
-	
+
+	@Override
 	public boolean execute() {
-		
+
 		//Check if player already has a rollback processing
 		if (session.doingRollback()) {
 			Util.sendMessage(sender, "&cYou already have a query command processing!");
 			return true;
 		}
-		
+
 		//Parse arguments
 		SearchParser parser = null;
 		try {
-			
+
 			parser = new SearchParser(player, args);
 			parser.loc = null;
-			
+
 			//Check that supplied actions can rollback
 			if (parser.actions.size() > 0) {
 				for (DataType type : parser.actions)
@@ -44,18 +45,19 @@ public class RebuildCommand extends BaseCommand {
 				for (DataType type : DataType.values())
 					if (type.canRollback()) parser.actions.add(type);
 			}
-			
+
 		} catch (IllegalArgumentException e) {
 			Util.sendMessage(sender, "&c" + e.getMessage());
 			return true;
 		}
-		
+
 		//Create new SearchQuery with data
 		new SearchQuery(new RebuildCallback(session), parser, SearchDir.ASC);
 		return true;
-		
+
 	}
-	
+
+	@Override
 	public void moreHelp() {
 		List<String> acs = new ArrayList<String>();
 		for (DataType type : DataType.values()) if (type.canRollback()) acs.add(type.getConfigName());
@@ -69,7 +71,8 @@ public class RebuildCommand extends BaseCommand {
 		Util.sendMessage(sender, "&7  -&c t:2011-06-02,10:45:10 &7-from given date");
 		Util.sendMessage(sender, "&7  -&c t:2011-06-02,10:45:10,2011-07-04,18:15:00 &7-between dates");
 	}
-	
+
+	@Override
 	public boolean permission() {
 		return Permission.rebuild(sender);
 	}

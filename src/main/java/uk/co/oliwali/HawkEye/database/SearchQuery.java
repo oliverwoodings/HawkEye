@@ -12,7 +12,6 @@ import java.util.Map;
 import uk.co.oliwali.HawkEye.DataType;
 import uk.co.oliwali.HawkEye.SearchParser;
 import uk.co.oliwali.HawkEye.callbacks.BaseCallback;
-import uk.co.oliwali.HawkEye.database.DataManager;
 import uk.co.oliwali.HawkEye.entry.DataEntry;
 import uk.co.oliwali.HawkEye.util.Config;
 import uk.co.oliwali.HawkEye.util.Util;
@@ -23,29 +22,30 @@ import uk.co.oliwali.HawkEye.util.Util;
  * @author oliverw92
  */
 public class SearchQuery extends Thread {
-	
-	private SearchParser parser;
-	private SearchDir dir;
-	private BaseCallback callBack;
-	
+
+	private final SearchParser parser;
+	private final SearchDir dir;
+	private final BaseCallback callBack;
+
 	public SearchQuery(BaseCallback callBack, SearchParser parser, SearchDir dir) {
 		this.callBack = callBack;
 		this.parser = parser;
 		this.dir = dir;
-		
+
 		//Start thread
 		this.start();
 	}
-	
+
 	/**
 	 * Run the search query
 	 */
+	@Override
 	public void run() {
-		
+
 		Util.debug("Beginning search query");
 		String sql = "SELECT * FROM `" + Config.DbHawkEyeTable + "` WHERE ";
 		List<String> args = new ArrayList<String>();
-		
+
 		//Match players from database list
 		Util.debug("Building players");
 		if (parser.players != null) {
@@ -70,7 +70,7 @@ public class SearchQuery extends Thread {
 				return;
 			}
 		}
-		
+
 		//Match worlds from database list
 		Util.debug("Building worlds");
 		if (parser.worlds != null) {
@@ -95,7 +95,7 @@ public class SearchQuery extends Thread {
 				return;
 			}
 		}
-		
+
 		//Compile actions into SQL form
 		Util.debug("Building actions");
 		if (parser.actions != null && parser.actions.size() > 0) {
@@ -104,14 +104,14 @@ public class SearchQuery extends Thread {
 				acs.add(act.getId());
 			args.add("action IN (" + Util.join(acs, ",") + ")");
 		}
-		
+
 		//Add dates
 		Util.debug("Building dates");
 		if (parser.dateFrom != null)
 			args.add("date >= '" + parser.dateFrom + "'");
 		if (parser.dateTo != null)
 			args.add("date <= '" + parser.dateTo + "'");
-		
+
 		//Check if location is exact or a range
 		Util.debug("Building location");
 		if (parser.minLoc != null) {
@@ -124,7 +124,7 @@ public class SearchQuery extends Thread {
 			args.add("y = " + parser.loc.getY());
 			args.add("z = " + parser.loc.getZ());
 		}
-		
+
 		//Build the filters into SQL form
 		Util.debug("Building filters");
 		if (parser.filters != null) {
@@ -132,42 +132,42 @@ public class SearchQuery extends Thread {
 				parser.filters[i] = "'%" + parser.filters[i] + "%'";
 			args.add("data LIKE " + Util.join(Arrays.asList(parser.filters), " OR HawkEye.data LIKE "));
 		}
-		
+
 		//Build WHERE clause
 		sql += Util.join(args, " AND ");
-		
+
 		//Add order by
 		Util.debug("Ordering by data_id");
 		sql += " ORDER BY `data_id` DESC";
-		
+
 		//Check the limits
 		Util.debug("Building limits");
 		if (Config.MaxLines > 0)
 			sql += " LIMIT " + Config.MaxLines;
-		
+
 		Util.debug("Searching: " + sql);
-		
+
 		//Set up some stuff for the search
 		ResultSet res;
 		List<DataEntry> results = new ArrayList<DataEntry>();
 		JDCConnection conn = DataManager.getConnection();
 		Statement stmnt = null;
-		
+
 		try {
-			
+
 			//Execute query
 			stmnt = conn.createStatement();
 			res = stmnt.executeQuery(sql);
 			Util.debug("Getting results");
-			
+
 			//Retrieve results
 			while (res.next())
 				results.add(DataManager.createEntryFromRes(res));
-			
+
 			//If ascending, reverse results
 			if (dir == SearchDir.ASC)
 				Collections.reverse(results);
-			
+
 		} catch (Exception ex) {
 			Util.severe("Error executing MySQL query: " + ex);
 			ex.printStackTrace();
@@ -182,19 +182,19 @@ public class SearchQuery extends Thread {
 				Util.severe("Unable to close SQL connection: " + ex);
 				callBack.error(SearchError.MYSQL_ERROR, "Unable to close SQL connection: " + ex);
 			}
-				
+
 		}
-		
+
 		Util.debug(results.size() + " results found");
-		
+
 		//Run callback
 		callBack.results = results;
 		callBack.execute();
-		
+
 		Util.debug("Search complete");
-		
+
 	}
-	
+
 	/**
 	 * Enumeration for result sorting directions
 	 * @author oliverw92
@@ -203,7 +203,7 @@ public class SearchQuery extends Thread {
 		ASC,
 		DESC
 	}
-	
+
 	/**
 	 * Enumeration for query errors
 	 */
@@ -212,5 +212,5 @@ public class SearchQuery extends Thread {
 		NO_WORLDS,
 		MYSQL_ERROR
 	}
-	
+
 }

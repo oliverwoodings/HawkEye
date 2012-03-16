@@ -16,18 +16,21 @@ public class PageCommand extends BaseCommand {
 		argLength = 1;
 		usage = "<page> <- display a page from your last search";
 	}
-	
+
+	@Override
 	public boolean execute() {
 		DisplayManager.displayPage(session, Integer.parseInt(args.get(0)));
 		return true;
 	}
-	
+
+	@Override
 	public void moreHelp() {
 		Util.sendMessage(sender, "&cShows the specified page of results from your latest search");
 	}
-	
+
+	@Override
 	public boolean permission() {
 		return Permission.page(sender);
 	}
-	
+
 }

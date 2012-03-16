@@ -20,18 +20,18 @@ import uk.co.oliwali.HawkEye.util.Util;
  * @author oliverw92
  */
 public class ToolManager {
-	
+
 	/**
 	 * Enables the HawkEye tool
 	 * @param session
 	 * @param player
 	 */
 	public static void enableTool(PlayerSession session, Player player) {
-		
+
 		Inventory inv = player.getInventory();
 		session.setUsingTool(true);
 		ItemStack stack = BlockUtil.itemStringToStack(Config.ToolBlock, 1);
-		
+
 		//If player doesn't have a tool, give them one if enabled in config
 		if (!inv.contains(stack) && Config.GiveTool) {
 			int first = inv.firstEmpty();
@@ -39,20 +39,20 @@ public class ToolManager {
 				player.getWorld().dropItem(player.getLocation(), stack);
 			else inv.setItem(first, stack);
 		}
-		
+
 		//If they aren't holding a tool, move the tool to their hand
 		int first = inv.first(BlockUtil.getIdFromString(Config.ToolBlock));
-		if (!BlockUtil.getItemString(player.getItemInHand()).equals(Config.ToolBlock) && first != -1){ 
+		if (!BlockUtil.getItemString(player.getItemInHand()).equals(Config.ToolBlock) && first != -1){
 			ItemStack back = player.getItemInHand().clone();
 			player.setItemInHand(inv.getItem(first));
 			if (back.getAmount() == 0) inv.clear(first);
 			else inv.setItem(first, back);
 		}
-		
+
 		Util.sendMessage(player, "&cHawkEye tool enabled! &7Left click a block or place the tool to get information");
-		
+
 	}
-	
+
 	/**
 	 * Disables the HawkEye tool
 	 * @param session
@@ -62,17 +62,17 @@ public class ToolManager {
 		session.setUsingTool(false);
 		Util.sendMessage(player, "&cHawkEye tool disabled");
 	}
-	
+
 	/**
 	 * Performs a HawkEye tool search at the specified location
 	 * @param player
 	 * @param loc
 	 */
 	public static void toolSearch(Player player, Location loc) {
-		
+
 		PlayerSession session = SessionManager.getSession(player);
 		SearchParser parser;
-		
+
 		//If parameters aren't bound, do some default
 		if (session.getToolCommand().length == 0 || session.getToolCommand()[0] == "") {
 			parser = new SearchParser(player);
@@ -83,13 +83,13 @@ public class ToolManager {
 		else {
 			parser = new SearchParser(player, Arrays.asList(session.getToolCommand()));
 		}
-		
+
 		parser.loc = Util.getSimpleLocation(loc).toVector();
 		parser.worlds = new String[]{ loc.getWorld().getName() };
 		new SearchQuery(new SearchCallback(SessionManager.getSession(player)), parser, SearchDir.DESC);
-	
+
 	}
-	
+
 	/**
 	 * Binds arguments to the HawkEye tool
 	 * @param player player issueing the command
@@ -97,7 +97,7 @@ public class ToolManager {
 	 * @param args parameters
 	 */
 	public static void bindTool(Player player, PlayerSession session, List<String> args) {
-		
+
 		try {
 			new SearchParser(player, args);
 		} catch (IllegalArgumentException e) {
@@ -108,9 +108,9 @@ public class ToolManager {
 		Util.sendMessage(player, "&cParameters bound to tool: &7" + Util.join(args, " "));
 		session.setToolCommand(args.toArray(new String[0]));
 		if (!session.isUsingTool()) enableTool(session, player);
-	
+
 	}
-	
+
 	/**
 	 * Reset tool to default parameters
 	 * @param session

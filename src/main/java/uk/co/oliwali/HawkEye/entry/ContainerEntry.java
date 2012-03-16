@@ -18,9 +18,9 @@ import uk.co.oliwali.HawkEye.util.InventoryUtil;
  * @author oliverw92
  */
 public class ContainerEntry extends DataEntry {
-	
+
 	public ContainerEntry() { }
-	
+
 	public ContainerEntry(Player player, Location location, String diff) {
 		data = diff;
 		setInfo(player, DataType.CONTAINER_TRANSACTION, location);
@@ -29,12 +29,12 @@ public class ContainerEntry extends DataEntry {
 		data = diff;
 		setInfo(player, DataType.CONTAINER_TRANSACTION, location);
 	}
-	
+
 	@Override
 	public String getStringData() {
 		return InventoryUtil.createChangeString(InventoryUtil.interpretDifferenceString(data));
 	}
-	
+
 	@Override
 	public boolean rollback(Block block) {
 		if (!(block instanceof InventoryHolder)) return false;
@@ -52,7 +52,7 @@ public class ContainerEntry extends DataEntry {
 		}
 		return true;
 	}
-	
+
 	@Override
 	public boolean rebuild(Block block) {
 		if (!(block instanceof InventoryHolder)) return false;

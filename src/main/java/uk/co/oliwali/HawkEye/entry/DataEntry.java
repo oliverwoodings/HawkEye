@@ -20,7 +20,7 @@ import uk.co.oliwali.HawkEye.util.Util;
 public class DataEntry {
 
 	private String plugin = null;
-    
+
     private int dataId;
 
     private String date;
@@ -34,13 +34,13 @@ public class DataEntry {
     private double y;
 
     private double z;
-    
+
     private BlockState undoState;
 
     protected DataType type = null;
-    
+
     protected String data = null;
-    
+
     public DataEntry() { }
     public DataEntry(Player player, DataType type, Location loc, String data) {
     	setInfo(player, type, loc);
@@ -78,7 +78,7 @@ public class DataEntry {
     public String getPlayer() {
         return player;
     }
-    
+
     public void setType(DataType type) {
     	this.type = type;
     }
@@ -113,18 +113,18 @@ public class DataEntry {
     public double getZ() {
         return z;
     }
-    
+
     public void setData(String data) {
     	this.data = data;
     }
-    
+
 	public BlockState getUndoState() {
 		return undoState;
 	}
 	public void setUndoState(BlockState undoState) {
 		this.undoState = undoState;
 	}
-    
+
     /**
      * Returns the entry data in a visually attractive and readable way for an in-game user to read
      * Extending classes can add colours, customise layout etc.
@@ -133,7 +133,7 @@ public class DataEntry {
 	public String getStringData() {
 		return data;
 	}
-	
+
 	/**
 	 * Converts the raw data from the database into the actual data required by the entry
 	 * Extending classes can override this to support custom storage methods (e.g. sign data etc)
@@ -142,7 +142,7 @@ public class DataEntry {
 	public void interpretSqlData(String data) {
 		this.data = data;
 	}
-	
+
 	/**
 	 * Returns the entry data ready for storage in the database
 	 * Extending classes can override this method and format the data as they wish
@@ -151,7 +151,7 @@ public class DataEntry {
 	public String getSqlData() {
 		return data;
 	}
-	
+
 	/**
 	 * Rolls back the data entry on the specified block
 	 * Default is to return false, however extending classes can override this and do their own thing
@@ -161,7 +161,7 @@ public class DataEntry {
 	public boolean rollback(Block block) {
 		return false;
 	}
-	
+
 	/**
 	 * Performs a local rollback for the specified player only
 	 * Default is to return false, and most extending classes will not override this
@@ -173,7 +173,7 @@ public class DataEntry {
 	public boolean rollbackPlayer(Block block, Player player) {
 		return false;
 	}
-	
+
 	/**
 	 * Rebuilds the entry (reapplies it)
 	 * Extending classes can implement this method to do custom things
@@ -183,7 +183,7 @@ public class DataEntry {
 	public boolean rebuild(Block block) {
 		return false;
 	}
-    
+
     /**
      * Parses the inputted action into the DataEntry instance
      * @param player

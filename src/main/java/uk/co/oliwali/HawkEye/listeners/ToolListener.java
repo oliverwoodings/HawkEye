@@ -19,7 +19,7 @@ import uk.co.oliwali.HawkEye.util.Config;
  * @author oliverw92
  */
 public class ToolListener implements Listener {
-	
+
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockPlace(BlockPlaceEvent event) {
 		Player player = event.getPlayer();
@@ -29,7 +29,7 @@ public class ToolListener implements Listener {
 			event.setCancelled(true);
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();

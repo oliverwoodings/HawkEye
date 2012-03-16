@@ -311,5 +311,5 @@ public class JDCConnection implements Connection
 			conn.close();
 		} catch (final SQLException ex) {}
 	}
-	
+
 }

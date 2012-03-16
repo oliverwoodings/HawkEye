@@ -9,9 +9,9 @@ import uk.co.oliwali.HawkEye.util.Config;
 import uk.co.oliwali.HawkEye.util.Util;
 
 public class DeleteEntry implements Runnable {
-	
-	private List<Integer> ids = new ArrayList<Integer>();
-	
+
+	private final List<Integer> ids = new ArrayList<Integer>();
+
 	public DeleteEntry(Integer id) {
 		ids.add(id);
 	}
@@ -25,7 +25,7 @@ public class DeleteEntry implements Runnable {
 			else ids.add((Integer)entries.get(i));
 		}
 	}
-	
+
 	public void run() {
 		JDCConnection conn = null;
 		try {
@@ -39,5 +39,5 @@ public class DeleteEntry implements Runnable {
 			conn.close();
 		}
 	}
-	
+
 }

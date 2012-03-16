@@ -20,7 +20,8 @@ public class TptoCommand extends BaseCommand {
 		argLength = 1;
 		usage = "<id> <- teleport to location of the data entry";
 	}
-	
+
+	@Override
 	public boolean execute() {
 		if (!Util.isInteger(args.get(0))) {
 			Util.sendMessage(sender, "&cPlease supply a entry id!");
@@ -41,14 +42,16 @@ public class TptoCommand extends BaseCommand {
 		Util.sendMessage(sender, "&7Teleported to location of data entry &c" + args.get(0));
 		return true;
 	}
-	
+
+	@Override
 	public void moreHelp() {
 		Util.sendMessage(sender, "&cTakes you to the location of the data entry with the specified ID");
 		Util.sendMessage(sender, "&cThe ID can be found in either the DataLog interface or when you do a search command");
 	}
-	
+
+	@Override
 	public boolean permission() {
 		return Permission.tpTo(sender);
 	}
-	
+
 }

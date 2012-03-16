@@ -21,7 +21,7 @@ public class PlayerSession {
 	private boolean doingRollback = false;
 	private String[] toolCommand = Config.DefaultToolCommand;
 	private boolean inPreview = false;
-	
+
 	public PlayerSession(CommandSender sender) {
 		this.sender = sender;
 	}
@@ -32,7 +32,7 @@ public class PlayerSession {
 	public void setSender(CommandSender sender) {
 		this.sender = sender;
 	}
-	
+
 	public List<DataEntry> getSearchResults() {
 		return searchResults;
 	}
@@ -53,21 +53,21 @@ public class PlayerSession {
 	public void setUsingTool(boolean usingTool) {
 		this.usingTool = usingTool;
 	}
-	
+
 	public boolean doingRollback() {
 		return doingRollback;
 	}
 	public void setDoingRollback(boolean doingRollback) {
 		this.doingRollback = doingRollback;
 	}
-	
+
 	public String[] getToolCommand() {
 		return toolCommand;
 	}
 	public void setToolCommand(String[] toolCommand) {
 		this.toolCommand = toolCommand;
 	}
-	
+
 	public boolean isInPreview() {
 		return inPreview;
 	}

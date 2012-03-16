@@ -11,9 +11,9 @@ import org.bukkit.material.MaterialData;
  * @author oliverw92
  */
 public class BlockUtil {
-	
+
 	/**
-	 * Gets the block in 'string form'. 
+	 * Gets the block in 'string form'.
 	 * e.g. blockid:datavalue
 	 * @param block BlockState of the block you wish to convert
 	 * @return string representing the block
@@ -26,7 +26,7 @@ public class BlockUtil {
 			return block.getTypeId() + ":" + block.getRawData();
 		return Integer.toString(block.getTypeId());
 	}
-	
+
 	/**
 	 * Same as getBlockString() except for ItemStack
 	 * @param stack ItemStack you wish to convert
@@ -37,7 +37,7 @@ public class BlockUtil {
 			return stack.getTypeId() + ":" + stack.getData().getData();
 		return Integer.toString(stack.getTypeId());
 	}
-	
+
 	/**
 	 * Converts an item string into an ItemStack
 	 * @param item item string representing the material and data
@@ -51,7 +51,7 @@ public class BlockUtil {
 			stack.setData(new MaterialData(Integer.parseInt(itemArr[0]), Byte.parseByte(itemArr[1])));
 		return stack;
 	}
-	
+
 	/**
 	 * Returns the name of the block, with its data if applicable
 	 * @param blockData
@@ -64,7 +64,7 @@ public class BlockUtil {
 			return Material.getMaterial(Integer.parseInt(blockArr[0])).name() + ":" + blockArr[1];
 		else return Material.getMaterial(Integer.parseInt(blockArr[0])).name();
 	}
-	
+
 	/**
 	 * Sets the block type and data to the inputted block string
 	 * @param block Block to be changed
@@ -77,7 +77,7 @@ public class BlockUtil {
 		if (blockArr.length > 1)
 			block.setData((byte) Integer.parseInt(blockArr[1]));
 	}
-	
+
 	/**
 	 * Returns ID section of a block string
 	 * @param string
@@ -87,7 +87,7 @@ public class BlockUtil {
 		if (!Util.isInteger(string.split(":")[0])) return 0;
 		return Integer.parseInt(string.split(":")[0]);
 	}
-	
+
 	/**
 	 * Returns data section of a block string
 	 * @param string

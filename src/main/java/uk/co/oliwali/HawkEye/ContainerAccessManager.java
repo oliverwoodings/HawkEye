@@ -18,32 +18,32 @@ import uk.co.oliwali.HawkEye.util.InventoryUtil;
  * @author oliverw92
  */
 public class ContainerAccessManager {
-	
-	private List<ContainerAccess> accessList = new ArrayList<ContainerAccess>();
-	
+
+	private final List<ContainerAccess> accessList = new ArrayList<ContainerAccess>();
+
 	/**
 	 * Checks whether the player's inventory was open and should now trigger a container transaction
 	 * @param player player to check
 	 */
 	public void checkInventoryClose(Player player) {
-		
+
 		//Get access from list
 		ContainerAccess access = null;
 		for (ContainerAccess acc : accessList) {
 			if (acc.player == player) access = acc;
 		}
-		
+
 		//If no access, return
 		if (access == null) return;
-		
+
 		//Get current inventory, create diff string and add the database
 		HashMap<String,Integer> after = InventoryUtil.compressInventory(InventoryUtil.getContainerContents(access.container));
 		String diff = InventoryUtil.createDifferenceString(access.beforeInv, after);
 		if (diff.length() > 1) DataManager.addEntry(new ContainerEntry(player, access.loc, diff));
 		accessList.remove(access);
-		
+
 	}
-	
+
 	/**
 	 * 'Sets' the player inventory to be open and stores the current contents of the container
 	 * @param player player to check

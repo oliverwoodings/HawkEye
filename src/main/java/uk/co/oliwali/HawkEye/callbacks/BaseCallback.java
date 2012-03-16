@@ -10,17 +10,17 @@ import uk.co.oliwali.HawkEye.entry.DataEntry;
  * @author oliverw92
  */
 public abstract class BaseCallback {
-	
+
 	/**
 	 * Contains results of the {@SearchQuery}
 	 */
 	public List<DataEntry> results = null;
-	
+
 	/**
 	 * Called when the {@SearchQuery} is complete
 	 */
 	public abstract void execute();
-	
+
 	/**
 	 * Called if an error occurs during the {@SearchQuery}
 	 * @param error {@SearchError} that has occurred

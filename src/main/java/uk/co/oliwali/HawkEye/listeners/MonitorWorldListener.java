@@ -13,25 +13,25 @@ import uk.co.oliwali.HawkEye.entry.BlockChangeEntry;
 import uk.co.oliwali.HawkEye.util.BlockUtil;
 
 public class MonitorWorldListener extends HawkEyeListener {
-	
+
 	public HawkEye plugin;
 
 	public MonitorWorldListener(HawkEye HawkEye) {
 		super(HawkEye);
 	}
-	
+
 	@HawkEvent(dataType = {DataType.TREE_GROW, DataType.MUSHROOM_GROW})
 	public void onStructureGrow(StructureGrowEvent event) {
 		//Sort out structure type
 		DataType type = DataType.TREE_GROW;
 		if (event.getSpecies().name().toLowerCase().contains("mushroom")) type = DataType.MUSHROOM_GROW;
-		
+
 		//Loop through blocks
 		for (BlockState block : event.getBlocks()) {
-			
+
 			//Don't log the bottom block
 			if (block.getType() == Material.MYCEL || block.getType() == Material.DIRT || block.getType() == Material.GRASS) continue;
-			
+
 			Location loc = new Location(event.getWorld(), block.getX(), block.getY(), block.getZ());
 			//If a player did it
 			if (event.getPlayer() != null) {
@@ -42,7 +42,7 @@ public class MonitorWorldListener extends HawkEyeListener {
 				DataManager.addEntry(new BlockChangeEntry("Environment", type, loc, "0", BlockUtil.getBlockString(block)));
 			}
 		}
-		
+
 	}
 
 }

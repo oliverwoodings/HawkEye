@@ -15,7 +15,8 @@ public class ToolCommand extends BaseCommand {
 		argLength = 0;
 		usage = " <- enables/disables the searching tool";
 	}
-	
+
+	@Override
 	public boolean execute() {
 
 		//If not using tool, enable
@@ -28,14 +29,16 @@ public class ToolCommand extends BaseCommand {
 
 		return true;
 	}
-	
+
+	@Override
 	public void moreHelp() {
 		Util.sendMessage(sender, "&cGives you the HawkEye tool. You can use this to see changes at specific places");
 		Util.sendMessage(sender, "&cLeft click a block or place the tool to get information");
 	}
 
+	@Override
 	public boolean permission() {
 		return Permission.tool(sender);
 	}
-	
+
 }

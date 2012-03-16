@@ -16,7 +16,7 @@ import uk.co.oliwali.HawkEye.entry.SimpleRollbackEntry;
  * @author oliverw92
  */
 public enum DataType {
-	
+
 	BLOCK_BREAK(0, BlockEntry.class, "block-break", true, true),
 	BLOCK_PLACE(1, BlockChangeEntry.class, "block-place", true, true),
 	SIGN_PLACE(2, SignEntry.class, "sign-place", true, true),
@@ -60,10 +60,10 @@ public enum DataType {
 	private String configName;
 	private boolean canRollback;
 	private Class<?> entryClass;
-	
+
 	private static final Map<String, DataType> nameMapping = new HashMap<String, DataType>();
 	private static final Map<Integer, DataType> idMapping = new HashMap<Integer, DataType>();
-	
+
 	static {
 		//Mapping to enable quick finding of DataTypes by name or id
 		for (DataType type : EnumSet.allOf(DataType.class)) {
@@ -73,7 +73,7 @@ public enum DataType {
 			idMapping.put(type.id, type);
 		}
 	}
-	
+
 	private DataType(int id, Class<?> entryClass, String configName, boolean canHere, boolean canRollback) {
 		this.id = id;
 		this.entryClass = entryClass;
@@ -81,7 +81,7 @@ public enum DataType {
 		this.configName = configName;
 		this.canRollback = canRollback;
 	}
-	
+
 	/**
 	 * Get the id of the DataType
 	 * @return int id of the DataType
@@ -89,7 +89,7 @@ public enum DataType {
 	public int getId() {
 		return id;
 	}
-	
+
 	/**
 	 * Get the config name of the DataType
 	 * @return String config name
@@ -97,7 +97,7 @@ public enum DataType {
 	public String getConfigName() {
 		return configName;
 	}
-	
+
 	/**
 	 * Get the class to be used for DataEntry
 	 * @return String name of entry class
@@ -105,7 +105,7 @@ public enum DataType {
 	public Class<?> getEntryClass() {
 		return entryClass;
 	}
-	
+
 	/**
 	 * Get a matching DataType from the supplied config name
 	 * @param name DataType config name to search for
@@ -114,16 +114,16 @@ public enum DataType {
 	public static DataType fromName(String name) {
 		return nameMapping.get(name);
 	}
-	
+
 	/**
 	 * Get a matching DataType from the supplied  id
 	 * @param id DataType id to search for
 	 * @return {@link DataType}
-	 */	
+	 */
 	public static DataType fromId(int id) {
 		return idMapping.get(id);
 	}
-	
+
 	/**
 	 * Check if the DataType can be rolled back
 	 * @return true if it can be, false if not

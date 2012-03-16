@@ -26,12 +26,12 @@ import uk.co.oliwali.HawkEye.util.Util;
  */
 public class DataManager extends TimerTask {
 
-	private static LinkedBlockingQueue<DataEntry> queue = new LinkedBlockingQueue<DataEntry>();
+	private static final LinkedBlockingQueue<DataEntry> queue = new LinkedBlockingQueue<DataEntry>();
 	private static ConnectionManager connections;
 	private static Timer loggingTimer = null;
-	public static Timer cleanseTimer = null;
-	public static HashMap<String, Integer> dbPlayers = new HashMap<String, Integer>();
-	public static HashMap<String, Integer> dbWorlds = new HashMap<String, Integer>();
+	private static Timer cleanseTimer = null;
+	private static final HashMap<String, Integer> dbPlayers = new HashMap<String, Integer>();
+	private static final HashMap<String, Integer> dbWorlds = new HashMap<String, Integer>();
 
 	/**
 	 * Initiates database connection pool, checks tables, starts cleansing utility

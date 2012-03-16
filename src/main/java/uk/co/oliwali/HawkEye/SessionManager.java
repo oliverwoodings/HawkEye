@@ -11,19 +11,19 @@ import org.bukkit.entity.Player;
  * @author oliverw92
  */
 public class SessionManager {
-	
-	private static HashMap<String, PlayerSession> playerSessions = new HashMap<String, PlayerSession>();
-	
+
+	private static final HashMap<String, PlayerSession> playerSessions = new HashMap<String, PlayerSession>();
+
 	public SessionManager() {
-		
+
 		//Add console session
 		addSession(Bukkit.getServer().getConsoleSender());
-		
+
         //Create player sessions
         for (Player player : Bukkit.getServer().getOnlinePlayers()) addSession(player);
-		
+
 	}
-	
+
 	/**
 	 * Get a PlayerSession from the list
 	 */
@@ -34,7 +34,7 @@ public class SessionManager {
 		session.setSender(player);
 		return session;
 	}
-	
+
 	/**
 	 * Adds a PlayerSession to the list
 	 */

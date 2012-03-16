@@ -12,7 +12,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 public class InventoryUtil {
-	
+
 	/**
 	 * Compress an ItemStack[] into a HashMap of the item string and the total amount of that item
 	 * Uses {@BlockUtil} to get the item string
@@ -29,7 +29,7 @@ public class InventoryUtil {
 		}
 		return items;
 	}
-	
+
 	/**
 	 * Uncompress an inventory back into proper ItemStacks
 	 * @param comp Compressed HashMap inventory
@@ -47,7 +47,7 @@ public class InventoryUtil {
 		}
 		return inv.toArray(new ItemStack[0]);
 	}
-	
+
 	/**
 	 * Takes two compressed inventories and returns a string representation of the difference
 	 * @param before HashMap<String,Integer> of inventory before changes
@@ -71,7 +71,7 @@ public class InventoryUtil {
 		}
 		return Util.join(add, "&") + "@" + Util.join(sub, "&");
 	}
-	
+
 	/**
 	 * Takes an inventory difference string and forms two HashMaps containing the compressed inventory forms of the additions and subtractions
 	 * @param diff The difference string to be processed
@@ -91,7 +91,7 @@ public class InventoryUtil {
 		if (ops.size() == 1) ops.add(new HashMap<String,Integer>());
 		return ops;
 	}
-	
+
 	/**
 	 * Creates a readable string representing the changes of a difference string
 	 * @param ops additions and subtractions as supplied by interpretDifferenceString
@@ -101,7 +101,7 @@ public class InventoryUtil {
 
 		if (ops.size() == 0) return "";
 		String changeString = "";
-		
+
 		//Loop through ops
 		List<String> add = new ArrayList<String>();
 		for (Entry<String, Integer> item : ops.get(0).entrySet())
@@ -109,15 +109,15 @@ public class InventoryUtil {
 		List<String> sub = new ArrayList<String>();
 		for (Entry<String, Integer> item : ops.get(1).entrySet())
 			sub.add(item.getValue() + "x " + BlockUtil.getBlockStringName(item.getKey()));
-		
+
 		//Build string
 		if (add.size() > 0) changeString += "&a+(" + Util.join(add, ", ") + ")";
 		if (sub.size() > 0) changeString += "&4-(" + Util.join(sub, ", ") + ")";
-		
+
 		return changeString;
-		
+
 	}
-	
+
 	/**
 	 * Method for getting complete inventory from a ContainerBlock
 	 * Works around a bug in Minecraft that sometimes returns only half the chest
@@ -127,13 +127,13 @@ public class InventoryUtil {
 	 * @author N3X15
 	 */
     public static ItemStack[] getContainerContents(InventoryHolder container) {
-    	
+
     	//If it isn't a chest, there is no issue!
     	if (!(container instanceof Chest)) return container.getInventory().getContents();
-    	
+
     	Chest chest = (Chest)container;
         Chest second = null;
-        
+
         //Iterate through nearby blocks to find any other chests
         if (chest.getBlock().getRelative(BlockFace.NORTH).getType() == Material.CHEST)
             second = (Chest) chest.getBlock().getRelative(BlockFace.NORTH).getState();
@@ -143,13 +143,13 @@ public class InventoryUtil {
             second = (Chest) chest.getBlock().getRelative(BlockFace.EAST).getState();
         else if (chest.getBlock().getRelative(BlockFace.WEST).getType() == Material.CHEST)
             second = (Chest) chest.getBlock().getRelative(BlockFace.WEST).getState();
-        
+
         //If we can't find a second chest, just return this one
         if (second == null) {
             return chest.getInventory().getContents();
         }
         else {
-        	
+
             //I think it would be good, to consistently return same chest
             //contents, regardless of what
             //block was clicked on. That means, we must determine, which part
@@ -160,7 +160,7 @@ public class InventoryUtil {
             ItemStack[] result = new ItemStack[54];
             ItemStack[] firstHalf;
             ItemStack[] secondHalf;
-            
+
             if ((chest.getX() + chest.getZ()) < (second.getX() + second.getZ())) {
                 firstHalf = chest.getInventory().getContents();
                 secondHalf = second.getInventory().getContents();
@@ -168,16 +168,16 @@ public class InventoryUtil {
                 firstHalf = second.getInventory().getContents();
                 secondHalf = chest.getInventory().getContents();
             }
-            
+
             //Merge them
             for (int i = 0; i < 27; i++) {
                 result[i] = firstHalf[i];
                 result[i + 27] = secondHalf[i];
             }
-            
+
             return result;
         }
-        
+
     }
 
 }

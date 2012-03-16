@@ -14,12 +14,12 @@ import uk.co.oliwali.HawkEye.util.BlockUtil;
  * @author oliverw92
  */
 public class BlockChangeEntry extends DataEntry {
-	
+
 	private String from = null;
 	private String to = null;
-	
+
 	public BlockChangeEntry() { }
-	
+
 	public BlockChangeEntry(Player player, DataType type, Location loc, BlockState from, BlockState to) {
 		setInfo(player, type, loc);
 		this.from = BlockUtil.getBlockString(from);
@@ -40,7 +40,7 @@ public class BlockChangeEntry extends DataEntry {
 		this.from = from;
 		this.to = to;
 	}
-	
+
 	@Override
 	public String getStringData() {
 		if (from == null) return BlockUtil.getBlockStringName(to);
@@ -60,14 +60,14 @@ public class BlockChangeEntry extends DataEntry {
 			BlockUtil.setBlockString(block, from);
 		return true;
 	}
-	
+
 	@Override
 	public boolean rollbackPlayer(Block block, Player player) {
 		if (from == null) player.sendBlockChange(block.getLocation(), 0, (byte)0);
 		else player.sendBlockChange(block.getLocation(), BlockUtil.getIdFromString(from), BlockUtil.getDataFromString(from));
 		return true;
 	}
-	
+
 	@Override
 	public boolean rebuild(Block block) {
 		if (to == null) return false;

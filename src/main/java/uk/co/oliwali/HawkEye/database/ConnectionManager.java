@@ -1,12 +1,11 @@
 package uk.co.oliwali.HawkEye.database;
 
 import java.io.Closeable;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.Vector;
-
-import java.sql.Connection;
 
 import uk.co.oliwali.HawkEye.util.Config;
 import uk.co.oliwali.HawkEye.util.Util;
@@ -17,14 +16,14 @@ import uk.co.oliwali.HawkEye.util.Util;
  * @author oliverw92
  */
 public class ConnectionManager implements Closeable {
-	
+
 	private static int poolsize = 10;
 	private static long timeToLive = 300000;
 	private static Vector<JDCConnection> connections;
-	private ConnectionReaper reaper;
-	private String url;
-	private String user;
-	private String password;
+	private final ConnectionReaper reaper;
+	private final String url;
+	private final String user;
+	private final String password;
 
 	/**
 	 * Creates the connection manager and starts the reaper
@@ -58,7 +57,7 @@ public class ConnectionManager implements Closeable {
 			conn.terminate();
 		}
 	}
-	
+
 	/**
 	 * Returns a connection from the pool
 	 * @return returns a {JDCConnection}
@@ -86,7 +85,7 @@ public class ConnectionManager implements Closeable {
 		connections.add(conn);
 		return conn;
 	}
-	
+
     /**
      * Removes a connection from the pool
      * @param {JDCConnection} to remove
@@ -94,7 +93,7 @@ public class ConnectionManager implements Closeable {
 	public static synchronized void removeConn(Connection conn) {
 		connections.remove(conn);
 	}
-	
+
 	/**
 	 * Loops through connections, reaping old ones
 	 */
@@ -106,12 +105,12 @@ public class ConnectionManager implements Closeable {
 		int i = 1;
 		while (conns.hasMoreElements()) {
 			final JDCConnection conn = conns.nextElement();
-			
+
 			if (conn.inUse() && stale > conn.getLastUse() && !conn.isValid()) {
 				connections.remove(conn);
 				count++;
 			}
-			
+
 			if (i > poolsize) {
 				connections.remove(conn);
 				count++;
@@ -121,7 +120,7 @@ public class ConnectionManager implements Closeable {
 		}
 		Util.debug(count + " connections reaped");
 	}
-	
+
 	/**
 	 * Reaps connections
 	 * @author oliverw92

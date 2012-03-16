@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.bukkit.configuration.Configuration;
 
-import uk.co.oliwali.HawkEye.HawkEye;
 import uk.co.oliwali.HawkEye.DataType;
+import uk.co.oliwali.HawkEye.HawkEye;
 
 /**
  * Configuration manager for HawkEye.
@@ -14,7 +14,7 @@ import uk.co.oliwali.HawkEye.DataType;
  * @author oliverw92
  */
 public class Config {
-	
+
 	public static List<String> CommandFilter = new ArrayList<String>();
 	public static List<String> IgnoreWorlds = new ArrayList<String>();
 	public static List<Integer> BlockFilter = new ArrayList<Integer>();
@@ -40,15 +40,15 @@ public class Config {
 	public static String DbPlayerTable;
 	public static String DbWorldTable;
 	public static int PoolSize;
-	
+
 	private static Configuration config;
-	
+
 	/**
 	 * Loads the config from file and validates the data
 	 * @param plugin
 	 */
 	public Config(HawkEye plugin) {
-		
+
 		config = plugin.getConfig().getRoot();
 		config.options().copyDefaults(true);
 		config.set("version", plugin.version);
@@ -80,9 +80,9 @@ public class Config {
 		DbPlayerTable = config.getString("mysql.player-table");
 		DbWorldTable = config.getString("mysql.world-table");
 		PoolSize = config.getInt("mysql.max-connections");
-		
+
 	}
-	
+
 	/**
 	 * Check if a {@link DataType} is logged or not
 	 * @param dataType
@@ -93,5 +93,5 @@ public class Config {
 			return true;
 		return false;
 	}
-	
+
 }

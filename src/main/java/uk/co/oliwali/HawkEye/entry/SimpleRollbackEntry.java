@@ -12,9 +12,9 @@ import uk.co.oliwali.HawkEye.DataType;
  * @author oliverw92
  */
 public class SimpleRollbackEntry extends DataEntry {
-	
+
 	public SimpleRollbackEntry() { }
-	
+
 	public SimpleRollbackEntry(Player player, DataType type, Location loc, String data) {
 		setInfo(player, type, loc);
 		this.data = data;
@@ -29,11 +29,11 @@ public class SimpleRollbackEntry extends DataEntry {
 		block.setType(Material.AIR);
 		return true;
 	}
-	
+
 	@Override
 	public boolean rollbackPlayer(Block block, Player player) {
 		player.sendBlockChange(block.getLocation(), Material.AIR, (byte)0);
 		return true;
 	}
-	
+
 }

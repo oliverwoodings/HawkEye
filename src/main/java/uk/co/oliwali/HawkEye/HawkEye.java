@@ -16,14 +16,12 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-
-import uk.co.oliwali.HawkEye.commands.PreviewApplyCommand;
 import uk.co.oliwali.HawkEye.commands.BaseCommand;
-import uk.co.oliwali.HawkEye.commands.PreviewCancelCommand;
 import uk.co.oliwali.HawkEye.commands.HelpCommand;
 import uk.co.oliwali.HawkEye.commands.HereCommand;
 import uk.co.oliwali.HawkEye.commands.PageCommand;
+import uk.co.oliwali.HawkEye.commands.PreviewApplyCommand;
+import uk.co.oliwali.HawkEye.commands.PreviewCancelCommand;
 import uk.co.oliwali.HawkEye.commands.PreviewCommand;
 import uk.co.oliwali.HawkEye.commands.RebuildCommand;
 import uk.co.oliwali.HawkEye.commands.RollbackCommand;
@@ -44,8 +42,10 @@ import uk.co.oliwali.HawkEye.util.Config;
 import uk.co.oliwali.HawkEye.util.Permission;
 import uk.co.oliwali.HawkEye.util.Util;
 
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+
 public class HawkEye extends JavaPlugin {
-	
+
 	public String name;
 	public String version;
 	public Config config;
@@ -58,18 +58,20 @@ public class HawkEye extends JavaPlugin {
 	public static List<BaseCommand> commands = new ArrayList<BaseCommand>();
 	public WorldEditPlugin worldEdit = null;
 	public static ContainerAccessManager containerManager;
-	
+
 	/**
 	 * Safely shuts down HawkEye
 	 */
+	@Override
 	public void onDisable() {
 		DataManager.close();
 		Util.info("Version " + version + " disabled!");
 	}
-	
+
 	/**
 	 * Starts up HawkEye initiation process
 	 */
+	@Override
 	public void onEnable() {
 
 		//Set up config and permissions
@@ -77,17 +79,17 @@ public class HawkEye extends JavaPlugin {
 		server = getServer();
 		name = this.getDescription().getName();
         version = this.getDescription().getVersion();
-        
+
 		Util.info("Starting HawkEye " + version + " initiation process...");
-		
+
 		//Load config and permissions
         config = new Config(this);
         new Permission(this);
-        
+
         versionCheck();
-        
+
         new SessionManager();
-        
+
         //Initiate database connection
         try {
 			new DataManager(this);
@@ -96,35 +98,35 @@ public class HawkEye extends JavaPlugin {
 			pm.disablePlugin(this);
 			return;
 		}
-		
+
 		checkDependencies(pm);
-		
+
 		containerManager = new ContainerAccessManager();
-        
+
 	    registerListeners(pm);
-        
+
 	    registerCommands();
-        
+
         Util.info("Version " + version + " enabled!");
-        
+
 	}
-	
+
 	/**
 	 * Checks if any updates are available for HawkEye
 	 * Outputs console warning if updates are needed
 	 */
 	private void versionCheck() {
-		
+
 		//Check if update checking enabled
 		if (!Config.CheckUpdates) {
 			Util.warning("Update checking is disabled, this is not recommended!");
 			return;
 		}
-		
+
         //Perform version check
         Util.info("Performing update check...");
         try {
-        	
+
         	//Values
         	int updateVer;
         	int curVer;
@@ -133,14 +135,14 @@ public class HawkEye extends JavaPlugin {
         	int updateBuild;
         	int curBuild;
         	String info;
-        	
+
         	//Get version file
         	URLConnection yc = new URL("https://raw.github.com/oliverw92/HawkEye/master/version.txt").openConnection();
     		BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
-    		
+
     		//Get version number
     		String updateVersion = in.readLine().replace(".", "");
-    		
+
     		//Check for hot fixes on new version
     		if (Character.isLetter(updateVersion.charAt(updateVersion.length() - 1))) {
     			updateHot = Character.getNumericValue(updateVersion.charAt(updateVersion.length() - 1));
@@ -162,10 +164,10 @@ public class HawkEye extends JavaPlugin {
 			if (!matcher.find() || matcher.group(1) == null) throw new Exception();
 			curBuild = Integer.parseInt(matcher.group(1));
     		updateBuild = Integer.parseInt(in.readLine());
-    		
+
     		//Get custom info string
     		info = in.readLine();
-    		
+
     		//Check versions
     		if (updateVer > curVer || updateVer == curVer && updateHot > curHot) {
 				Util.warning("New version of HawkEye available: " + updateVersion);
@@ -175,19 +177,19 @@ public class HawkEye extends JavaPlugin {
     		}
     		else Util.info("No updates available for HawkEye");
     		in.close();
-    		
+
 		} catch (Exception e) {
 			Util.warning("Unable to perform update check!");
 			if (Config.Debug) e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Checks if required plugins are loaded
 	 * @param pm PluginManager
 	 */
 	private void checkDependencies(PluginManager pm) {
-		
+
         //Check if WorldEdit is loaded
         Plugin we = pm.getPlugin("WorldEdit");
         if (we != null) {
@@ -195,28 +197,28 @@ public class HawkEye extends JavaPlugin {
         	Util.info("WorldEdit found, selection rollbacks enabled");
         }
         else Util.info("WARNING! WorldEdit not found, WorldEdit selection rollbacks disabled until WorldEdit is available");
-	    
+
 	}
-	
+
 	/**
 	 * Registers event listeners
 	 * @param pm PluginManager
 	 */
 	private void registerListeners(PluginManager pm) {
-		
+
 		monitorBlockListener.registerEvents();
 		monitorPlayerListener.registerEvents();
 		monitorEntityListener.registerEvents();
 		monitorWorldListener.registerEvents();
 		pm.registerEvents(toolListener, this);
-       
+
 	}
-	
+
 	/**
 	 * Registers commands for use by the command manager
 	 */
 	private void registerCommands() {
-		
+
         //Add commands
         commands.add(new HelpCommand());
         commands.add(new ToolBindCommand());
@@ -233,9 +235,9 @@ public class HawkEye extends JavaPlugin {
         if (worldEdit != null) commands.add(new WorldEditRollbackCommand());
         commands.add(new UndoCommand());
         commands.add(new RebuildCommand());
-        
+
 	}
-	
+
 	/**
 	 * Command manager for HawkEye
 	 * @param sender - {@link CommandSender}
@@ -243,6 +245,7 @@ public class HawkEye extends JavaPlugin {
 	 * @param commandLabel - String
 	 * @param args[] - String[]
 	 */
+	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String args[]) {
 		if (cmd.getName().equalsIgnoreCase("hawk")) {
 			if (args.length == 0)

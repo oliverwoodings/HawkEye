@@ -15,7 +15,8 @@ public class HelpCommand extends BaseCommand {
 		argLength = 0;
 		usage = "<- lists all HawkEye commands";
 	}
-	
+
+	@Override
 	public boolean execute() {
 		//General help
 		if (args.size() == 0) {
@@ -40,12 +41,14 @@ public class HelpCommand extends BaseCommand {
 		}
 		return true;
 	}
-	
+
+	@Override
 	public void moreHelp() {
 		Util.sendMessage(sender, "&cShows all HawkEye commands");
 		Util.sendMessage(sender, "&cType &7/hawk help <command>&c for help on that command");
 	}
-	
+
+	@Override
 	public boolean permission() {
 		return true;
 	}

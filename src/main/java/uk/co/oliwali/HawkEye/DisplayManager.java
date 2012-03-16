@@ -21,20 +21,20 @@ public class DisplayManager {
 	 * @param page page number to display
 	 */
 	public static void displayPage(PlayerSession session, int page) {
-		
+
 		//Check if any results are found
 		List<DataEntry> results = session.getSearchResults();
 		if (results == null || results.size() == 0) {
 			Util.sendMessage(session.getSender(), "&cNo results found");
 			return;
 		}
-		
+
 		//Work out max pages. Return if page is higher than max pages
 		int maxLines = 6;
 		int maxPages = (int)Math.ceil((double)results.size() / 6);
 		if (page > maxPages || page < 1)
 			return;
-		
+
 		//Begin displaying page
 		Util.sendMessage(session.getSender(), "&8--------------------- &7Page (&c" + page + "&7/&c" + maxPages + "&7) &8--------------------" + (maxPages < 9?"-":""));
 
@@ -49,7 +49,7 @@ public class DisplayManager {
 		Util.sendMessage(session.getSender(), "&8-----------------------------------------------------");
 		return;
 	}
-	
+
 	/**
 	 * Handler for sending a result. Converts to multiple lines if it is too long
 	 * @param sender {@link CommandSender} to send result to
@@ -68,5 +68,5 @@ public class DisplayManager {
 			}
 		}
 	}
-	
+
 }

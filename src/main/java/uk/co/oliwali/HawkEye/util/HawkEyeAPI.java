@@ -18,7 +18,7 @@ import uk.co.oliwali.HawkEye.entry.DataEntry;
  * @author oliverw92
  */
 public class HawkEyeAPI {
-	
+
 	/**
 	 * Add a custom entry to the HawkEye database
 	 * @param plugin instance of your plugin (i.e. just pass 'this' from your main class)
@@ -35,7 +35,7 @@ public class HawkEyeAPI {
 		DataEntry entry = new DataEntry(player, DataType.OTHER, loc, action + "-" + data);
 		return addEntry(plugin, entry);
 	}
-	
+
 	/**
 	 * Add a standard entry to the HawkEye database
 	 * @param plugin instance of your plugin (i.e. just pass 'this' from your main class)
@@ -46,16 +46,16 @@ public class HawkEyeAPI {
 	 * @return true if accepted, false if not
 	 */
 	public static boolean addEntry(JavaPlugin plugin, DataEntry entry) {
-		
+
 		if (entry.getClass() != entry.getType().getEntryClass()) return false;
 		if (entry.getPlayer() == null) return false;
-		
+
 		entry.setPlugin(plugin.getDescription().getName());
 		DataManager.addEntry(entry);
 		return true;
-		
+
 	}
-	
+
 	/**
 	 * Performs a search of the HawkEye database
 	 * @param callBack implementation of {@BaseCallback} for {@SearchQuery} to call

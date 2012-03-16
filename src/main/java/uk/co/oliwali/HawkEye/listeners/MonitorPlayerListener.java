@@ -14,9 +14,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 
+import uk.co.oliwali.HawkEye.DataType;
 import uk.co.oliwali.HawkEye.HawkEvent;
 import uk.co.oliwali.HawkEye.HawkEye;
-import uk.co.oliwali.HawkEye.DataType;
 import uk.co.oliwali.HawkEye.database.DataManager;
 import uk.co.oliwali.HawkEye.entry.DataEntry;
 import uk.co.oliwali.HawkEye.entry.SimpleRollbackEntry;
@@ -28,11 +28,11 @@ import uk.co.oliwali.HawkEye.util.Util;
  * @author oliverw92
  */
 public class MonitorPlayerListener extends HawkEyeListener {
-	
+
 	public MonitorPlayerListener(HawkEye HawkEye) {
 		super(HawkEye);
 	}
-	
+
 	@HawkEvent(dataType = DataType.CHAT)
 	public void onPlayerChat(PlayerChatEvent event) {
 		Player player = event.getPlayer();
@@ -50,31 +50,31 @@ public class MonitorPlayerListener extends HawkEyeListener {
 		if (Config.CommandFilter.contains(event.getMessage().split(" ")[0])) return;
 		DataManager.addEntry(new DataEntry(player, DataType.COMMAND, player.getLocation(), event.getMessage()));
 	}
-	
+
 	@HawkEvent(dataType = DataType.JOIN)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		Location loc  = player.getLocation();
 		DataManager.addEntry(new DataEntry(player, DataType.JOIN, loc, Config.LogIpAddresses?player.getAddress().getAddress().getHostAddress().toString():""));
 	}
-	
+
 	@HawkEvent(dataType = DataType.QUIT)
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
 		Location loc  = player.getLocation();
-		
+
 		//Check for inventory close
 		HawkEye.containerManager.checkInventoryClose(player);
-		
+
 		//Hackish workaround for random NPE given off by the address system
 		String ip = "";
 		try {
 			ip = player.getAddress().getAddress().getHostAddress().toString();
 		} catch (Exception e) { }
-		
+
 		DataManager.addEntry(new DataEntry(player, DataType.QUIT, loc, Config.LogIpAddresses?ip:""));
 	}
-	
+
 	@HawkEvent(dataType = DataType.TELEPORT)
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
 		//Check for inventory close
@@ -84,21 +84,21 @@ public class MonitorPlayerListener extends HawkEyeListener {
 		if (Util.distance(from, to) > 5)
 			DataManager.addEntry(new DataEntry(event.getPlayer(), DataType.TELEPORT, from, to.getWorld().getName() + ": " + to.getX() + ", " + to.getY() + ", " + to.getZ()));
 	}
-	
+
 	/**
-	 * Handles several actions: 
+	 * Handles several actions:
 	 * OPEN_CHEST, DOOR_INTERACT, LEVER, STONE_BUTTON, FLINT_AND_STEEL, LAVA_BUCKET, WATER_BUCKET
 	 */
 	@HawkEvent(dataType = {DataType.OPEN_CONTAINER, DataType.DOOR_INTERACT, DataType.LEVER, DataType.STONE_BUTTON, DataType.LAVA_BUCKET, DataType.WATER_BUCKET})
-	public void onPlayerInteract(PlayerInteractEvent event) {		
+	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		Block block = event.getClickedBlock();
-		
+
 		//Check for inventory close
 		HawkEye.containerManager.checkInventoryClose(player);
-		
+
 		if (block != null) {
-			
+
 			Location loc = block.getLocation();
 
 			switch (block.getType()) {
@@ -123,7 +123,7 @@ public class MonitorPlayerListener extends HawkEyeListener {
 					DataManager.addEntry(new DataEntry(player, DataType.STONE_BUTTON, loc, ""));
 					break;
 			}
-			
+
 			if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 				loc = block.getRelative(event.getBlockFace()).getLocation();
 				switch (player.getItemInHand().getType()) {
@@ -138,11 +138,11 @@ public class MonitorPlayerListener extends HawkEyeListener {
 						break;
 				}
 			}
-		
+
 		}
-		
+
 	}
-	
+
 	@HawkEvent(dataType = DataType.ITEM_DROP)
 	public void onPlayerDropItem(PlayerDropItemEvent event) {
 		Player player = event.getPlayer();
@@ -154,7 +154,7 @@ public class MonitorPlayerListener extends HawkEyeListener {
 			data = stack.getAmount() + "x " + stack.getTypeId();
 		DataManager.addEntry(new DataEntry(player, DataType.ITEM_DROP, player.getLocation(), data));
 	}
-	
+
 	@HawkEvent(dataType = DataType.ITEM_PICKUP)
 	public void onPlayerPickupItem(PlayerPickupItemEvent event) {
 		Player player = event.getPlayer();

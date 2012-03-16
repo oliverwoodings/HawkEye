@@ -19,7 +19,7 @@ import uk.co.oliwali.HawkEye.util.Util;
  *
  */
 public abstract class BaseCommand {
-	
+
 	public CommandSender sender;
 	public List<String> args = new ArrayList<String>();
 	public String name;
@@ -30,7 +30,7 @@ public abstract class BaseCommand {
 	public String usedCommand;
 	public PlayerSession session;
 	public HawkEye plugin;
-	
+
 	/**
 	 * Method called by the command manager in {@link HawkEye} to run the command.
 	 * Arguments are processed into a list for easier manipulating.
@@ -41,27 +41,27 @@ public abstract class BaseCommand {
 	 * @return true on success, false if there is an error in the checks or if the extending command returns false
 	 */
 	public boolean run(HawkEye instace, CommandSender csender, String[] preArgs, String cmd) {
-		
+
 		plugin = instace;
 		sender = csender;
 		session = SessionManager.getSession(sender);
 		usedCommand = cmd;
-		
+
 		//Sort out arguments
 		args.clear();
 		for (String arg : preArgs)
 			args.add(arg);
-		
+
 		//Remove commands from arguments
 		for (int i = 0; i < name.split(" ").length && i < args.size(); i++)
 			args.remove(0);
-		
+
 		//Check arg lengths
 		if (argLength > args.size()) {
 			sendUsage();
 			return true;
 		}
-		
+
 		//Check if sender should be a player
 		if (bePlayer && !(sender instanceof Player))
 			return false;
@@ -71,28 +71,28 @@ public abstract class BaseCommand {
 			Util.sendMessage(sender, "&cYou do not have permission to do that!");
 			return false;
 		}
-		
+
 		return execute();
 	}
-	
+
 	/**
 	 * Runs the extending command.
 	 * Should only be run by the BaseCommand after all pre-processing is done
 	 * @return true on success, false otherwise
 	 */
 	public abstract boolean execute();
-	
+
 	/**
 	 * Performs the extending command's permission check.
 	 * @return true if the user has permission, false if not
 	 */
 	public abstract boolean permission();
-	
+
 	/**
 	 * Sends advanced help to the sender
 	 */
 	public abstract void moreHelp();
-	
+
 	/**
 	 * Displays the help information for this command
 	 */
