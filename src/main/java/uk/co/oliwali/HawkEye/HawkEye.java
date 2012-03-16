@@ -31,7 +31,6 @@ import uk.co.oliwali.HawkEye.commands.ToolCommand;
 import uk.co.oliwali.HawkEye.commands.ToolResetCommand;
 import uk.co.oliwali.HawkEye.commands.TptoCommand;
 import uk.co.oliwali.HawkEye.commands.UndoCommand;
-import uk.co.oliwali.HawkEye.commands.WorldEditRollbackCommand;
 import uk.co.oliwali.HawkEye.database.DataManager;
 import uk.co.oliwali.HawkEye.listeners.MonitorBlockListener;
 import uk.co.oliwali.HawkEye.listeners.MonitorEntityListener;
@@ -56,7 +55,7 @@ public class HawkEye extends JavaPlugin {
 	public MonitorWorldListener monitorWorldListener = new MonitorWorldListener(this);
 	public ToolListener toolListener = new ToolListener();
 	public static List<BaseCommand> commands = new ArrayList<BaseCommand>();
-	public WorldEditPlugin worldEdit = null;
+	public static WorldEditPlugin worldEdit = null;
 	public static ContainerAccessManager containerManager;
 
 	/**
@@ -232,7 +231,7 @@ public class HawkEye extends JavaPlugin {
         commands.add(new PreviewCancelCommand());
         commands.add(new PreviewCommand());
         commands.add(new RollbackCommand());
-        if (worldEdit != null) commands.add(new WorldEditRollbackCommand());
+        // if (worldEdit != null) commands.add(new WorldEditRollbackCommand());
         commands.add(new UndoCommand());
         commands.add(new RebuildCommand());
 

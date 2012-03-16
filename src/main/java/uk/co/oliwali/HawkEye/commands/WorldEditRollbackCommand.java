@@ -3,6 +3,7 @@ package uk.co.oliwali.HawkEye.commands;
 import org.bukkit.util.Vector;
 
 import uk.co.oliwali.HawkEye.DataType;
+import uk.co.oliwali.HawkEye.HawkEye;
 import uk.co.oliwali.HawkEye.Rollback.RollbackType;
 import uk.co.oliwali.HawkEye.SearchParser;
 import uk.co.oliwali.HawkEye.callbacks.RollbackCallback;
@@ -40,7 +41,7 @@ public class WorldEditRollbackCommand extends BaseCommand {
 		}
 
 		//Check if WorldEdit is enabled
-		if (plugin.worldEdit == null) {
+		if (HawkEye.worldEdit == null) {
 			Util.sendMessage(sender, "&7WorldEdit&c is not enabled, unable to perform rollbacks in selected region");
 			return true;
 		}
@@ -48,9 +49,9 @@ public class WorldEditRollbackCommand extends BaseCommand {
 		//Check if the WorldEdit selection is complete
 		Region region = null;
 		try {
-			LocalPlayer lp = new BukkitPlayer(plugin.worldEdit, plugin.worldEdit.getWorldEdit().getServer(), player);
+			LocalPlayer lp = new BukkitPlayer(HawkEye.worldEdit, HawkEye.worldEdit.getWorldEdit().getServer(), player);
 			LocalWorld lw = lp.getWorld();
-			region = plugin.worldEdit.getWorldEdit().getSession(lp).getSelection(lw);
+			region = HawkEye.worldEdit.getWorldEdit().getSession(lp).getSelection(lw);
 		} catch (IncompleteRegionException e) {
 			Util.sendMessage(sender, "&cPlease complete your selection before doing a &7WorldEdit&c rollback!");
 			return true;

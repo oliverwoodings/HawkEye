@@ -13,6 +13,8 @@ import uk.co.oliwali.HawkEye.util.Config;
 import uk.co.oliwali.HawkEye.util.Permission;
 import uk.co.oliwali.HawkEye.util.Util;
 
+import com.sk89q.worldedit.bukkit.selections.Selection;
+
 /**
  * Class for parsing HawkEye arguments ready to be used by an instance of {@SearchQuery}
  * @author oliverw92
@@ -48,6 +50,7 @@ public class SearchParser {
 
 		String lastParam = "";
 		boolean paramSet = false;
+		boolean worldedit = false;
 
 		for (int i = 0; i < args.size(); i++) {
 			String arg = args.get(i);
@@ -118,9 +121,27 @@ public class SearchParser {
 				}
 				// Radius
 				else if (lastParam.equals("r")) {
-					if (!Util.isInteger(values[0])) throw new IllegalArgumentException("Invalid radius supplied: &7" + values[0]);
-					radius = Integer.parseInt(values[0]);
-					if (Config.MaxRadius != 0 && radius > Config.MaxRadius) throw new IllegalArgumentException("Radius too large, max allowed: &7" + Config.MaxRadius);
+					if (!Util.isInteger(values[0])) {
+						if ((values[0].equalsIgnoreCase("we") || values[0].equalsIgnoreCase("worldedit")) && HawkEye.worldEdit != null) {
+							Selection sel = HawkEye.worldEdit.getSelection(player);
+							double lRadius = Math.ceil(sel.getLength() / 2);
+							double wRadius = Math.ceil(sel.getWidth() / 2);
+							double hRadius = Math.ceil(sel.getHeight() / 2);
+
+							if (Config.MaxRadius != 0 && (lRadius > Config.MaxRadius || wRadius > Config.MaxRadius || hRadius > Config.MaxRadius))
+								throw new IllegalArgumentException("Selection too large, max radius: &7" + Config.MaxRadius);
+
+							worldedit = true;
+							minLoc = new Vector(sel.getMinimumPoint().getX(), sel.getMinimumPoint().getY(), sel.getMinimumPoint().getZ());
+							maxLoc = new Vector(sel.getMaximumPoint().getX(), sel.getMaximumPoint().getY(), sel.getMaximumPoint().getZ());
+						} else {
+							throw new IllegalArgumentException("Invalid radius supplied: &7" + values[0]);
+						}
+					} else {
+						radius = Integer.parseInt(values[0]);
+						if (Config.MaxRadius != 0 && radius > Config.MaxRadius)
+							throw new IllegalArgumentException("Radius too large, max allowed: &7" + Config.MaxRadius);
+					}
 				}
 				//Time
 				else if (lastParam.equals("t")) {
@@ -195,8 +216,7 @@ public class SearchParser {
 		}
 
 		//Sort out locations
-		parseLocations();
-
+		if (!worldedit) parseLocations();
 	}
 
 	/**
