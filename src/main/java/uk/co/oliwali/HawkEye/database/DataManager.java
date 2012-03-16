@@ -28,8 +28,8 @@ public class DataManager extends TimerTask {
 
 	private static final LinkedBlockingQueue<DataEntry> queue = new LinkedBlockingQueue<DataEntry>();
 	private static ConnectionManager connections;
-	private static Timer loggingTimer = null;
-	private static Timer cleanseTimer = null;
+	public static Timer loggingTimer = null;
+	public static Timer cleanseTimer = null;
 	public static final HashMap<String, Integer> dbPlayers = new HashMap<String, Integer>();
 	public static final HashMap<String, Integer> dbWorlds = new HashMap<String, Integer>();
 
@@ -84,18 +84,18 @@ public class DataManager extends TimerTask {
 
 		//Check block filter
 		switch (entry.getType()) {
-			case BLOCK_BREAK:
-				if (Config.BlockFilter.contains(BlockUtil.getBlockStringName(entry.getSqlData())))
-					return;
-				break;
-			case BLOCK_PLACE:
-				String txt = null;
-				if (entry.getSqlData().indexOf("-") == -1)
-					txt = BlockUtil.getBlockStringName(entry.getSqlData());
-				else
-					txt = BlockUtil.getBlockStringName(entry.getSqlData().substring(entry.getSqlData().indexOf("-") + 1));
-				if (Config.BlockFilter.contains(txt))
-					return;
+		case BLOCK_BREAK:
+			if (Config.BlockFilter.contains(BlockUtil.getBlockStringName(entry.getSqlData())))
+				return;
+			break;
+		case BLOCK_PLACE:
+			String txt = null;
+			if (entry.getSqlData().indexOf("-") == -1)
+				txt = BlockUtil.getBlockStringName(entry.getSqlData());
+			else
+				txt = BlockUtil.getBlockStringName(entry.getSqlData().substring(entry.getSqlData().indexOf("-") + 1));
+			if (Config.BlockFilter.contains(txt))
+				return;
 		}
 
 		//Check world ignore list
@@ -146,7 +146,7 @@ public class DataManager extends TimerTask {
 		for (Entry<String, Integer> entry : dbPlayers.entrySet())
 			if (entry.getValue() == id)
 				return entry.getKey();
-		return null;
+				return null;
 	}
 
 	/**
@@ -158,7 +158,7 @@ public class DataManager extends TimerTask {
 		for (Entry<String, Integer> entry : dbWorlds.entrySet())
 			if (entry.getValue() == id)
 				return entry.getKey();
-		return null;
+				return null;
 	}
 
 	/**

@@ -45,7 +45,7 @@ public class HereCommand extends BaseCommand {
 
 			//Check if players were supplied
 			if (args.size() > 1)
-				parser.players = args.get(1).split(",");
+				for (String p : args.get(1).split(",")) parser.players.add(p);
 
 			//Add in 'here' actions
 			for (DataType type : DataType.values())
