@@ -48,13 +48,13 @@ public class SearchQuery extends Thread {
 
 		//Match players from database list
 		Util.debug("Building players");
-		if (parser.players != null) {
+		if (parser.players.size() >= 1) {
 			List<Integer> pids = new ArrayList<Integer>();
 			List<Integer> npids = new ArrayList<Integer>();
 			for (String player : parser.players) {
 				for (Map.Entry<String, Integer> entry : DataManager.dbPlayers.entrySet()) {
 					if (entry.getKey().toLowerCase().contains(player.toLowerCase()))
-							pids.add(entry.getValue());
+						pids.add(entry.getValue());
 					else if (entry.getKey().toLowerCase().contains(player.replace("!", "").toLowerCase()))
 						npids.add(entry.getValue());
 				}
@@ -102,7 +102,7 @@ public class SearchQuery extends Thread {
 			List<Integer> acs = new ArrayList<Integer>();
 			for (DataType act : parser.actions)
 				acs.add(act.getId());
-			args.add("action IN (" + Util.join(acs, ",") + ")");
+					args.add("action IN (" + Util.join(acs, ",") + ")");
 		}
 
 		//Add dates
