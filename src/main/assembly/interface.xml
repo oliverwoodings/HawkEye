@@ -10,9 +10,6 @@
       <directory>${basedir}/HawkEye Interface</directory>
       <outputDirectory>/</outputDirectory>
       <filtered>false</filtered>
-      <includes>
-        <include>*</include>
-      </includes>
     </fileSet>
   </fileSets>
 </assembly>
