@@ -19,6 +19,7 @@ import uk.co.oliwali.HawkEye.util.Util;
 public class SearchCommand extends BaseCommand {
 
 	public SearchCommand() {
+		bePlayer = false;
 		name = "search";
 		argLength = 1;
 		usage = "<parameters> <- search HawkEye database";
@@ -30,7 +31,7 @@ public class SearchCommand extends BaseCommand {
 		//Parse arguments
 		SearchParser parser = null;
 		try {
-			parser = new SearchParser(player, args);
+			parser = new SearchParser(sender, args);
 		} catch (IllegalArgumentException e) {
 			Util.sendMessage(sender, "&c" + e.getMessage());
 			return true;

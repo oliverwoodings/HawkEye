@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -21,7 +22,7 @@ import com.sk89q.worldedit.bukkit.selections.Selection;
  */
 public class SearchParser {
 
-	public Player player = null;
+	public CommandSender player = null;
 	public List<String> players = new ArrayList<String>();
 	public Vector loc = null;
 	public Vector minLoc = null;
@@ -35,17 +36,17 @@ public class SearchParser {
 
 	public SearchParser() { }
 
-	public SearchParser(Player player) {
+	public SearchParser(CommandSender player) {
 		this.player = player;
 	}
 
-	public SearchParser(Player player, int radius) {
+	public SearchParser(CommandSender player, int radius) {
 		this.player = player;
 		this.radius = radius;
 		parseLocations();
 	}
 
-	public SearchParser(Player player, List<String> args) throws IllegalArgumentException {
+	public SearchParser(CommandSender player, List<String> args) throws IllegalArgumentException {
 		this.player = player;
 
 		String lastParam = "";
@@ -116,9 +117,9 @@ public class SearchParser {
 					}
 				}
 				// Location
-				else if (lastParam.equals("l")) {
+				else if (lastParam.equals("l") && player instanceof Player) {
 					if (values[0].equalsIgnoreCase("here"))
-						loc = player.getLocation().toVector();
+						loc = ((Player) player).getLocation().toVector();
 					else {
 						loc = new Vector();
 						loc.setX(Integer.parseInt(values[0]));
@@ -127,10 +128,10 @@ public class SearchParser {
 					}
 				}
 				// Radius
-				else if (lastParam.equals("r")) {
+				else if (lastParam.equals("r") && player instanceof Player) {
 					if (!Util.isInteger(values[0])) {
 						if ((values[0].equalsIgnoreCase("we") || values[0].equalsIgnoreCase("worldedit")) && HawkEye.worldEdit != null) {
-							Selection sel = HawkEye.worldEdit.getSelection(player);
+							Selection sel = HawkEye.worldEdit.getSelection((Player) player);
 							double lRadius = Math.ceil(sel.getLength() / 2);
 							double wRadius = Math.ceil(sel.getWidth() / 2);
 							double hRadius = Math.ceil(sel.getHeight() / 2);
@@ -231,6 +232,8 @@ public class SearchParser {
 	 */
 	public void parseLocations() {
 
+		if (!(player instanceof Player)) return;
+
 		// Check if there is a max radius
 		if (radius == null && Config.MaxRadius != 0) radius = Config.MaxRadius;
 
@@ -238,8 +241,8 @@ public class SearchParser {
 		if (radius != null) {
 
 			//Check if location and world are supplied
-			if (loc == null) loc = player.getLocation().toVector();
-			if (worlds == null) worlds = new String[]{ player.getWorld().getName() };
+			if (loc == null) loc = ((Player) player).getLocation().toVector();
+			if (worlds == null) worlds = new String[]{ ((Player) player).getWorld().getName() };
 
 			//Format min and max
 			minLoc = new Vector(loc.getX() - radius, loc.getY() - radius, loc.getZ() - radius);
