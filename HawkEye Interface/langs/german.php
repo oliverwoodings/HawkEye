@@ -73,7 +73,8 @@
 									   "32" => "Enderman Pickup",
 									   "33" => "Enderman Place",
 									   "34" => "Tree Grow",
-									   "35" => "Mushroom Grow"),
+									   "35" => "Mushroom Grow",
+									   "36" => "Mob Kill"),
 
 					"results" => array("title" => "Ergebnisse",
 									   "id" => "ID",

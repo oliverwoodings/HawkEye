@@ -92,10 +92,10 @@
                                 <div><input type="checkbox" name="action" class="act" value="14" /> <?php echo $lang["actions"][14]; ?></div><br />
                                 <div><input type="checkbox" name="action" class="act" value="15" /> <?php echo $lang["actions"][15]; ?></div><br />
                                 <div><input type="checkbox" name="action" class="act" value="16" /> <?php echo $lang["actions"][16]; ?></div><br />
-                                <div><input type="checkbox" name="action" class="act" value="17" /> <?php echo $lang["actions"][17]; ?></div>
+                                <div><input type="checkbox" name="action" class="act" value="17" /> <?php echo $lang["actions"][17]; ?></div><br />
+                                <div><input type="checkbox" name="action" class="act" value="18" /> <?php echo $lang["actions"][18]; ?></div
                             </div>
                             <div>
-                                <div><input type="checkbox" name="action" class="act" value="18" /> <?php echo $lang["actions"][18]; ?></div><br />
                                 <div><input type="checkbox" name="action" class="act" value="19" /> <?php echo $lang["actions"][19]; ?></div><br />
                                 <div><input type="checkbox" name="action" class="act" value="20" /> <?php echo $lang["actions"][20]; ?></div><br />
                                 <div><input type="checkbox" name="action" class="act" value="21" /> <?php echo $lang["actions"][21]; ?></div><br />
@@ -113,6 +113,7 @@
                         		<div><input type="checkbox" name="action" class="act" value="33" /> <?php echo $lang["actions"][33]; ?></div><br />
                         		<div><input type="checkbox" name="action" class="act" value="34" /> <?php echo $lang["actions"][34]; ?></div><br />
                         		<div><input type="checkbox" name="action" class="act" value="35" /> <?php echo $lang["actions"][35]; ?></div><br />
+                        		<div><input type="checkbox" name="action" class="act" value="36" /> <?php echo $lang["actions"][36]; ?></div>
                             </div>
                         </div>
                         <div class="parameters1">
