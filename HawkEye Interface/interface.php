@@ -136,6 +136,10 @@
 		return error(mysql_error());
 	
 	$items = explode("\n", file_get_contents("items.txt"));
+	foreach($items as $i) {
+		$item = explode(",", $i);
+		$itemhash[intval($item[0])] = $item[1];
+	}
 	$results = array();
 	
 	//Get results from MySQL
@@ -214,15 +218,12 @@
 	*/
 	function getBlockName($string) {
 		global $items;
-		$parts = explode(":", $string);
-		foreach ($items as $i) {
-			$item = explode(",", $i);
-			if ($item[0] == $parts[0]) {
-				if (count($parts) == 2)
-					return $item[1] . ":" . $parts[1];
-				else return $item[1];
-			}
-		}
+		global $itemhash;
+		$i = $itemhash[$parts[0]];
+		if($i) {
+			if (count($parts) == 2)
+				return $i . ":" . $parts[1];
+			else return $i;
 		return $string;
 	}
 	
