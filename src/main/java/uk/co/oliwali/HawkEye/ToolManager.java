@@ -7,6 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 import uk.co.oliwali.HawkEye.callbacks.SearchCallback;
 import uk.co.oliwali.HawkEye.database.SearchQuery;
@@ -84,7 +85,11 @@ public class ToolManager {
 			parser = new SearchParser(player, Arrays.asList(session.getToolCommand()));
 		}
 
-		parser.loc = Util.getSimpleLocation(loc).toVector();
+		Vector vec = Util.getSimpleLocation(loc).toVector();
+
+		parser.loc = vec;
+		parser.minLoc = null;
+		parser.maxLoc = null;
 		parser.worlds = new String[]{ loc.getWorld().getName() };
 		new SearchQuery(new SearchCallback(SessionManager.getSession(player)), parser, SearchDir.DESC);
 
