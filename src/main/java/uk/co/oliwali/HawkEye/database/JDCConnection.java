@@ -17,12 +17,14 @@ import java.sql.Statement;
 import java.sql.Struct;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.Executor;
 
 public class JDCConnection implements Connection
 {
 	private final Connection conn;
 	private boolean inuse;
 	private long timestamp;
+    private String schema;
 
 	JDCConnection(Connection connection) {
 		this.conn = connection;
@@ -311,5 +313,25 @@ public class JDCConnection implements Connection
 			conn.close();
 		} catch (final SQLException ex) {}
 	}
+
+    public void setSchema(String schema) throws SQLException {
+        this.schema = schema;
+    }
+
+    public String getSchema() throws SQLException {
+        return schema;
+    }
+
+    public void abort(Executor executor) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public int getNetworkTimeout() throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
 }

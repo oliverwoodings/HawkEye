@@ -13,11 +13,12 @@
       <url>http://repo.bukkit.org/content/groups/public/</url>
     </repository>
     
-    <!-- WorldEdit repo -->
+    <!-- Spout repo (Worldedit) -->
     <repository>
-      <id>zml-repo</id>
-      <url>http://files.zachsthings.com/repo/</url>
-    </repository>
+        <id>spout</id>
+        <name>spout</name>
+        <url>http://nexus.spout.org/content/groups/public/</url>
+    </repository>     
     
     <!-- PermissionsEx repo -->
     <repository>
@@ -36,7 +37,7 @@
     <dependency>
       <groupId>com.sk89q</groupId>
       <artifactId>worldedit</artifactId>
-      <version>5.2</version>
+      <version>5.3-SNAPSHOT</version>
     </dependency>
     
     <dependency>
