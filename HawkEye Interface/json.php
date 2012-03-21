@@ -38,9 +38,7 @@ function json_decode ($json)
       return eval("return $json;"); 
   } 
 function json_encode($in) { 
-  $_escape = function ($str) { 
-    return addcslashes($str, "\v\t\n\r\f\"\\/"); 
-  }; 
+  $_escape = create_function('$str', 'return addcslashes($str, "\v\t\n\r\f\"\\/");');
   $out = ""; 
   if (is_object($in)) { 
     $class_vars = get_object_vars(($in)); 
