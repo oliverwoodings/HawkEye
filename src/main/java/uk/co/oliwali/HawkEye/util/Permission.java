@@ -1,4 +1,7 @@
 package uk.co.oliwali.HawkEye.util;
+import com.nijiko.permissions.PermissionHandler;
+import com.nijikokun.bukkit.Permissions.Permissions;
+
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -9,9 +12,6 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import ru.tehkode.permissions.PermissionManager;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 import uk.co.oliwali.HawkEye.HawkEye;
-
-import com.nijiko.permissions.PermissionHandler;
-import com.nijikokun.bukkit.Permissions.Permissions;
 
 /**
  * Permissions handler for HawkEye
@@ -173,6 +173,15 @@ public class Permission {
 	 */
 	public static boolean rebuild(CommandSender player) {
 		return hasPermission(player, "hawkeye.rebuild");
+	}
+
+	/**
+	 * Permission to delete entires
+	 * @param player
+	 * @return
+	 */
+	public static boolean delete(CommandSender player) {
+		return hasPermission(player, "hawkeye.delete");
 	}
 
 	/**
