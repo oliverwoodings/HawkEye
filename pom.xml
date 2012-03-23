@@ -2,24 +2,24 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>uk.co.oliwali</groupId>
   <artifactId>HawkEye</artifactId>
-  <version>1.0.7</version>
+  <version>1.0.7c</version>
   <name>HawkEye</name>
   <description>Bukkit data logging plugin with web-based data browser</description>
   
   <repositories>
-    <!-- Bukkit repo -->
+    <!-- Bukkit -->
     <repository>
       <id>bukkit-repo</id>
       <url>http://repo.bukkit.org/content/groups/public/</url>
     </repository>
     
-    <!-- WorldEdit repo -->
+    <!-- WorldEdit -->
     <repository>
-      <id>zml-repo</id>
-      <url>http://files.zachsthings.com/repo/</url>
+      <id>spout-repo</id>
+      <url>http://nexus.spout.org/content/groups/public/</url>
     </repository>
     
-    <!-- PermissionsEx repo -->
+    <!-- PermissionsEx -->
     <repository>
       <id>tehkode-repo</id>
       <url>http://repo.tehkode.ru/repository/bukkit-plugins/</url>
@@ -30,13 +30,13 @@
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
-      <version>1.2.3-R0.1</version>
+      <version>1.2.4-R0.1-SNAPSHOT</version>
     </dependency>
     
     <dependency>
       <groupId>com.sk89q</groupId>
       <artifactId>worldedit</artifactId>
-      <version>5.2</version>
+      <version>5.3-SNAPSHOT</version>
     </dependency>
     
     <dependency>
@@ -75,27 +75,10 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.3.2</version>
-      </plugin>
-      
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.2-beta-2</version>
         <configuration>
-          <descriptors>
-            <descriptor>${basedir}/src/main/assembly/interface.xml</descriptor>
-            <descriptor>${basedir}/src/main/assembly/release.xml</descriptor>
-          </descriptors>
+          <source>1.6</source>
+          <target>1.6</target>
         </configuration>
-        <executions>
-          <execution>
-            <id>release</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       
       <plugin>
