@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -17,6 +19,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import uk.co.oliwali.HawkEye.commands.BaseCommand;
+import uk.co.oliwali.HawkEye.commands.DeleteCommand;
 import uk.co.oliwali.HawkEye.commands.HelpCommand;
 import uk.co.oliwali.HawkEye.commands.HereCommand;
 import uk.co.oliwali.HawkEye.commands.PageCommand;
@@ -40,8 +43,6 @@ import uk.co.oliwali.HawkEye.listeners.ToolListener;
 import uk.co.oliwali.HawkEye.util.Config;
 import uk.co.oliwali.HawkEye.util.Permission;
 import uk.co.oliwali.HawkEye.util.Util;
-
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
 public class HawkEye extends JavaPlugin {
 
@@ -234,6 +235,7 @@ public class HawkEye extends JavaPlugin {
         // if (worldEdit != null) commands.add(new WorldEditRollbackCommand());
         commands.add(new UndoCommand());
         commands.add(new RebuildCommand());
+        commands.add(new DeleteCommand());
 
 	}
 

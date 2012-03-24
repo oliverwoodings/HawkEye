@@ -93,7 +93,7 @@
                                 <div><input type="checkbox" name="action" class="act" value="15" /> <?php echo $lang["actions"][15]; ?></div><br />
                                 <div><input type="checkbox" name="action" class="act" value="16" /> <?php echo $lang["actions"][16]; ?></div><br />
                                 <div><input type="checkbox" name="action" class="act" value="17" /> <?php echo $lang["actions"][17]; ?></div><br />
-                                <div><input type="checkbox" name="action" class="act" value="18" /> <?php echo $lang["actions"][18]; ?></div
+                                <div><input type="checkbox" name="action" class="act" value="18" /> <?php echo $lang["actions"][18]; ?></div>
                             </div>
                             <div>
                                 <div><input type="checkbox" name="action" class="act" value="19" /> <?php echo $lang["actions"][19]; ?></div><br />

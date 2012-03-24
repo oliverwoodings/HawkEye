@@ -12,6 +12,7 @@ import java.util.Map;
 import uk.co.oliwali.HawkEye.DataType;
 import uk.co.oliwali.HawkEye.SearchParser;
 import uk.co.oliwali.HawkEye.callbacks.BaseCallback;
+import uk.co.oliwali.HawkEye.callbacks.DeleteCallback;
 import uk.co.oliwali.HawkEye.entry.DataEntry;
 import uk.co.oliwali.HawkEye.util.Config;
 import uk.co.oliwali.HawkEye.util.Util;
@@ -26,11 +27,13 @@ public class SearchQuery extends Thread {
 	private final SearchParser parser;
 	private final SearchDir dir;
 	private final BaseCallback callBack;
+	private final boolean delete;
 
 	public SearchQuery(BaseCallback callBack, SearchParser parser, SearchDir dir) {
 		this.callBack = callBack;
 		this.parser = parser;
 		this.dir = dir;
+		this.delete = (callBack instanceof DeleteCallback);
 
 		//Start thread
 		this.start();
@@ -43,7 +46,14 @@ public class SearchQuery extends Thread {
 	public void run() {
 
 		Util.debug("Beginning search query");
-		String sql = "SELECT * FROM `" + Config.DbHawkEyeTable + "` WHERE ";
+		String sql;
+
+		if (delete)
+			sql = "DELETE FROM ";
+		else
+			sql = "SELECT * FROM ";
+
+		sql += "`" + Config.DbHawkEyeTable + "` WHERE ";
 		List<String> args = new ArrayList<String>();
 
 		//Match players from database list
@@ -152,22 +162,29 @@ public class SearchQuery extends Thread {
 		List<DataEntry> results = new ArrayList<DataEntry>();
 		JDCConnection conn = DataManager.getConnection();
 		Statement stmnt = null;
+		int deleted = 0;
 
 		try {
 
 			//Execute query
 			stmnt = conn.createStatement();
-			res = stmnt.executeQuery(sql);
-			Util.debug("Getting results");
 
-			//Retrieve results
-			while (res.next())
-				results.add(DataManager.createEntryFromRes(res));
+			if (delete) {
+				Util.debug("Deleting entries");
+				deleted = stmnt.executeUpdate(sql);
+			} else {
+				res = stmnt.executeQuery(sql);
 
-			//If ascending, reverse results
-			if (dir == SearchDir.ASC)
-				Collections.reverse(results);
+				Util.debug("Getting results");
 
+				//Retrieve results
+				while (res.next())
+					results.add(DataManager.createEntryFromRes(res));
+
+				//If ascending, reverse results
+				if (dir == SearchDir.ASC)
+					Collections.reverse(results);
+			}
 		} catch (Exception ex) {
 			Util.severe("Error executing MySQL query: " + ex);
 			ex.printStackTrace();
@@ -188,7 +205,11 @@ public class SearchQuery extends Thread {
 		Util.debug(results.size() + " results found");
 
 		//Run callback
-		callBack.results = results;
+		if (delete)
+			((DeleteCallback) callBack).deleted = deleted;
+		else
+			callBack.results = results;
+
 		callBack.execute();
 
 		Util.debug("Search complete");

@@ -82,29 +82,29 @@ public class Util {
 	 * @throws IOException
 	 */
 	public static void download(URL url, File file) throws IOException {
-	    if (!file.getParentFile().exists())
-	        file.getParentFile().mkdir();
-	    if (file.exists())
-	        file.delete();
-	    file.createNewFile();
-	    int size = url.openConnection().getContentLength();
-	    Util.info("Downloading " + file.getName() + " (" + size / 1024 + "kb) ...");
-	    InputStream in = url.openStream();
-	    OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
-	    byte[] buffer = new byte[1024];
-	    int len, downloaded = 0, msgs = 0;
-	    final long start = System.currentTimeMillis();
-	    while ((len = in.read(buffer)) >= 0) {
-	        out.write(buffer, 0, len);
-	        downloaded += len;
-	        if ((int)((System.currentTimeMillis() - start) / 500) > msgs) {
-	            Util.info((int)((double)downloaded / (double)size * 100d) + "%");
-	            msgs++;
-	        }
-	    }
-	    in.close();
-	    out.close();
-	    Util.info("Download finished");
+		if (!file.getParentFile().exists())
+			file.getParentFile().mkdir();
+		if (file.exists())
+			file.delete();
+		file.createNewFile();
+		int size = url.openConnection().getContentLength();
+		Util.info("Downloading " + file.getName() + " (" + size / 1024 + "kb) ...");
+		InputStream in = url.openStream();
+		OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
+		byte[] buffer = new byte[1024];
+		int len, downloaded = 0, msgs = 0;
+		final long start = System.currentTimeMillis();
+		while ((len = in.read(buffer)) >= 0) {
+			out.write(buffer, 0, len);
+			downloaded += len;
+			if ((int)((System.currentTimeMillis() - start) / 500) > msgs) {
+				Util.info((int)((double)downloaded / (double)size * 100d) + "%");
+				msgs++;
+			}
+		}
+		in.close();
+		out.close();
+		Util.info("Download finished");
 	}
 
 	/**
@@ -117,7 +117,7 @@ public class Util {
 		int i;
 		String part;
 		CustomColor lastColor = CustomColor.WHITE;
-		for (String line : msg.split("`n")) {
+		for (String line : msg.split("\n")) {
 			i = 0;
 			while (i < line.length()) {
 				part = getMaxString(line.substring(i));
@@ -165,14 +165,14 @@ public class Util {
 	 * @return String
 	 */
 	public static String join(Collection<?> s, String delimiter) {
-	    StringBuffer buffer = new StringBuffer();
-	    Iterator<?> iter = s.iterator();
-	    while (iter.hasNext()) {
-	        buffer.append(iter.next());
-	        if (iter.hasNext())
-	            buffer.append(delimiter);
-	    }
-	    return buffer.toString();
+		StringBuffer buffer = new StringBuffer();
+		Iterator<?> iter = s.iterator();
+		while (iter.hasNext()) {
+			buffer.append(iter.next());
+			if (iter.hasNext())
+				buffer.append(delimiter);
+		}
+		return buffer.toString();
 	}
 
 	/**
@@ -191,8 +191,8 @@ public class Util {
 		T[] result = Arrays.copyOf(first, totalLength);
 		int offset = first.length;
 		for (T[] array : rest) {
-		    System.arraycopy(array, 0, result, offset, array.length);
-		    offset += array.length;
+			System.arraycopy(array, 0, result, offset, array.length);
+			offset += array.length;
 		}
 		return result;
 
@@ -206,7 +206,7 @@ public class Util {
 	* @return double
 	**/
 	public static double distance(Location from, Location to) {
-	    return Math.sqrt(Math.pow(from.getX() - to.getX(), 2) + Math.pow(from.getY() - to.getY(), 2) + Math.pow(from.getZ() - to.getZ(), 2));
+		return Math.sqrt(Math.pow(from.getX() - to.getX(), 2) + Math.pow(from.getY() - to.getY(), 2) + Math.pow(from.getZ() - to.getZ(), 2));
 	}
 
 	/**
@@ -243,28 +243,28 @@ public class Util {
 	 * @param str input
 	 * @return inputted string with proper colour values
 	 */
-    public static String replaceColors(String str) {
-    	for (CustomColor color : CustomColor.values())
-    		str = str.replace(color.getCustom(), color.getString());
-        return str;
-    }
+	public static String replaceColors(String str) {
+		for (CustomColor color : CustomColor.values())
+			str = str.replace(color.getCustom(), color.getString());
+		return str;
+	}
 
-    /**
-     * Finds the max length of the inputted string for outputting
-     * @param str
-     * @return the string in its longest possible form
-     */
-    private static String getMaxString(String str) {
-    	for (int i = 0; i < str.length(); i++) {
-    		if (stripColors(str.substring(0, i)).length() == maxLength) {
-    			if (stripColors(str.substring(i, i+1)) == "")
-    				return str.substring(0, i-1);
-    			else
-    				return str.substring(0, i);
-    		}
-    	}
-    	return str;
-    }
+	/**
+	 * Finds the max length of the inputted string for outputting
+	 * @param str
+	 * @return the string in its longest possible form
+	 */
+	private static String getMaxString(String str) {
+		for (int i = 0; i < str.length(); i++) {
+			if (stripColors(str.substring(0, i)).length() == maxLength) {
+				if (stripColors(str.substring(i, i+1)) == "")
+					return str.substring(0, i-1);
+				else
+					return str.substring(0, i);
+			}
+		}
+		return str;
+	}
 
 	/**
 	 * Returns the name of the supplied entity
@@ -279,45 +279,52 @@ public class Util {
 		else return entity.getType().getName();
 	}
 
-    /**
-     * Custom colour class.
-     * Created to allow for easier colouring of text
-     * @author oliverw92
-     */
-    public enum CustomColor {
+	/**
+	 * Custom colour class.
+	 * Created to allow for easier colouring of text
+	 * @author oliverw92
+	 */
+	public enum CustomColor {
 
-    	RED("c", 0xC),
-    	DARK_RED("4", 0x4),
-    	YELLOW("e", 0xE),
-    	GOLD("6", 0x6),
-    	GREEN("a", 0xA),
-    	DARK_GREEN("2", 0x2),
-    	TURQOISE("3", 0x3),
-    	AQUA("b", 0xB),
-    	DARK_AQUA("8", 0x8),
-    	BLUE("9", 0x9),
-    	DARK_BLUE("1", 0x1),
-    	LIGHT_PURPLE("d", 0xD),
-    	DARK_PURPLE("5", 0x5),
-    	BLACK("0", 0x0),
-    	DARK_GRAY("8", 0x8),
-    	GRAY("7", 0x7),
-    	WHITE("f", 0xf);
+		RED("c", 0xC),
+		DARK_RED("4", 0x4),
+		YELLOW("e", 0xE),
+		GOLD("6", 0x6),
+		GREEN("a", 0xA),
+		DARK_GREEN("2", 0x2),
+		TURQOISE("3", 0x3),
+		AQUA("b", 0xB),
+		DARK_AQUA("8", 0x8),
+		BLUE("9", 0x9),
+		DARK_BLUE("1", 0x1),
+		LIGHT_PURPLE("d", 0xD),
+		DARK_PURPLE("5", 0x5),
+		BLACK("0", 0x0),
+		DARK_GRAY("8", 0x8),
+		GRAY("7", 0x7),
+		WHITE("f", 0xf),
+		MAGIC("k", 0x10),
+		BOLD("l", 0x11),
+		STRIKETHROUGH("m", 0x12),
+		UNDERLINE("n", 0x13),
+		ITALIC("o", 0x14),
+		RESET("r", 0x15);
 
-    	private final String custom;
-    	private final int code;
 
-    	private CustomColor(String custom, int code) {
-    		this.custom = custom;
-    		this.code = code;
-    	}
-    	public String getCustom() {
-    		return "&" + custom;
-    	}
-    	public String getString() {
-    		return String.format("\u00A7%x", code);
-    	}
+		private final String custom;
+		private final int code;
 
-    }
+		private CustomColor(String custom, int code) {
+			this.custom = custom;
+			this.code = code;
+		}
+		public String getCustom() {
+			return "&" + custom;
+		}
+		public String getString() {
+			return String.format("\u00A7%x", code);
+		}
+
+	}
 
 }
