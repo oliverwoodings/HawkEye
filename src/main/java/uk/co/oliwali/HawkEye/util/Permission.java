@@ -36,11 +36,13 @@ public class Permission {
 
 		if (pm.isPluginEnabled("Vault")) {
 			RegisteredServiceProvider<net.milkbowl.vault.permission.Permission> rsp = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
-			vaultPermissions = rsp.getProvider();
-			if (vaultPermissions != null) {
-				handler = PermissionPlugin.VAULT;
-				Util.info("Using " + vaultPermissions.getName() + " for user permissions");
-				return;
+			if (rsp != null) {
+				vaultPermissions = rsp.getProvider();
+				if (vaultPermissions != null) {
+					handler = PermissionPlugin.VAULT;
+					Util.info("Using " + vaultPermissions.getName() + " for user permissions");
+					return;
+				}
 			}
 		}
 
