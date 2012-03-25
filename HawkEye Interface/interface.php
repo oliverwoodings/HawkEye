@@ -217,13 +217,16 @@
 	// Gets block name of block
 	*/
 	function getBlockName($string) {
-		global $items;
-		global $itemhash;
+		global $items, $itemhash;
+
+		$parts = explode(":", $string);
 		$i = $itemhash[$parts[0]];
 		if($i) {
 			if (count($parts) == 2)
 				return $i . ":" . $parts[1];
-			else return $i;
+			else
+				return $i;
+		}
 		return $string;
 	}
 	
