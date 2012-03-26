@@ -62,7 +62,7 @@ public class Util {
 
 	public static void debug(DebugLevel level, String msg) {
 		if (Config.Debug)
-			if (Config.DebugLevel.compareTo(level) > 0)
+			if (Config.DebugLevel.compareTo(level) >= 0)
 				Util.info("DEBUG: " + msg);
 	}
 

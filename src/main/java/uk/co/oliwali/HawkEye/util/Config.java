@@ -83,7 +83,7 @@ public class Config {
 		PoolSize = config.getInt("mysql.max-connections");
 
 		try {
-			DebugLevel = Util.DebugLevel.valueOf(config.getString("general.debug-level"));
+			DebugLevel = Util.DebugLevel.valueOf(config.getString("general.debug-level").toUpperCase());
 		} catch (Exception ex) {
 			DebugLevel = Util.DebugLevel.NONE;
 		}
