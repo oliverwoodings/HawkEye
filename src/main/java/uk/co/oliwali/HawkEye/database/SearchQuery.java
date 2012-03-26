@@ -2,10 +2,11 @@ package uk.co.oliwali.HawkEye.database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -54,7 +55,8 @@ public class SearchQuery extends Thread {
 			sql = "SELECT * FROM ";
 
 		sql += "`" + Config.DbHawkEyeTable + "` WHERE ";
-		List<String> args = new ArrayList<String>();
+		List<String> args = new LinkedList<String>();
+		List<Object> binds = new LinkedList<Object>();
 
 		//Match players from database list
 		Util.debug("Building players");
@@ -117,10 +119,14 @@ public class SearchQuery extends Thread {
 
 		//Add dates
 		Util.debug("Building dates");
-		if (parser.dateFrom != null)
-			args.add("date >= '" + parser.dateFrom + "'");
-		if (parser.dateTo != null)
-			args.add("date <= '" + parser.dateTo + "'");
+		if (parser.dateFrom != null) {
+			args.add("date >= ?");
+			binds.add(parser.dateFrom);
+		}
+		if (parser.dateTo != null) {
+			args.add("date <= ?");
+			binds.add(parser.dateTo);
+		}
 
 		//Check if location is exact or a range
 		Util.debug("Building location");
@@ -138,9 +144,10 @@ public class SearchQuery extends Thread {
 		//Build the filters into SQL form
 		Util.debug("Building filters");
 		if (parser.filters != null) {
-			for (int i = 0; i < parser.filters.length; i++)
-				parser.filters[i] = "'%" + parser.filters[i] + "%'";
-			args.add("data LIKE " + Util.join(Arrays.asList(parser.filters), " OR HawkEye.data LIKE "));
+			for (String filter : parser.filters) {
+				args.add("data LIKE ?");
+				binds.add("%" + filter + "%");
+			}
 		}
 
 		//Build WHERE clause
@@ -155,25 +162,31 @@ public class SearchQuery extends Thread {
 		if (Config.MaxLines > 0)
 			sql += " LIMIT " + Config.MaxLines;
 
-		Util.debug("Searching: " + sql);
+		//Util.debug("Searching: " + sql);
 
 		//Set up some stuff for the search
 		ResultSet res;
 		List<DataEntry> results = new ArrayList<DataEntry>();
 		JDCConnection conn = DataManager.getConnection();
-		Statement stmnt = null;
+		PreparedStatement stmnt = null;
 		int deleted = 0;
 
 		try {
 
 			//Execute query
-			stmnt = conn.createStatement();
+			stmnt = conn.prepareStatement(sql);
+
+			Util.debug("Preparing statement");
+			for (int i = 0; i < binds.size(); i++)
+				stmnt.setObject(i + 1, binds.get(i));
+
+			Util.debug("Searching: " + stmnt.toString());
 
 			if (delete) {
 				Util.debug("Deleting entries");
-				deleted = stmnt.executeUpdate(sql);
+				deleted = stmnt.executeUpdate();
 			} else {
-				res = stmnt.executeQuery(sql);
+				res = stmnt.executeQuery();
 
 				Util.debug("Getting results");
 
