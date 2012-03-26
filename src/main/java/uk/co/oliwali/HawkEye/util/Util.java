@@ -28,6 +28,7 @@ public class Util {
 	private static final Logger log = Logger.getLogger("Minecraft");
 	private static int maxLength = 105;
 
+
 	/**
 	 * Send an info level log message to console
 	 * @param msg message to send
@@ -56,7 +57,13 @@ public class Util {
 	 */
 	public static void debug(String msg) {
 		if (Config.Debug)
-			Util.info("DEBUG: " + msg);
+			Util.debug(DebugLevel.LOW, msg);
+	}
+
+	public static void debug(DebugLevel level, String msg) {
+		if (Config.Debug)
+			if (Config.DebugLevel.compareTo(level) > 0)
+				Util.info("DEBUG: " + msg);
 	}
 
 	/**
@@ -325,6 +332,12 @@ public class Util {
 			return String.format("\u00A7%x", code);
 		}
 
+	}
+
+	public enum DebugLevel {
+		NONE,
+		LOW,
+		HIGH;
 	}
 
 }

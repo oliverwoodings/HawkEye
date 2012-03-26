@@ -28,6 +28,7 @@ public class Config {
 	public static boolean GiveTool;
 	public static boolean CheckUpdates;
 	public static boolean Debug;
+	public static Util.DebugLevel DebugLevel;
 	public static boolean LogIpAddresses;
 	public static boolean DeleteDataOnRollback;
 	public static boolean LogDeathDrops;
@@ -80,6 +81,12 @@ public class Config {
 		DbPlayerTable = config.getString("mysql.player-table");
 		DbWorldTable = config.getString("mysql.world-table");
 		PoolSize = config.getInt("mysql.max-connections");
+
+		try {
+			DebugLevel = Util.DebugLevel.valueOf(config.getString("general.debug-level"));
+		} catch (Exception ex) {
+			DebugLevel = Util.DebugLevel.NONE;
+		}
 
 	}
 

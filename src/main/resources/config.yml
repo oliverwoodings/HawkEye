@@ -44,6 +44,7 @@ general:
     delete-data-on-rollback: true
     log-ip-addresses: true
     debug: false
+    debug-level: low
     max-radius: 0
     give-user-tool: true
     tool-block: '17'

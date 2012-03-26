@@ -13,6 +13,7 @@ import uk.co.oliwali.HawkEye.HawkEvent;
 import uk.co.oliwali.HawkEye.HawkEye;
 import uk.co.oliwali.HawkEye.util.Config;
 import uk.co.oliwali.HawkEye.util.Util;
+import uk.co.oliwali.HawkEye.util.Util.DebugLevel;
 
 public abstract class HawkEyeListener implements Listener {
 
@@ -53,7 +54,9 @@ public abstract class HawkEyeListener implements Listener {
 							return;
 						}
 
+						Util.debug(DebugLevel.HIGH, "Calling event: " + event.getEventName());
 						method.invoke(listener, event);
+						Util.debug(DebugLevel.HIGH, "Event call complete: " + event.getEventName());
 					} catch (Exception ex) {
 						throw new EventException(ex.getCause());
 					}

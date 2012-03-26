@@ -81,6 +81,9 @@ public class MonitorBlockListener extends HawkEyeListener {
 	public void onBlockFromTo(BlockFromToEvent event) {
 		List<Integer> fluidBlocks = Arrays.asList(0, 27, 28, 31, 32, 37, 38, 39, 40, 50, 51, 55, 59, 66, 69, 70, 75, 76, 78, 93, 94);
 
+		//Only interested in liquids flowing
+		if (!event.getBlock().isLiquid()) return;
+
 		Location loc = event.getToBlock().getLocation();
 		BlockState from = event.getBlock().getState();
 		BlockState to = event.getToBlock().getState();
