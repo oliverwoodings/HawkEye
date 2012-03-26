@@ -8,7 +8,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockFadeEvent;
@@ -47,14 +46,14 @@ public class MonitorBlockListener extends HawkEyeListener {
 			DataManager.addEntry(new BlockEntry(event.getPlayer(), DataType.BLOCK_BREAK, block));
 	}
 
-	@HawkEvent(dataType = DataType.BLOCK_PLACE, priority = EventPriority.HIGHEST)
+	@HawkEvent(dataType = DataType.BLOCK_PLACE)
 	public void onBlockPlace(BlockPlaceEvent event) {
 		Block block = event.getBlock();
 		if (block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST) return;
 		DataManager.addEntry(new BlockChangeEntry(event.getPlayer(), DataType.BLOCK_PLACE, block.getLocation(), event.getBlockReplacedState(), block.getState()));
 	}
 
-	@HawkEvent(dataType = DataType.SIGN_PLACE, priority = EventPriority.NORMAL)
+	@HawkEvent(dataType = DataType.SIGN_PLACE)
 	public void onSignChange(SignChangeEvent event) {
 		DataManager.addEntry(new SignEntry(event.getPlayer(), DataType.SIGN_PLACE, event.getBlock(), event.getLines()));
 	}
