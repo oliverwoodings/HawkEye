@@ -27,8 +27,6 @@ import uk.co.oliwali.HawkEye.entry.BlockChangeEntry;
 import uk.co.oliwali.HawkEye.entry.BlockEntry;
 import uk.co.oliwali.HawkEye.entry.SignEntry;
 import uk.co.oliwali.HawkEye.entry.SimpleRollbackEntry;
-import uk.co.oliwali.HawkEye.util.BlockUtil;
-import uk.co.oliwali.HawkEye.util.Util;
 
 /**
  * Block listener class for HawkEye
@@ -45,9 +43,8 @@ public class MonitorBlockListener extends HawkEyeListener {
 		Block block = event.getBlock();
 		if (block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST)
 			DataManager.addEntry(new SignEntry(event.getPlayer(), DataType.SIGN_BREAK, event.getBlock()));
-		DataManager.addEntry(new BlockEntry(event.getPlayer(), DataType.BLOCK_BREAK, block));
-		Util.debug(BlockUtil.getBlockString(block));
-		Util.debug(BlockUtil.getBlockString(block.getState()));
+		else
+			DataManager.addEntry(new BlockEntry(event.getPlayer(), DataType.BLOCK_BREAK, block));
 	}
 
 	@HawkEvent(dataType = DataType.BLOCK_PLACE, priority = EventPriority.HIGHEST)
@@ -55,7 +52,6 @@ public class MonitorBlockListener extends HawkEyeListener {
 		Block block = event.getBlock();
 		if (block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST) return;
 		DataManager.addEntry(new BlockChangeEntry(event.getPlayer(), DataType.BLOCK_PLACE, block.getLocation(), event.getBlockReplacedState(), block.getState()));
-		Util.debug(BlockUtil.getBlockString(block));
 	}
 
 	@HawkEvent(dataType = DataType.SIGN_PLACE, priority = EventPriority.NORMAL)
