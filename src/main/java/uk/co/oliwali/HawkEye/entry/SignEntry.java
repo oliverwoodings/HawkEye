@@ -39,6 +39,12 @@ public class SignEntry extends DataEntry {
 		setInfo(player, type, block.getLocation());
 	}
 
+	public SignEntry(Player player, DataType type, Block block, String[] lines) {
+		interpretSignBlock(block);
+		this.lines = lines;
+		setInfo(player, type, block.getLocation());
+	}
+
 	/**
 	 * Extracts the sign data from a block
 	 * @param block
@@ -51,6 +57,8 @@ public class SignEntry extends DataEntry {
 		else this.facing = signData.getFacing();
 		this.wallSign = signData.isWallSign();
 		this.lines = sign.getLines();
+		System.out.println("Line 1: " + sign.getLine(1));
+		for (String line : lines) System.out.println("Line: " + line);
 	}
 
 	@Override
@@ -128,19 +136,19 @@ public class SignEntry extends DataEntry {
 		for (BlockFace face : BlockFace.values())
 			if (face.toString().equalsIgnoreCase(arr[1])) facing = face;
 
-		//Parse lines
-		if (arr.length != 3) return;
-		BASE64Decoder decoder = new BASE64Decoder();
-		List<String> decoded = new ArrayList<String>();
-		String[] encLines = arr[2].split(",");
-		for (int i = 0; i < encLines.length; i++) {
-			try {
-				decoded.add(new String(decoder.decodeBuffer(encLines[i])));
-			} catch (IOException e) {
-				Util.severe("Unable to decode sign data from database");
-			}
-		}
-		lines = decoded.toArray(new String[0]);
+				//Parse lines
+				if (arr.length != 3) return;
+				BASE64Decoder decoder = new BASE64Decoder();
+				List<String> decoded = new ArrayList<String>();
+				String[] encLines = arr[2].split(",");
+				for (int i = 0; i < encLines.length; i++) {
+					try {
+						decoded.add(new String(decoder.decodeBuffer(encLines[i])));
+					} catch (IOException e) {
+						Util.severe("Unable to decode sign data from database");
+					}
+				}
+				lines = decoded.toArray(new String[0]);
 
 	}
 

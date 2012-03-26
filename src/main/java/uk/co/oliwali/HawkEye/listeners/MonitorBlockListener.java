@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockFadeEvent;
@@ -26,6 +27,8 @@ import uk.co.oliwali.HawkEye.entry.BlockChangeEntry;
 import uk.co.oliwali.HawkEye.entry.BlockEntry;
 import uk.co.oliwali.HawkEye.entry.SignEntry;
 import uk.co.oliwali.HawkEye.entry.SimpleRollbackEntry;
+import uk.co.oliwali.HawkEye.util.BlockUtil;
+import uk.co.oliwali.HawkEye.util.Util;
 
 /**
  * Block listener class for HawkEye
@@ -43,18 +46,21 @@ public class MonitorBlockListener extends HawkEyeListener {
 		if (block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST)
 			DataManager.addEntry(new SignEntry(event.getPlayer(), DataType.SIGN_BREAK, event.getBlock()));
 		DataManager.addEntry(new BlockEntry(event.getPlayer(), DataType.BLOCK_BREAK, block));
+		Util.debug(BlockUtil.getBlockString(block));
+		Util.debug(BlockUtil.getBlockString(block.getState()));
 	}
 
-	@HawkEvent(dataType = DataType.BLOCK_PLACE)
+	@HawkEvent(dataType = DataType.BLOCK_PLACE, priority = EventPriority.HIGHEST)
 	public void onBlockPlace(BlockPlaceEvent event) {
 		Block block = event.getBlock();
 		if (block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST) return;
 		DataManager.addEntry(new BlockChangeEntry(event.getPlayer(), DataType.BLOCK_PLACE, block.getLocation(), event.getBlockReplacedState(), block.getState()));
+		Util.debug(BlockUtil.getBlockString(block));
 	}
 
-	@HawkEvent(dataType = DataType.SIGN_PLACE)
+	@HawkEvent(dataType = DataType.SIGN_PLACE, priority = EventPriority.NORMAL)
 	public void onSignChange(SignChangeEvent event) {
-        DataManager.addEntry(new SignEntry(event.getPlayer(), DataType.SIGN_PLACE, event.getBlock()));
+		DataManager.addEntry(new SignEntry(event.getPlayer(), DataType.SIGN_PLACE, event.getBlock(), event.getLines()));
 	}
 
 	@HawkEvent(dataType = DataType.BLOCK_FORM)
