@@ -30,6 +30,21 @@
 		return error($lang["messages"]["breakMe"]);
 		
 	$data = json_decode(stripslashes($_GET["data"]), true);
+
+	// Sanitize input
+	foreach ($data["actions"] as $key => $val)
+		$data["actions"][$key] = intval($val);
+	foreach ($data["loc"] as $key => $val)
+		$data["loc"][$key] = intval($val);
+	foreach ($data["keywords"] as $key => $val)
+		$data["keywords"][$key] = mysql_real_escape_string($val);
+	foreach ($data["exclude"] as $key => $val)
+		$data["exclude"][$key] = mysql_real_escape_string($val);
+
+	$data["block"] = intval($data["block"]);
+	$data["range"] = intval($data["range"]);
+	$data["dateFrom"] = mysql_real_escape_string($data["dateFrom"]);
+	$data["dateTo"] = mysql_real_escape_string($data["dateTo"]);
 		
 	//Get players
 	$players = array();
