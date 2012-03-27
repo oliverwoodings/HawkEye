@@ -152,7 +152,8 @@
 	
 	$items = explode("\n", file_get_contents("items.txt"));
 	foreach($items as $i) {
-		$item = explode(",", $i);
+		$item = explode(",", $i, 2);
+		if (count($item) < 2) continue;
 		$itemhash[intval($item[0])] = $item[1];
 	}
 	$results = array();
