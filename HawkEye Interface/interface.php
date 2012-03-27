@@ -151,6 +151,7 @@
 		return error(mysql_error());
 	
 	$items = explode("\n", file_get_contents("items.txt"));
+	$itemhash = array();
 	foreach($items as $i) {
 		$item = explode(",", $i, 2);
 		if (count($item) < 2) continue;
@@ -233,17 +234,18 @@
 	// Gets block name of block
 	*/
 	function getBlockName($string) {
-		global $items, $itemhash;
+		global $itemhash;
 
 		$parts = explode(":", $string);
+
+		if (!isset($itemhash[$parts[0])) return $string;
+
 		$i = $itemhash[$parts[0]];
-		if($i) {
-			if (count($parts) == 2)
-				return $i . ":" . $parts[1];
-			else
-				return $i;
-		}
-		return $string;
+		
+		if (count($parts) == 2)
+			return $i . ":" . $parts[1];
+		else
+			return $i;
 	}
 	
 	/*
