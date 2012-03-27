@@ -57,8 +57,6 @@ public class SignEntry extends DataEntry {
 		else this.facing = signData.getFacing();
 		this.wallSign = signData.isWallSign();
 		this.lines = sign.getLines();
-		System.out.println("Line 1: " + sign.getLine(1));
-		for (String line : lines) System.out.println("Line: " + line);
 	}
 
 	@Override
