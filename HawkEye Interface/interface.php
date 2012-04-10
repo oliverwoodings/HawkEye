@@ -238,7 +238,7 @@
 
 		$parts = explode(":", $string);
 
-		if (!isset($itemhash[$parts[0])) return $string;
+		if (!isset($itemhash[$parts[0]])) return $string;
 
 		$i = $itemhash[$parts[0]];
 		
