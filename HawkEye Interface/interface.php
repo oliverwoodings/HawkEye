@@ -172,6 +172,9 @@
 		switch ($action) {
 			case 0:
 			case 10:
+			case 17:
+			case 32:
+			case 33:
 				$fdata = getBlockName($fdata);
 				break;
 			case 1:
@@ -217,6 +220,15 @@
 				foreach ($lines as $key => $value)
 					$lines[$key] = base64_decode($value);
 				$fdata = implode("<br />", $lines);
+				break;
+			case 23:
+			case 24:
+				$arr = explode("x ", $fdata);	//Separate the quantity from the item/block number
+				$item = explode(":", $arr[1]);	//Separate the damage value from the item/block
+				$changeString = $arr[0] . "x " . getBlockName($item[0]);	//String is now "quantity"x "blockname"
+				if($item[1] != "0")
+					$changeString = $changeString . ":" . $item[1];	//If item has a damage value other than 0, add it to changeString
+				$fdata = $changeString;
 				break;
 		}
 		
