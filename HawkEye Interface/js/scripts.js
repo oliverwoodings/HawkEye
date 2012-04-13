@@ -5,10 +5,29 @@ $(document).ready(function(){
 		function (data) {
 			items = data.split("\n");
 			itemstring = "";
+			var itemlist = [];
+
 			for (i in items) {
 				it = items[i].split(',');
-				itemstring += '<option value="' + it[0] + '">' + it[1] + "</option>";
+				if(it[1])  {
+					itemlist.push({id:it[0],name:it[1]});
+				}
 			}
+
+			itemlist.sort(function(a, b) {
+				var nameA = a.name.toLowerCase();
+				var nameB = b.name.toLowerCase();
+
+				if(nameA < nameB)
+					return -1;
+				if(nameA > nameB)
+					return 1;
+                                return 0;
+			})
+
+			for (var i in itemlist) {
+				itemstring += '<option value="' + itemlist[i].id + '">' + itemlist[i].name + "</option>";
+                        }
 			$("[name=item]").html(itemstring);
 
 		});
