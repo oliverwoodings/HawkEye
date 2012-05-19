@@ -155,7 +155,7 @@
 	foreach($items as $i) {
 		$item = explode(",", $i, 2);
 		if (count($item) < 2) continue;
-		$itemhash[intval($item[0])] = $item[1];
+		if(isset($item[0]) && isset($item[1])) $itemhash[intval($item[0])] = $item[1];
 	}
 	$results = array();
 	
