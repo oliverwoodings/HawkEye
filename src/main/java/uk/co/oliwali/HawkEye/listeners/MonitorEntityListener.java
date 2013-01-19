@@ -7,12 +7,17 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.hanging.HangingBreakEvent;
+import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.painting.PaintingBreakByEntityEvent;
 import org.bukkit.event.painting.PaintingBreakEvent;
 import org.bukkit.event.painting.PaintingBreakEvent.RemoveCause;
@@ -117,6 +122,16 @@ public class MonitorEntityListener extends HawkEyeListener {
 	@HawkEvent(dataType = DataType.PAINTING_PLACE)
 	public void onPaintingPlace(PaintingPlaceEvent event) {
 		DataManager.addEntry(new DataEntry(event.getPlayer(), DataType.PAINTING_PLACE, event.getPainting().getLocation(), ""));
+	}
+	
+	@HawkEvent(dataType = DataType.HANGING_PLACE)
+	public void onHangingPlace(HangingPlaceEvent event) {
+		DataManager.addEntry(new DataEntry(event.getPlayer(), DataType.HANGING_PLACE, event.getEntity().getLocation(), event.getEntity().getType().toString()));
+	}
+	
+	@HawkEvent(dataType = DataType.HANGING_BREAK)
+	public void onHangingBreak(HangingBreakByEntityEvent event) {
+		DataManager.addEntry(new DataEntry((Player)event.getRemover(), DataType.HANGING_BREAK, event.getEntity().getLocation(), event.getEntity().getType().toString()));
 	}
 
 	@HawkEvent(dataType = {DataType.ENDERMAN_PICKUP, DataType.ENDERMAN_PLACE})

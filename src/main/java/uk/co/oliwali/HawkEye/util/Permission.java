@@ -1,7 +1,6 @@
 package uk.co.oliwali.HawkEye.util;
-import com.nijiko.permissions.PermissionHandler;
-import com.nijikokun.bukkit.Permissions.Permissions;
 
+import org.bukkit.permissions.*;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -23,7 +22,6 @@ public class Permission {
 	private final HawkEye plugin;
 	private static PermissionPlugin handler = PermissionPlugin.BUKKITPERMS;
 	private static net.milkbowl.vault.permission.Permission vaultPermissions;
-	private static PermissionHandler permissionPlugin;
 	private static PermissionManager permissionsEx;
 
 	/**
@@ -51,11 +49,6 @@ public class Permission {
         	permissionsEx = PermissionsEx.getPermissionManager();
         	Util.info("Using PermissionsEx for user permissions");
 		}
-        else if (pm.isPluginEnabled("Permissions")) {
-        	permissionPlugin = ((Permissions)plugin.getServer().getPluginManager().getPlugin("Permissions")).getHandler();
-        	handler = PermissionPlugin.PERMISSIONS;
-        	Util.info("Using Permissions for user permissions");
-        }
         else {
         	Util.info("No permission handler detected, defaulting to superperms");
         }
@@ -79,8 +72,6 @@ public class Permission {
 				return vaultPermissions.has(player, node);
 			case PERMISSIONSEX:
 				return permissionsEx.has(player, node);
-			case PERMISSIONS:
-				return permissionPlugin.has(player, node);
 			case BUKKITPERMS:
 				return player.hasPermission(node);
 		}
@@ -202,8 +193,6 @@ public class Permission {
 				return vaultPermissions.playerInGroup(world, player, group);
 			case PERMISSIONSEX:
 				return permissionsEx.getUser(player).inGroup(group);
-			case PERMISSIONS:
-				return permissionPlugin.inGroup(world, player, group);
 		}
 		return false;
 	}
