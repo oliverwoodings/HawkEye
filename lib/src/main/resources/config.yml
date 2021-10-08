@@ -1,0 +1,94 @@
+log:
+    lava-bucket: false
+    water-bucket: false
+    item-place: false
+    pvp-death: false
+    mob-death: false
+    other-death: false
+    command: false
+    chat: false
+    join: false
+    quit: false
+    door-interact: false
+    open-container: false
+    container-transaction: false
+    item-pickup: false
+    item-drop: false
+    button: false
+    teleport: false
+    lever: false
+    sign-place: false
+    sign-break: false
+    item-break: false
+    flint-steel: false
+    block-place: true
+    block-break: true
+    block-burn: false
+    block-fade: false
+    block-form: false
+    leaf-decay: false
+    mushroom-grow: false
+    tree-grow: false
+    water-flow: false
+    lava-flow: false
+    explosion: false
+    enderman-pickup: false
+    enderman-place: false
+    entity-kill: false
+    other: false
+    spawnmob-egg: false
+    herochat: false
+    entity-modify: false
+    block-inhabit: false
+    super-pickaxe: false
+    worldedit-place: false
+    worldedit-break: false
+    crop-trample: true
+    block-ignite: false
+    fallingblock-place: true
+    player-water-flow: false
+    player-lava-flow: false
+general:
+    max-lines: 0
+    log-item-drops-on-death: false
+    cleanse-period: 20m
+    cleanse-age: 0
+    delete-data-on-rollback: true
+    log-ip-addresses: false
+    debug: false
+    debug-level: low
+    max-radius: 0
+    give-user-tool: true
+    tool-block: '17'
+    default-here-radius: 5
+    default-tool-command: ''
+    check-for-updates: true
+    op-permissions: false
+    simplify-time: true
+    log-delay: 2
+    max-write-logs: 5000
+mysql:
+    hawkeye-table: hawkeye
+    port: 3306
+    player-table: hawk_players
+    username: root
+    world-table: hawk_worlds
+    hostname: localhost
+    max-connections: 10
+    password: ''
+    database: minecraft
+ignore-worlds:
+- thisworldisignored
+- soisthisone
+command-filter:
+- /login
+- /restartsrv
+- /register
+- /spawn
+block-filter:
+- 567
+containertransaction-filter:
+    chest: true
+    doublechest: true
+    furnace: true
+    dispenser: true
