@@ -5,11 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.bukkit.Location;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Chest;
-import org.bukkit.block.Dispenser;
-import org.bukkit.block.DoubleChest;
-import org.bukkit.block.Furnace;
+import org.bukkit.block.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -149,11 +145,18 @@ public class InventoryUtil {
    }
 
    public static Location getHolderLoc(InventoryHolder holder) {
-      return holder instanceof Chest?((Chest)holder).getLocation():(holder instanceof DoubleChest?((DoubleChest)holder).getLocation().getBlock().getLocation():(holder instanceof Furnace?((Furnace)holder).getLocation():(holder instanceof Dispenser?((Dispenser)holder).getLocation():null)));
+
+      if(holder instanceof DoubleChest) {
+         return ((DoubleChest)holder).getLocation().getBlock().getLocation();
+      } else if(holder instanceof BlockState) {
+         return ((BlockState)holder).getLocation();
+      }
+
+      return null;
    }
 
    public static boolean isHolderValid(InventoryHolder holder) {
-      return holder instanceof Chest?Config.logChest:(holder instanceof DoubleChest?Config.logDoubleChest:(holder instanceof Furnace?Config.logFurnace:(holder instanceof Dispenser?Config.logDispenser:false)));
+      return true;
    }
 
    public static String updateInv(String old) {
