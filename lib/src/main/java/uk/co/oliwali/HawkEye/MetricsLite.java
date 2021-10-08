@@ -155,7 +155,7 @@ public class MetricsLite {
       boolean onlineMode = Bukkit.getServer().getOnlineMode();
       String pluginVersion = description.getVersion();
       String serverVersion = Bukkit.getVersion();
-      int playersOnline = Bukkit.getServer().getOnlinePlayers().size();
+      int playersOnline = Bukkit.getServer().getOnlinePlayers().length;
       StringBuilder data = new StringBuilder();
       data.append(encode("guid")).append('=').append(encode(this.guid));
       encodeDataPair(data, "version", pluginVersion);

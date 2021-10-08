@@ -11,6 +11,10 @@ plugins {
     id 'java-library'
 }
 
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
@@ -29,6 +33,6 @@ dependencies {
 
     implementation group: 'org.bukkit', name: 'bukkit', version: '1.6.4-R2.0'
     implementation group: 'com.sk89q', name: 'worldedit', version: '5.5.2-SNAPSHOT'
-    implementation group: 'com.dthielke.herochat', name: 'HeroChat', version: '5.6.5-SNAPSHOT'
+    implementation files('libs/Herochat.jar')
 
 }

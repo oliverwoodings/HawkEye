@@ -12,7 +12,7 @@ public class SessionManager {
 
    public SessionManager() {
       addSession(Bukkit.getServer().getConsoleSender());
-      Player[] arr$ = Bukkit.getServer().getOnlinePlayers().toArray(new Player[0]);
+      Player[] arr$ = Bukkit.getServer().getOnlinePlayers();
       int len$ = arr$.length;
 
       for(int i$ = 0; i$ < len$; ++i$) {
