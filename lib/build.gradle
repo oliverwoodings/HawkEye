@@ -31,7 +31,7 @@ repositories {
 dependencies {
     // Use JUnit Jupiter for testing.
 
-    implementation group: 'org.bukkit', name: 'bukkit', version: '1.6.4-R2.0'
+    implementation group: 'org.bukkit', name: 'craftbukkit', version: '1.6.4-R2.0'
     implementation group: 'com.sk89q', name: 'worldedit', version: '5.5.2-SNAPSHOT'
     implementation files('libs/Herochat.jar')
 

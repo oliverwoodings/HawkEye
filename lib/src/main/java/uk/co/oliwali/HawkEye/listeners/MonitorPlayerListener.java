@@ -6,6 +6,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftInventory;
+import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftInventoryCustom;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -198,7 +200,7 @@ public class MonitorPlayerListener extends HawkEyeListener {
         String player = event.getPlayer().getName();
         InventoryHolder holder = event.getInventory().getHolder();
         if (InventoryUtil.isHolderValid(holder) && HawkEye.InvSession.containsKey(player)) {
-            String data = InventoryUtil.compareInvs((HashMap) HawkEye.InvSession.get(player), InventoryUtil.compressInventory(holder.getInventory().getContents()));
+            String data = InventoryUtil.compareInvs((HashMap) HawkEye.InvSession.get(player), InventoryUtil.compressInventory(InventoryUtil.getHolderInventory(holder)));
             if (data == null) {
                 return;
             }
@@ -220,7 +222,7 @@ public class MonitorPlayerListener extends HawkEyeListener {
                 HawkEye.InvSession.remove(player);
             }
 
-            HawkEye.InvSession.put(player, InventoryUtil.compressInventory(holder.getInventory().getContents()));
+            HawkEye.InvSession.put(player, InventoryUtil.compressInventory(InventoryUtil.getHolderInventory(holder)));
         }
 
     }
