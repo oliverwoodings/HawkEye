@@ -3,6 +3,7 @@ package uk.co.oliwali.HawkEye;
 import com.dthielke.herochat.Herochat;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -207,6 +208,13 @@ public class HawkEye extends JavaPlugin {
 
     }
 
+    public void logTransaction(int x, int y,  int z, String worldId, String player, String data) {
+
+        System.out.println("LOOGGGGGGGG !");
+
+        DataManager.addEntry(new ContainerEntry(player, new Location(Bukkit.getWorld(worldId), x, y, z), data));
+    }
+
     public HashMap parseBlockInventory(int posX, int posY, int posZ) {
         World world = Bukkit.getWorlds().get(0);
 
@@ -237,7 +245,7 @@ public class HawkEye extends JavaPlugin {
             if (data == null) {
                 return;
             }
-            
+
             DataManager.addEntry(new ContainerEntry(playerName, InventoryUtil.getHolderLoc(inventoryHolder), data));
         }
     }
