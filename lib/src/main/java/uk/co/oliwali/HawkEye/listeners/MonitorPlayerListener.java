@@ -11,6 +11,7 @@ import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftInventoryCustom;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -21,6 +22,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import uk.co.oliwali.HawkEye.DataType;
@@ -209,6 +211,14 @@ public class MonitorPlayerListener extends HawkEyeListener {
             HawkEye.InvSession.remove(player);
         }
 
+    }
+
+    @HawkEvent(
+            dataType = {DataType.CONTAINER_TRANSACTION}
+    )
+    public void onItemMove(InventoryMoveItemEvent event) {
+        if(!event.getSource().getViewers().isEmpty())
+            event.setCancelled(true);
     }
 
     @HawkEvent(
