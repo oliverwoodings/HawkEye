@@ -209,9 +209,6 @@ public class HawkEye extends JavaPlugin {
     }
 
     public void logTransaction(int x, int y,  int z, String worldId, String player, String data) {
-
-        System.out.println("LOOGGGGGGGG !");
-
         DataManager.addEntry(new ContainerEntry(player, new Location(Bukkit.getWorld(worldId), x, y, z), data));
     }
 
