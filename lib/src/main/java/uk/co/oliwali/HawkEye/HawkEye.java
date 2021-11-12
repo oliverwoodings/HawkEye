@@ -19,8 +19,10 @@ import uk.co.oliwali.HawkEye.commands.*;
 import uk.co.oliwali.HawkEye.database.ConnectionManager;
 import uk.co.oliwali.HawkEye.database.DataManager;
 import uk.co.oliwali.HawkEye.entry.ContainerEntry;
+import uk.co.oliwali.HawkEye.entry.DataEntry;
 import uk.co.oliwali.HawkEye.listeners.*;
 import uk.co.oliwali.HawkEye.util.Config;
+import uk.co.oliwali.HawkEye.util.HawkEyeAPI;
 import uk.co.oliwali.HawkEye.util.InventoryUtil;
 import uk.co.oliwali.HawkEye.util.Util;
 
@@ -211,6 +213,14 @@ public class HawkEye extends JavaPlugin {
     public void logTransaction(int x, int y,  int z, String worldId, String player, String data) {
         DataManager.addEntry(new ContainerEntry(player, new Location(Bukkit.getWorld(worldId), x, y, z), data));
     }
+
+    public void logTransactionAsCustom(int x, int y,  int z, String worldId, String player, String customTitle, String data) {
+        Location logLocation = new Location(Bukkit.getWorld(worldId), x, y, z);
+
+        DataEntry dataEntry = new ContainerEntry(player, logLocation, data);
+        HawkEyeAPI.addCustomEntry(this, customTitle, player, logLocation, dataEntry.getStringData());
+    }
+
 
     public HashMap parseBlockInventory(int posX, int posY, int posZ) {
         World world = Bukkit.getWorlds().get(0);
