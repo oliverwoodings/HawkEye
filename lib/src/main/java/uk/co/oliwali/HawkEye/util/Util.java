@@ -63,7 +63,7 @@ public class Util {
    }
 
    public static void sendMessage(CommandSender player, String msg) {
-      player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
+      player.sendMessage("[Logs] " + ChatColor.translateAlternateColorCodes('&', msg));
    }
 
    public static Location getSimpleLocation(Location location) {
