@@ -174,7 +174,7 @@ public class InventoryUtil {
     }
 
     public static boolean isHolderValid(InventoryHolder holder) {
-        return true;
+        return getHolderLoc(holder) != null;
     }
 
     public static String updateInv(String old) {

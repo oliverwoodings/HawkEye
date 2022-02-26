@@ -58,7 +58,7 @@ public class ToolManager {
       SearchParser parser;
       int len$;
       if(session.getToolCommand().length != 0 && !session.getToolCommand()[0].equals("")) {
-         parser = new SearchParser(player, Arrays.asList(session.getToolCommand()));
+         parser = new SearchParser(player, Arrays.asList(session.getToolCommand()), false);
       } else {
          parser = new SearchParser(player);
          DataType[] vec = DataType.values();
@@ -99,7 +99,7 @@ public class ToolManager {
 
    public static void bindTool(Player player, PlayerSession session, List args) {
       try {
-         new SearchParser(player, args);
+         new SearchParser(player, args, false);
       } catch (IllegalArgumentException var4) {
          Util.sendMessage(player, "&c" + var4.getMessage());
          return;

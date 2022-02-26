@@ -1,6 +1,8 @@
 package uk.co.oliwali.HawkEye;
 
 import com.sk89q.worldedit.bukkit.selections.Selection;
+
+import java.security.InvalidParameterException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,11 +41,12 @@ public class SearchParser {
       this.parseLocations();
    }
 
-   public SearchParser(CommandSender player, List args) throws IllegalArgumentException {
+   public SearchParser(CommandSender player, List args, boolean radiusRequired) throws IllegalArgumentException {
       this.player = player;
       String lastParam = "";
       boolean paramSet = false;
       boolean worldedit = false;
+      boolean radiusSet = false;
 
       for(int i = 0; i < args.size(); ++i) {
          String arg = (String)args.get(i);
@@ -135,6 +138,7 @@ public class SearchParser {
                } else {
                   int var24;
                   if(lastParam.equals("r") && player instanceof Player) {
+                     radiusSet = true;
                      if(!Util.isInteger(values[0])) {
                         if(!values[0].equalsIgnoreCase("we") && !values[0].equalsIgnoreCase("worldedit") || HawkEye.worldEdit == null) {
                            throw new IllegalArgumentException("Invalid radius supplied: &7" + values[0]);
@@ -250,6 +254,9 @@ public class SearchParser {
             }
          }
       }
+
+      if(radiusRequired && !radiusSet)
+         throw new InvalidParameterException("No radius set !");
 
       if(!worldedit) {
          this.parseLocations();

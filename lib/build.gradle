@@ -14,6 +14,9 @@ plugins {
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
+archivesBaseName = "HawkEye"
+
+archivesBaseName = "HawkEye"
 
 repositories {
     // Use Maven Central for resolving dependencies.

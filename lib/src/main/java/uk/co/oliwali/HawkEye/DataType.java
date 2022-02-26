@@ -34,7 +34,7 @@ public enum DataType {
    FLINT_AND_STEEL("FLINT_AND_STEEL", 13, 13, BlockChangeEntry.class, "flint-steel", true, true),
    LEVER("LEVER", 14, 14, DataEntry.class, "lever", true, false),
    STONE_BUTTON("STONE_BUTTON", 15, 15, DataEntry.class, "button", true, false),
-   OTHER("OTHER", 16, 16, DataEntry.class, "other", false, false),
+   OTHER("OTHER", 16, 16, DataEntry.class, "other", true, false),
    EXPLOSION("EXPLOSION", 17, 17, BlockEntry.class, "explosion", true, true),
    BLOCK_BURN("BLOCK_BURN", 18, 18, BlockEntry.class, "block-burn", true, true),
    BLOCK_FORM("BLOCK_FORM", 19, 19, BlockChangeEntry.class, "block-form", true, true),
