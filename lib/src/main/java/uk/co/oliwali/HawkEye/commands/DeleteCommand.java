@@ -19,7 +19,7 @@ public class DeleteCommand extends BaseCommand {
       SearchParser parser = null;
 
       try {
-         parser = new SearchParser(this.sender, this.args);
+         parser = new SearchParser(this.sender, this.args, false);
       } catch (IllegalArgumentException var3) {
          Util.sendMessage(this.sender, "&c" + var3.getMessage());
          return true;

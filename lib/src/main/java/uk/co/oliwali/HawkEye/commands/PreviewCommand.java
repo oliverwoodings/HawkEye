@@ -25,7 +25,7 @@ public class PreviewCommand extends BaseCommand {
          SearchParser parser = null;
 
          try {
-            parser = new SearchParser(this.player, this.args);
+            parser = new SearchParser(this.player, this.args, false);
             parser.loc = null;
             if(parser.actions.size() > 0) {
                Iterator e = parser.actions.iterator();

@@ -41,7 +41,7 @@ public class SearchParser {
       this.parseLocations();
    }
 
-   public SearchParser(CommandSender player, List args) throws IllegalArgumentException {
+   public SearchParser(CommandSender player, List args, boolean radiusRequired) throws IllegalArgumentException {
       this.player = player;
       String lastParam = "";
       boolean paramSet = false;
@@ -255,7 +255,7 @@ public class SearchParser {
          }
       }
 
-      if(!radiusSet)
+      if(radiusRequired && !radiusSet)
          throw new InvalidParameterException("No radius set !");
 
       if(!worldedit) {
