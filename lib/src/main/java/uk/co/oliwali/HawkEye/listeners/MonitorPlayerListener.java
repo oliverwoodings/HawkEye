@@ -206,16 +206,16 @@ public class MonitorPlayerListener extends HawkEyeListener {
 
         Inventory inventory = event.getInventory();
         InventoryHolder holder = inventory.getHolder();
-        if ((InventoryUtil.isPlayerInventoryValid(inventory) || InventoryUtil.isHolderValid(holder)) && HawkEye.InvSession.containsKey(player)) {
-            ItemStack[] items = InventoryUtil.isPlayerInventoryValid(inventory) ? InventoryUtil.getInventory(inventory) : InventoryUtil.getHolderInventory(holder);
+        if ((InventoryUtil.isPlayerInventoryValid(inventory, player) || InventoryUtil.isHolderValid(holder)) && HawkEye.InvSession.containsKey(player)) {
+            ItemStack[] items = InventoryUtil.isPlayerInventoryValid(inventory, player) ? InventoryUtil.getInventory(inventory) : InventoryUtil.getHolderInventory(holder);
 
             String data = InventoryUtil.compareInvs((HashMap) HawkEye.InvSession.get(player), InventoryUtil.compressInventory(items));
             if (data == null) {
                 return;
             }
 
-            if(InventoryUtil.isPlayerInventoryValid(inventory)) {
-                Bukkit.getLogger().log(Level.INFO, InventoryUtil.getPlayerInventoryType(inventory) + " Transaction - " +  player + " - " + data);
+            if(InventoryUtil.isPlayerInventoryValid(inventory, player)) {
+                Bukkit.getLogger().log(Level.INFO, InventoryUtil.getPlayerInventoryType(inventory, player) + " Transaction - " +  player + " - " + data);
             } else {
                 DataManager.addEntry(new ContainerEntry(event.getPlayer().getName(), InventoryUtil.getHolderLoc(holder), data));
             }
@@ -240,12 +240,12 @@ public class MonitorPlayerListener extends HawkEyeListener {
         String player = event.getPlayer().getName();
         Inventory inventory = event.getInventory();
         InventoryHolder holder = inventory.getHolder();
-        if (InventoryUtil.isPlayerInventoryValid(inventory) || InventoryUtil.isHolderValid(holder)) {
+        if (InventoryUtil.isPlayerInventoryValid(inventory, player) || InventoryUtil.isHolderValid(holder)) {
             if (HawkEye.InvSession.containsKey(player)) {
                 HawkEye.InvSession.remove(player);
             }
 
-            ItemStack[] items = InventoryUtil.isPlayerInventoryValid(inventory) ? InventoryUtil.getInventory(inventory) : InventoryUtil.getHolderInventory(holder);
+            ItemStack[] items = InventoryUtil.isPlayerInventoryValid(inventory, player) ? InventoryUtil.getInventory(inventory) : InventoryUtil.getHolderInventory(holder);
 
             HawkEye.InvSession.put(player, InventoryUtil.compressInventory(items));
         }

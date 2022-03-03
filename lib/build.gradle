@@ -37,6 +37,6 @@ dependencies {
     implementation group: 'org.bukkit', name: 'craftbukkit', version: '1.6.4-R2.0'
     implementation group: 'com.sk89q', name: 'worldedit', version: '5.5.3-SNAPSHOT'
     implementation files('libs/Herochat.jar')
-    implementation files('libs/nationsgui-1.8.0-bukkit.jar')
+    implementation files('libs/NationsTool.jar')
 
 }

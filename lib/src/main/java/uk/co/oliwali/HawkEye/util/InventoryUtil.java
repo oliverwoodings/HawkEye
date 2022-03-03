@@ -1,26 +1,26 @@
 package uk.co.oliwali.HawkEye.util;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import com.almuramc.backpack.bukkit.BackpackPlugin;
-import com.almuramc.backpack.bukkit.inventory.BackpackInventory;
+import be.pyrrh4.ntools.Main;
+import be.pyrrh4.ntools.backpack.util.Backpack;
 import net.minecraft.server.v1_6_R3.IInventory;
 import org.bukkit.Location;
-import org.bukkit.block.*;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftInventory;
-import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftInventoryCustom;
 import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import uk.co.oliwali.HawkEye.database.DataManager;
 import uk.co.oliwali.HawkEye.entry.ContainerEntry;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class InventoryUtil {
 
@@ -185,18 +185,19 @@ public class InventoryUtil {
         return getHolderLoc(holder) != null;
     }
 
-    public static boolean isPlayerInventoryValid(Inventory inventory) {
-        return getPlayerInventoryType(inventory) != null;
+    public static boolean isPlayerInventoryValid(Inventory inventory, String player) {
+        return getPlayerInventoryType(inventory, player) != null;
     }
 
-    public static String getPlayerInventoryType(Inventory inventory) {
+    public static String getPlayerInventoryType(Inventory inventory, String player) {
         if(inventory.getType() == InventoryType.ENDER_CHEST)
             return "EnderChest";
 
-        System.out.println(inventory.getTitle());
+        Backpack backpack = Main.instance().getBackpack(player);
 
-        if(inventory.getTitle().equals("Backpack"))
+        if(backpack != null && backpack.getInventory() == inventory) {
             return "BackPack";
+        }
 
         return null;
     }
