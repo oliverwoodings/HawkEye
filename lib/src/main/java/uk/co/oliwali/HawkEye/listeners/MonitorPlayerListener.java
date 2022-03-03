@@ -1,7 +1,10 @@
 package uk.co.oliwali.HawkEye.listeners;
 
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -200,14 +203,23 @@ public class MonitorPlayerListener extends HawkEyeListener {
     )
     public void onInventoryClose(InventoryCloseEvent event) {
         String player = event.getPlayer().getName();
-        InventoryHolder holder = event.getInventory().getHolder();
-        if (InventoryUtil.isHolderValid(holder) && HawkEye.InvSession.containsKey(player)) {
-            String data = InventoryUtil.compareInvs((HashMap) HawkEye.InvSession.get(player), InventoryUtil.compressInventory(InventoryUtil.getHolderInventory(holder)));
+
+        Inventory inventory = event.getInventory();
+        InventoryHolder holder = inventory.getHolder();
+        if ((InventoryUtil.isPlayerInventoryValid(inventory) || InventoryUtil.isHolderValid(holder)) && HawkEye.InvSession.containsKey(player)) {
+            ItemStack[] items = InventoryUtil.isPlayerInventoryValid(inventory) ? InventoryUtil.getInventory(inventory) : InventoryUtil.getHolderInventory(holder);
+
+            String data = InventoryUtil.compareInvs((HashMap) HawkEye.InvSession.get(player), InventoryUtil.compressInventory(items));
             if (data == null) {
                 return;
             }
 
-            DataManager.addEntry(new ContainerEntry(event.getPlayer().getName(), InventoryUtil.getHolderLoc(holder), data));
+            if(InventoryUtil.isPlayerInventoryValid(inventory)) {
+                Bukkit.getLogger().log(Level.INFO, InventoryUtil.getPlayerInventoryType(inventory) + " Transaction - " +  player + " - " + data);
+            } else {
+                DataManager.addEntry(new ContainerEntry(event.getPlayer().getName(), InventoryUtil.getHolderLoc(holder), data));
+            }
+
             HawkEye.InvSession.remove(player);
         }
 
@@ -226,14 +238,18 @@ public class MonitorPlayerListener extends HawkEyeListener {
     )
     public void onInventoryClose(InventoryOpenEvent event) {
         String player = event.getPlayer().getName();
-        InventoryHolder holder = event.getInventory().getHolder();
-        if (InventoryUtil.isHolderValid(holder)) {
+        Inventory inventory = event.getInventory();
+        InventoryHolder holder = inventory.getHolder();
+        if (InventoryUtil.isPlayerInventoryValid(inventory) || InventoryUtil.isHolderValid(holder)) {
             if (HawkEye.InvSession.containsKey(player)) {
                 HawkEye.InvSession.remove(player);
             }
 
-            HawkEye.InvSession.put(player, InventoryUtil.compressInventory(InventoryUtil.getHolderInventory(holder)));
+            ItemStack[] items = InventoryUtil.isPlayerInventoryValid(inventory) ? InventoryUtil.getInventory(inventory) : InventoryUtil.getHolderInventory(holder);
+
+            HawkEye.InvSession.put(player, InventoryUtil.compressInventory(items));
         }
+
 
     }
 

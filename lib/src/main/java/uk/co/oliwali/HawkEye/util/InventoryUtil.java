@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.almuramc.backpack.bukkit.BackpackPlugin;
+import com.almuramc.backpack.bukkit.inventory.BackpackInventory;
 import net.minecraft.server.v1_6_R3.IInventory;
 import org.bukkit.Location;
 import org.bukkit.block.*;
@@ -12,6 +14,9 @@ import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftInventory;
 import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftInventoryCustom;
 import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import uk.co.oliwali.HawkEye.database.DataManager;
@@ -20,10 +25,13 @@ import uk.co.oliwali.HawkEye.entry.ContainerEntry;
 public class InventoryUtil {
 
     public static ItemStack[] getHolderInventory(InventoryHolder inventoryHolder) {
+        return getInventory(inventoryHolder.getInventory());
+    }
 
+    public static ItemStack[] getInventory(Inventory inventory) {
         ItemStack[] inv;
 
-        IInventory iInventory = ((CraftInventory) inventoryHolder.getInventory()).getInventory();
+        IInventory iInventory = ((CraftInventory) inventory).getInventory();
         inv = new ItemStack[iInventory.getSize()];
 
         for (int i = 0; i < iInventory.getSize(); i++) {
@@ -175,6 +183,22 @@ public class InventoryUtil {
 
     public static boolean isHolderValid(InventoryHolder holder) {
         return getHolderLoc(holder) != null;
+    }
+
+    public static boolean isPlayerInventoryValid(Inventory inventory) {
+        return getPlayerInventoryType(inventory) != null;
+    }
+
+    public static String getPlayerInventoryType(Inventory inventory) {
+        if(inventory.getType() == InventoryType.ENDER_CHEST)
+            return "EnderChest";
+
+        System.out.println(inventory.getTitle());
+
+        if(inventory.getTitle().equals("Backpack"))
+            return "BackPack";
+
+        return null;
     }
 
     public static String updateInv(String old) {
