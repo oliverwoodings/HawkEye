@@ -195,7 +195,7 @@ public class InventoryUtil {
 
         Backpack backpack = Main.instance().getBackpack(player);
 
-        if(backpack != null && backpack.getInventory() == inventory) {
+        if(backpack != null && ((CraftInventory)backpack.getInventory()).getInventory() == ((CraftInventory)inventory).getInventory()) {
             return "BackPack";
         }
 
