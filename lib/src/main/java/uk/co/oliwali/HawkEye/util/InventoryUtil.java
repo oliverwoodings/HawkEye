@@ -173,8 +173,6 @@ public class InventoryUtil {
     }
 
     public static Location getHolderLoc(InventoryHolder holder) {
-        System.out.println(holder);
-        System.out.println(holder.getClass());
         if (holder instanceof DoubleChest) {
             return ((DoubleChest) holder).getLocation().getBlock().getLocation();
         } else if (holder instanceof BlockState) {
