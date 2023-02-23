@@ -7,6 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
+import org.bukkit.craftbukkit.v1_6_R3.entity.CraftMinecartChest;
 import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftInventory;
 import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
@@ -176,8 +177,9 @@ public class InventoryUtil {
             return ((DoubleChest) holder).getLocation().getBlock().getLocation();
         } else if (holder instanceof BlockState) {
             return ((BlockState) holder).getLocation();
+        } else if (holder instanceof CraftMinecartChest) {
+            return (((CraftMinecartChest) holder)).getLocation();
         }
-
         return null;
     }
 

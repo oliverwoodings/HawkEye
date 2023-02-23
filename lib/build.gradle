@@ -26,17 +26,14 @@ repositories {
         url "https://maven.elmakers.com/repository/"
     }
 
-    maven {
-        url "https://maven.sk89q.com/repo/"
-    }
 }
 
 dependencies {
     // Use JUnit Jupiter for testing.
 
     implementation group: 'org.bukkit', name: 'craftbukkit', version: '1.6.4-R2.0'
-    implementation group: 'com.sk89q', name: 'worldedit', version: '5.5.3-SNAPSHOT'
     implementation files('libs/Herochat.jar')
     implementation files('libs/NationsTool.jar')
+    implementation files('libs/worldedit.jar')
 
 }
