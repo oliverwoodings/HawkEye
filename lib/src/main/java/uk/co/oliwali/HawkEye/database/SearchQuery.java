@@ -6,7 +6,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map.Entry;
+
 import uk.co.oliwali.HawkEye.DataType;
 import uk.co.oliwali.HawkEye.SearchParser;
 import uk.co.oliwali.HawkEye.callbacks.BaseCallback;
@@ -120,6 +122,19 @@ public class SearchQuery extends Thread {
             return;
          }
       }
+      
+      Util.debug("Building entitys");
+      if(this.parser.entitys.size() >= 1) {
+    	  List<String> entitys = new ArrayList<>();
+    	  for(int entity : this.parser.entitys) {
+    		  if(DataManager.dbEntitys.containsKey(entity)) {
+    			  entitys.add(String.valueOf(entity));
+    		  }
+    	  }
+    	  if(entitys.size() >= 1) {
+    		  args.add("entity_id IN (" + Util.join(entitys, ",") + ")");
+    	  }
+      }
 
       Util.debug("Building actions");
       if(this.parser.actions != null && this.parser.actions.size() > 0) {
@@ -205,6 +220,7 @@ public class SearchQuery extends Thread {
                while(var23.next()) {
                   DataType var36 = DataType.fromId(var23.getInt(4));
                   DataEntry var37 = (DataEntry)var36.getEntryConstructor().newInstance(new Object[]{Integer.valueOf(var23.getInt(3)), var23.getTimestamp(2), Integer.valueOf(var23.getInt(1)), Integer.valueOf(var23.getInt(4)), var23.getString(9), var23.getString(10), Integer.valueOf(var23.getInt(5)), Integer.valueOf(var23.getInt(6)), Integer.valueOf(var23.getInt(7)), Integer.valueOf(var23.getInt(8))});
+                  var37.setEntityId(var23.getInt(11));
                   results.add(var37);
                }
             }

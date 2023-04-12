@@ -2,24 +2,22 @@ package uk.co.oliwali.HawkEye.listeners;
 
 import java.util.HashMap;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftInventory;
-import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftInventoryCustom;
+import org.bukkit.craftbukkit.v1_6_R3.entity.CraftMinecart;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -28,6 +26,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+
 import uk.co.oliwali.HawkEye.DataType;
 import uk.co.oliwali.HawkEye.HawkEvent;
 import uk.co.oliwali.HawkEye.HawkEye;
@@ -37,16 +36,19 @@ import uk.co.oliwali.HawkEye.entry.BlockChangeEntry;
 import uk.co.oliwali.HawkEye.entry.BlockEntry;
 import uk.co.oliwali.HawkEye.entry.ContainerEntry;
 import uk.co.oliwali.HawkEye.entry.DataEntry;
+import uk.co.oliwali.HawkEye.entry.MinecartEntry;
 import uk.co.oliwali.HawkEye.util.Config;
 import uk.co.oliwali.HawkEye.util.InventoryUtil;
 import uk.co.oliwali.HawkEye.util.Util;
 
 public class MonitorPlayerListener extends HawkEyeListener {
+	public HawkEye plugin;
 
     public MonitorPlayerListener(HawkEye HawkEye) {
         super(HawkEye);
+        this.plugin = HawkEye;
     }
-
+    /*
     @HawkEvent(
             dataType = {DataType.CHAT}
     )
@@ -54,7 +56,7 @@ public class MonitorPlayerListener extends HawkEyeListener {
         Player player = event.getPlayer();
         DataManager.addEntry(new DataEntry(player, DataType.CHAT, player.getLocation(), event.getMessage()));
     }
-
+*/
     @HawkEvent(
             dataType = {DataType.COMMAND}
     )
@@ -143,6 +145,34 @@ public class MonitorPlayerListener extends HawkEyeListener {
                 case STONE_BUTTON:
                     DataManager.addEntry(new DataEntry(player, DataType.STONE_BUTTON, loc, ""));
                     break;
+                case RAILS:
+                	if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                		String minecartType = "";
+                		switch(player.getItemInHand().getType()) {
+            				case MINECART:
+            					minecartType = "MINECART";
+                				break;
+            				case POWERED_MINECART:
+            					minecartType = "MINECART_FURNACE";
+                				break;
+            				case EXPLOSIVE_MINECART:
+            					minecartType = "MINECART_TNT";
+                				break;
+            				case HOPPER_MINECART:
+            					minecartType = "MINECART_HOPPER";
+                				break;
+            				case STORAGE_MINECART:
+            					minecartType = "MINECART_CHEST";
+                				break;
+                			default:
+                				break;
+                		}
+                		
+                		if(minecartType.length() > 0) {
+                			this.plugin.minecartLocation.put(minecartType + ":" + player.getName(), loc);
+                		}
+                	}
+                	break;
                 default:
                     return;
             }
@@ -199,7 +229,7 @@ public class MonitorPlayerListener extends HawkEyeListener {
     }
 
     @HawkEvent(
-            dataType = {DataType.CONTAINER_TRANSACTION}
+            dataType = {DataType.CONTAINER_TRANSACTION, DataType.MINECART_TRANSACTION}
     )
     public void onInventoryClose(InventoryCloseEvent event) {
         String player = event.getPlayer().getName();
@@ -217,7 +247,20 @@ public class MonitorPlayerListener extends HawkEyeListener {
             if(InventoryUtil.isPlayerInventoryValid(inventory, player)) {
                 Bukkit.getLogger().log(Level.INFO, InventoryUtil.getPlayerInventoryType(inventory, player) + " Transaction - " +  player + " - " + data);
             } else {
-                DataManager.addEntry(new ContainerEntry(event.getPlayer().getName(), InventoryUtil.getHolderLoc(holder), data));
+                switch(event.getInventory().getHolder().getClass().getSimpleName()) {
+	            	case "CraftMinecartChest":
+	            	case "CraftMinecartHopper":
+	            		CraftMinecart entity = (CraftMinecart)event.getInventory().getHolder();
+	            		String[] uuidAndType = new String[] {
+	            				entity.getUniqueId().toString(),
+	            				entity.getType().toString()
+	            		};
+	            		DataManager.addEntry(new MinecartEntry(event.getPlayer().getName(), DataType.MINECART_TRANSACTION, InventoryUtil.getHolderLoc(holder), uuidAndType, data));
+	            		break;
+	            	default:
+	            		DataManager.addEntry(new ContainerEntry(event.getPlayer().getName(), InventoryUtil.getHolderLoc(holder), data));
+	            		break;
+            	}
             }
 
             HawkEye.InvSession.remove(player);
@@ -226,7 +269,7 @@ public class MonitorPlayerListener extends HawkEyeListener {
     }
 
     @HawkEvent(
-            dataType = {DataType.CONTAINER_TRANSACTION}
+            dataType = {DataType.CONTAINER_TRANSACTION, DataType.MINECART_TRANSACTION}
     )
     public void onItemMove(InventoryMoveItemEvent event) {
         if(!event.getSource().getViewers().isEmpty())
@@ -234,7 +277,7 @@ public class MonitorPlayerListener extends HawkEyeListener {
     }
 
     @HawkEvent(
-            dataType = {DataType.CONTAINER_TRANSACTION}
+            dataType = {DataType.CONTAINER_TRANSACTION, DataType.MINECART_TRANSACTION}
     )
     public void onInventoryClose(InventoryOpenEvent event) {
         String player = event.getPlayer().getName();
@@ -249,8 +292,30 @@ public class MonitorPlayerListener extends HawkEyeListener {
 
             HawkEye.InvSession.put(player, InventoryUtil.compressInventory(items));
         }
-
-
     }
-
+    
+    @HawkEvent(
+            dataType = {DataType.MINECART_OPEN}
+    )
+    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+    	switch(event.getRightClicked().getType()) {
+	    	case MINECART_HOPPER:
+	    	case MINECART_CHEST:
+	    		String[] uuidAndType = new String[] {
+	    				event.getRightClicked().getUniqueId().toString(),
+	    				event.getRightClicked().getType().toString()
+	    		};
+	    		DataManager.addEntry(
+	    			new MinecartEntry(
+	    				event.getPlayer().getName(),
+	    				DataType.MINECART_OPEN,
+	    				event.getRightClicked().getLocation().getBlock().getLocation(),
+	    				uuidAndType
+	    			)
+	    		);
+	    		break;
+	    	default:
+	    		break;
+    	}
+    }
 }
