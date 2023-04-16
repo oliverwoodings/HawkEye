@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 
 import org.bukkit.Location;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
@@ -70,20 +71,39 @@ public class MonitorMinecartListener extends HawkEyeListener {
             dataType = {DataType.MINECART_BREAK}
     )
 	public void onVehicleDestroy(VehicleDestroyEvent event) {
-		String player = "Unknown";
-		if((event.getAttacker() instanceof Player)) {
-			player = ((Player) event.getAttacker()).getName();
+		Boolean isMinecart = false;
+		
+		//on verif quel minecart c'est
+		switch(event.getVehicle().getType()) {
+			case MINECART:
+			case MINECART_FURNACE:
+			case MINECART_TNT:
+			case MINECART_HOPPER:
+			case MINECART_CHEST:
+				isMinecart = true;
+				break;
+			default:
+				break;
 		}
-		String[] uuidAndType = new String[] {
-				event.getVehicle().getUniqueId().toString(),
-				event.getVehicle().getType().toString()
-		};
-		DataManager.addEntry(new MinecartEntry(
-				player,
-				DataType.MINECART_BREAK,
-				event.getVehicle().getLocation().getBlock().getLocation(),
-				uuidAndType
-		));
+		
+		if(isMinecart) {
+			String player = "Unknown";
+			if((event.getAttacker() instanceof Player)) {
+				player = ((Player) event.getAttacker()).getName();
+			}
+			String[] uuidAndType = new String[] {
+					event.getVehicle().getUniqueId().toString(),
+					event.getVehicle().getType().toString()
+			};
+			DataManager.addEntry(
+				new MinecartEntry(
+					player,
+					DataType.MINECART_BREAK,
+					event.getVehicle().getLocation().getBlock().getLocation(),
+					uuidAndType
+				)
+			);
+		}
 	}
 	
 	//Explosion de minecart
@@ -91,15 +111,17 @@ public class MonitorMinecartListener extends HawkEyeListener {
             dataType = {DataType.MINECART_EXPLOSION}
     )
 	public void onEntityExplosion(EntityExplodeEvent event) {
-		String[] uuidAndType = new String[] {
-				event.getEntity().getUniqueId().toString(),
-				event.getEntityType().toString()
-		};
-		DataManager.addEntry(new MinecartEntry(
-				"Unknown",
-				DataType.MINECART_EXPLOSION,
-				event.getEntity().getLocation().getBlock().getLocation(),
-				uuidAndType
-		));
+		if(event.getEntity().getType() == EntityType.MINECART_TNT) {
+			String[] uuidAndType = new String[] {
+					event.getEntity().getUniqueId().toString(),
+					event.getEntityType().toString()
+			};
+			DataManager.addEntry(new MinecartEntry(
+					"Unknown",
+					DataType.MINECART_EXPLOSION,
+					event.getEntity().getLocation().getBlock().getLocation(),
+					uuidAndType
+			));
+		}
 	}
 }
