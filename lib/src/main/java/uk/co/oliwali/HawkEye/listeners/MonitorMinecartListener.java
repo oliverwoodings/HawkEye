@@ -45,24 +45,31 @@ public class MonitorMinecartListener extends HawkEyeListener {
 		}
 		
 		if(isMinecart) {
+			String player = "Unknown";
 			Boolean found = false;
 			Location loc = event.getVehicle().getLocation().getBlock().getLocation();
 			Iterator<Entry<String, Location>> entrys = this.plugin.minecartLocation.entrySet().iterator();
 			
 			Entry<String, Location> entry = null;
+			String[] typeAndPlayer = null;
 			while(!found & entrys.hasNext()) {
 				entry = entrys.next();
-				String[] typeAndPlayer = entry.getKey().split(":");
+				typeAndPlayer = entry.getKey().split(":");
 				
 				if(typeAndPlayer[0].equals(event.getVehicle().getType().toString())) {
 					if(entry.getValue().distance(loc) == 0.0) {
-						String[] uuidAndType = new String[] {event.getVehicle().getUniqueId().toString(), event.getVehicle().getType().toString()};
-						
-						DataManager.addEntry(new MinecartEntry(typeAndPlayer[1], DataType.MINECART_PLACE, loc, uuidAndType));
+						found = true;
 					}
 				}
 			}
-			this.plugin.minecartLocation.remove(entry.getKey());
+			String[] uuidAndType = new String[] {event.getVehicle().getUniqueId().toString(), event.getVehicle().getType().toString()};
+			
+			if(found) {
+				player = typeAndPlayer[1];
+				this.plugin.minecartLocation.remove(entry.getKey());
+			}
+			
+			DataManager.addEntry(new MinecartEntry(player, DataType.MINECART_PLACE, loc, uuidAndType));
 		}
 	}
 	
