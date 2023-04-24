@@ -13,6 +13,7 @@ import uk.co.oliwali.HawkEye.entry.ContainerEntry;
 import uk.co.oliwali.HawkEye.entry.DataEntry;
 import uk.co.oliwali.HawkEye.entry.EntityEntry;
 import uk.co.oliwali.HawkEye.entry.HangingEntry;
+import uk.co.oliwali.HawkEye.entry.MinecartEntry;
 import uk.co.oliwali.HawkEye.entry.SignEntry;
 import uk.co.oliwali.HawkEye.entry.SimpleRollbackEntry;
 
@@ -66,7 +67,14 @@ public enum DataType {
    BLOCK_IGNITE("BLOCK_IGNITE", 45, 45, SimpleRollbackEntry.class, "block-ignite", true, true),
    FALLING_BLOCK("FALLING_BLOCK", 46, 46, BlockChangeEntry.class, "fallingblock-place", true, true),
    PLAYER_LAVA_FLOW("PLAYER_LAVA_FLOW", 47, 47, BlockChangeEntry.class, "player-lava-flow", true, true),
-   PLAYER_WATER_FLOW("PLAYER_WATER_FLOW", 48, 48, BlockChangeEntry.class, "player-water-flow", true, true);
+   PLAYER_WATER_FLOW("PLAYER_WATER_FLOW", 48, 48, BlockChangeEntry.class, "player-water-flow", true, true),
+	//Action minecart
+	MINECART_PLACE("MINECART_PLACE", 49, 49, MinecartEntry.class, "minecart-place", false, false),
+	MINECART_BREAK("MINECART_BREAK", 50, 50, MinecartEntry.class, "minecart-break", false, false),
+	MINECART_EXPLOSION("MINECART_EXPLOSION", 51, 51, MinecartEntry.class, "minecart-explosion", false, false),
+	MINECART_OPEN("MINECART_OPEN", 52, 52, MinecartEntry.class, "minecart-open", false, false),
+	MINECART_TRANSACTION("MINECART_TRANSACTION", 53, 53, MinecartEntry.class, "minecart-transaction", false, false);
+	
    private int id;
    private boolean canHere;
    private String configName;
@@ -77,7 +85,7 @@ public enum DataType {
    private static final Map nameMapping = new HashMap();
    private static final Map idMapping = new HashMap();
    // $FF: synthetic field
-   private static final DataType[] $VALUES = new DataType[]{BLOCK_BREAK, BLOCK_PLACE, SIGN_PLACE, CHAT, COMMAND, JOIN, QUIT, TELEPORT, LAVA_BUCKET, WATER_BUCKET, OPEN_CONTAINER, DOOR_INTERACT, PVP_DEATH, FLINT_AND_STEEL, LEVER, STONE_BUTTON, OTHER, EXPLOSION, BLOCK_BURN, BLOCK_FORM, LEAF_DECAY, MOB_DEATH, OTHER_DEATH, ITEM_DROP, ITEM_PICKUP, BLOCK_FADE, LAVA_FLOW, WATER_FLOW, CONTAINER_TRANSACTION, SIGN_BREAK, ITEM_BREAK, ITEM_PLACE, ENDERMAN_PICKUP, ENDERMAN_PLACE, TREE_GROW, MUSHROOM_GROW, ENTITY_KILL, SPAWNMOB_EGG, HEROCHAT, ENTITY_MODIFY, BLOCK_INHABIT, SUPER_PICKAXE, WORLDEDIT_BREAK, WORLDEDIT_PLACE, CROP_TRAMPLE, BLOCK_IGNITE, FALLING_BLOCK, PLAYER_LAVA_FLOW, PLAYER_WATER_FLOW};
+   private static final DataType[] $VALUES = new DataType[]{BLOCK_BREAK, BLOCK_PLACE, SIGN_PLACE, CHAT, COMMAND, JOIN, QUIT, TELEPORT, LAVA_BUCKET, WATER_BUCKET, OPEN_CONTAINER, DOOR_INTERACT, PVP_DEATH, FLINT_AND_STEEL, LEVER, STONE_BUTTON, OTHER, EXPLOSION, BLOCK_BURN, BLOCK_FORM, LEAF_DECAY, MOB_DEATH, OTHER_DEATH, ITEM_DROP, ITEM_PICKUP, BLOCK_FADE, LAVA_FLOW, WATER_FLOW, CONTAINER_TRANSACTION, SIGN_BREAK, ITEM_BREAK, ITEM_PLACE, ENDERMAN_PICKUP, ENDERMAN_PLACE, TREE_GROW, MUSHROOM_GROW, ENTITY_KILL, SPAWNMOB_EGG, HEROCHAT, ENTITY_MODIFY, BLOCK_INHABIT, SUPER_PICKAXE, WORLDEDIT_BREAK, WORLDEDIT_PLACE, CROP_TRAMPLE, BLOCK_IGNITE, FALLING_BLOCK, PLAYER_LAVA_FLOW, PLAYER_WATER_FLOW, MINECART_PLACE, MINECART_BREAK, MINECART_EXPLOSION, MINECART_OPEN, MINECART_TRANSACTION};
 
 
    private DataType(String var1, int var2, int id, Class entryClass, String configName, boolean canHere, boolean canRollback) {

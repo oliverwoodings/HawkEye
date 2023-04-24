@@ -8,10 +8,11 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.Map.Entry;
 import java.util.concurrent.LinkedBlockingQueue;
+
 import uk.co.oliwali.HawkEye.DataType;
 import uk.co.oliwali.HawkEye.HawkEye;
 import uk.co.oliwali.HawkEye.entry.DataEntry;
@@ -25,6 +26,7 @@ public class DataManager extends TimerTask {
    public static Timer cleanseTimer = null;
    public static final HashMap dbPlayers = new HashMap();
    public static final HashMap dbWorlds = new HashMap();
+   public static final HashMap dbEntitys = new HashMap();
 
 
    public DataManager(HawkEye instance) throws Exception {
@@ -174,6 +176,52 @@ public class DataManager extends TimerTask {
 
       return var4;
    }
+   
+   //Entity
+   public boolean addEntity(String[] entity) {
+	   Boolean st = false;
+	   JDCConnection conn = null;
+	   
+	   try {
+		   conn = getConnection();
+		   
+		   conn.createStatement().execute("INSERT INTO `" + Config.DbEntityTable + "` (`uuid`, `type`) VALUES ('" + entity[0] + "', '" + entity[1] + "');");
+		   this.updateDbLists();
+		   st = true;
+	   }
+	   catch (Exception e) {
+		   Util.severe("Unable to add entity on database: " + e);
+		   st = false;
+	   }
+	   finally {
+		   conn.close();
+	   }
+	   
+	   return st;
+   }
+
+   public int getEntity(String uuid) {
+	   Iterator iterator = dbEntitys.entrySet().iterator();
+	   Boolean found = false;
+	   int idEntity = -1;
+	   
+	   while(!found & iterator.hasNext()) {
+		   Entry entry = (Entry)iterator.next();
+		   if(entry.getValue().equals(uuid)) {
+			   found = true;
+			   idEntity = (int) entry.getKey();
+		   }
+	   }
+
+	   return idEntity;
+   }
+   
+   public static String getEntityUuid(int entityId) {
+	   if(dbEntitys.containsKey(entityId)) {
+		   return (String) dbEntitys.get(entityId);
+	   }
+	   return null;
+   }
 
    private boolean updateDbLists() {
       JDCConnection conn = null;
@@ -194,6 +242,12 @@ public class DataManager extends TimerTask {
          while(ex.next()) {
             dbWorlds.put(ex.getString("world"), Integer.valueOf(ex.getInt("world_id")));
          }
+         
+         ex = stmnt.executeQuery("SELECT * FROM `" + Config.DbEntityTable + "`;");
+         
+         while(ex.next()) {
+             dbEntitys.put(ex.getInt("id"), ex.getString("uuid"));
+          }
 
          return true;
       } catch (SQLException var14) {
@@ -225,8 +279,13 @@ public class DataManager extends TimerTask {
          stmnt = conn.createStatement();
          DatabaseMetaData ex = conn.getMetaData();
          if(!JDBCUtil.tableExists(ex, Config.DbPlayerTable)) {
-            Util.info("Table `" + Config.DbPlayerTable + "` not found, creating...");
-            stmnt.execute("CREATE TABLE IF NOT EXISTS `" + Config.DbPlayerTable + "` (" + "`player_id` int(11) NOT NULL AUTO_INCREMENT, " + "`player` varchar(255) NOT NULL, " + "PRIMARY KEY (`player_id`), " + "UNIQUE KEY `player` (`player`)" + ");");
+             Util.info("Table `" + Config.DbPlayerTable + "` not found, creating...");
+             stmnt.execute("CREATE TABLE IF NOT EXISTS `" + Config.DbPlayerTable + "` (" + "`player_id` int(11) NOT NULL AUTO_INCREMENT, " + "`player` varchar(255) NOT NULL, " + "PRIMARY KEY (`player_id`), " + "UNIQUE KEY `player` (`player`)" + ");");
+         }
+         
+         if(!JDBCUtil.tableExists(ex, Config.DbEntityTable)) {
+             Util.info("Table `" + Config.DbEntityTable + "` not found, creating...");
+             stmnt.execute("CREATE TABLE IF NOT EXISTS `" + Config.DbEntityTable + "` ( `id` INT NOT NULL AUTO_INCREMENT , `uuid` VARCHAR(128) NOT NULL , `type` VARCHAR(32) NOT NULL , PRIMARY KEY (`id`), UNIQUE KEY `uuid` (`uuid`));");
          }
 
          if(!JDBCUtil.tableExists(ex, Config.DbWorldTable)) {
@@ -244,6 +303,12 @@ public class DataManager extends TimerTask {
             Util.info("This could take 1-30 minutes! Do not restart!");
             stmnt.execute("ALTER TABLE `" + Config.DbHawkEyeTable + "`" + " CHANGE COLUMN `date` `timestamp` TIMESTAMP NOT NULL" + ", ADD INDEX `timestamp` (`timestamp` DESC)" + ", ADD INDEX `player` (`player_id` ASC)" + ", ADD INDEX `action` (`action` ASC)" + ", ADD INDEX `world_id` (`world_id` ASC)" + ", DROP INDEX `player_action_world`;");
          }
+         
+         if(!JDBCUtil.columnExists(ex, Config.DbHawkEyeTable, "entity_id")) {
+             Util.info("Attempting to update HawkEye\'s MySQL tables....");
+             Util.info("This could take 1-30 minutes! Do not restart!");
+             stmnt.execute("ALTER TABLE `" + Config.DbHawkEyeTable + "`" + " ADD `entity_id` INT NOT NULL DEFAULT '0' AFTER `plugin`;");
+          }
 
          return true;
       } catch (SQLException var14) {
@@ -276,15 +341,18 @@ public class DataManager extends TimerTask {
 
          try {
             conn.setAutoCommit(false);
-            stmnt = conn.prepareStatement("INSERT into `" + Config.DbHawkEyeTable + "` (timestamp, player_id, action, world_id, x, y, z, data, plugin, data_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+            stmnt = conn.prepareStatement("INSERT into `" + Config.DbHawkEyeTable + "` (timestamp, player_id, action, world_id, x, y, z, data, plugin, data_id, entity_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
 
             for(int ex = 0; ex < queue.size(); ++ex) {
                DataEntry entry = (DataEntry)queue.poll();
                if(!dbPlayers.containsKey(entry.getPlayer()) && !this.addPlayer(entry.getPlayer())) {
                   Util.debug("Player \'" + entry.getPlayer() + "\' not found, skipping entry");
                } else if(!dbWorlds.containsKey(entry.getWorld()) && !this.addWorld(entry.getWorld())) {
-                  Util.debug("World \'" + entry.getWorld() + "\' not found, skipping entry");
+                   Util.debug("World \'" + entry.getWorld() + "\' not found, skipping entry");
+               } else if(entry.getClass().getSimpleName().equalsIgnoreCase("MinecartEntry") && entry.getEntity() != null && !dbEntitys.containsValue(entry.getEntity()[0]) && !this.addEntity(entry.getEntity())) {
+                   Util.debug("Entity \'" + entry.getEntity() + "\' not found, skipping entry");
                } else if(entry.getPlayer() != null && dbPlayers.get(entry.getPlayer()) != null) {
+            	   
                   stmnt.setTimestamp(1, entry.getTimestamp());
                   stmnt.setInt(2, ((Integer)dbPlayers.get(entry.getPlayer())).intValue());
                   stmnt.setInt(3, entry.getType().getId());
@@ -298,6 +366,12 @@ public class DataManager extends TimerTask {
                      stmnt.setInt(10, entry.getDataId());
                   } else {
                      stmnt.setInt(10, 0);
+                  }
+                  if(entry.getClass().getSimpleName().equalsIgnoreCase("MinecartEntry")) {
+                	  stmnt.setInt(11, this.getEntity(entry.getEntity()[0]));
+                  }
+                  else {
+                	  stmnt.setInt(11, 0);
                   }
 
                   stmnt.addBatch();

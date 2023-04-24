@@ -1,12 +1,15 @@
 package uk.co.oliwali.HawkEye.util;
 
-import be.pyrrh4.ntools.Main;
-import be.pyrrh4.ntools.backpack.util.Backpack;
-import net.minecraft.server.v1_6_R3.IInventory;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
+import org.bukkit.craftbukkit.v1_6_R3.entity.CraftMinecart;
 import org.bukkit.craftbukkit.v1_6_R3.entity.CraftMinecartChest;
 import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftInventory;
 import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftItemStack;
@@ -15,13 +18,12 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+
+import be.pyrrh4.ntools.Main;
+import be.pyrrh4.ntools.backpack.util.Backpack;
+import net.minecraft.server.v1_6_R3.IInventory;
 import uk.co.oliwali.HawkEye.database.DataManager;
 import uk.co.oliwali.HawkEye.entry.ContainerEntry;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
 
 public class InventoryUtil {
 
@@ -178,8 +180,11 @@ public class InventoryUtil {
         } else if (holder instanceof BlockState) {
             return ((BlockState) holder).getLocation();
         } else if (holder instanceof CraftMinecartChest) {
-            return (((CraftMinecartChest) holder)).getLocation();
+            return (((CraftMinecartChest) holder)).getLocation().getBlock().getLocation();
+        } else if (holder.getClass().getSimpleName().equalsIgnoreCase("CraftMinecartHopper")) {
+            return (((CraftMinecart) holder)).getLocation().getBlock().getLocation();
         }
+        
         return null;
     }
 
@@ -194,7 +199,7 @@ public class InventoryUtil {
     public static String getPlayerInventoryType(Inventory inventory, String player) {
         if(inventory.getType() == InventoryType.ENDER_CHEST)
             return "EnderChest";
-
+        
         Backpack backpack = Main.instance().getBackpack(player);
 
         if(backpack != null && ((CraftInventory)backpack.getInventory()).getInventory() == ((CraftInventory)inventory).getInventory()) {

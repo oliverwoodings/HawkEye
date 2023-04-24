@@ -23,6 +23,8 @@ public class DataEntry {
    private Timestamp timestamp;
    private String player = null;
    private String world;
+   private String[] entity = null;
+   private int entityId = 0;
    private double x;
    private double y;
    private double z;
@@ -114,6 +116,22 @@ public class DataEntry {
 
    public String getWorld() {
       return this.world;
+   }
+   
+   public void setEntity(String[] entity) {
+	   this.entity = entity;
+   }
+   
+   public String[] getEntity() {
+	   return this.entity;
+   }
+   
+   public void setEntityId(int entityId) {
+	   this.entityId = entityId;
+   }
+   
+   public int getEntityId() {
+	   return this.entityId;
    }
 
    public void setX(double x) {
