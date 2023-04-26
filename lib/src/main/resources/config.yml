@@ -48,11 +48,6 @@ log:
     fallingblock-place: true
     player-water-flow: false
     player-lava-flow: false
-    minecart-place: true
-    minecart-break: true
-    minecart-explosion: true
-    minecart-open: true
-    minecart-transaction: true
 general:
     max-lines: 0
     log-item-drops-on-death: false
@@ -76,7 +71,6 @@ mysql:
     hawkeye-table: hawkeye
     port: 3306
     player-table: hawk_players
-    entity-table: hawk_entitys
     username: root
     world-table: hawk_worlds
     hostname: localhost

@@ -44,7 +44,6 @@ public class Config {
    public static String DbDatabase;
    public static String DbHawkEyeTable;
    public static String DbPlayerTable;
-   public static String DbEntityTable;
    public static String DbWorldTable;
    public static int PoolSize;
    private static Configuration config;
@@ -86,7 +85,6 @@ public class Config {
       DbDatabase = config.getString("mysql.database");
       DbHawkEyeTable = config.getString("mysql.hawkeye-table");
       DbPlayerTable = config.getString("mysql.player-table");
-      DbEntityTable = config.getString("mysql.entity-table");
       DbWorldTable = config.getString("mysql.world-table");
       PoolSize = config.getInt("mysql.max-connections");
       logChest = config.getBoolean("containertransaction-filter.chest");

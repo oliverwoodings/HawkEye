@@ -27,7 +27,6 @@ public class SearchParser {
    public String dateFrom = null;
    public String dateTo = null;
    public String[] filters = null;
-   public List<Integer> entitys = new ArrayList<>();
 
 
    public SearchParser() {}
@@ -136,16 +135,6 @@ public class SearchParser {
                      this.loc.setY(Integer.parseInt(values[1]));
                      this.loc.setZ(Integer.parseInt(values[2]));
                   }
-               } else if(lastParam.equals("e")) {
-            	   for(String val : values) {
-            		   try{
-            			   entitys.add(Integer.parseInt(val, 16));
-            		   }
-            		   catch(Exception e) {
-            			   throw new IllegalArgumentException("Invalid entity id supplied: &7" + val);
-            		   }
-            	   }
-            	   
                } else {
                   int var24;
                   if(lastParam.equals("r") && player instanceof Player) {

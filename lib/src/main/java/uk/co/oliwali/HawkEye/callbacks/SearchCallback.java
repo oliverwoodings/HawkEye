@@ -20,7 +20,6 @@ public class SearchCallback extends BaseCallback {
 
    public void execute() {
       this.session.setSearchResults(this.results);
-      
       DisplayManager.displayPage(this.session, 1);
    }
 

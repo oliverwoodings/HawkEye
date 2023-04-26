@@ -1,10 +1,7 @@
 package uk.co.oliwali.HawkEye;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
+import com.dthielke.herochat.Herochat;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -17,60 +14,30 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import com.dthielke.herochat.Herochat;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-
 import uk.co.oliwali.HawkEye.WorldEdit.WESessionFactory;
-import uk.co.oliwali.HawkEye.commands.BaseCommand;
-import uk.co.oliwali.HawkEye.commands.DeleteCommand;
-import uk.co.oliwali.HawkEye.commands.HelpCommand;
-import uk.co.oliwali.HawkEye.commands.HereCommand;
-import uk.co.oliwali.HawkEye.commands.InfoCommand;
-import uk.co.oliwali.HawkEye.commands.PageCommand;
-import uk.co.oliwali.HawkEye.commands.PreviewApplyCommand;
-import uk.co.oliwali.HawkEye.commands.PreviewCancelCommand;
-import uk.co.oliwali.HawkEye.commands.PreviewCommand;
-import uk.co.oliwali.HawkEye.commands.RebuildCommand;
-import uk.co.oliwali.HawkEye.commands.ReloadCommand;
-import uk.co.oliwali.HawkEye.commands.RollbackCommand;
-import uk.co.oliwali.HawkEye.commands.SearchCommand;
-import uk.co.oliwali.HawkEye.commands.ToolBindCommand;
-import uk.co.oliwali.HawkEye.commands.ToolCommand;
-import uk.co.oliwali.HawkEye.commands.ToolResetCommand;
-import uk.co.oliwali.HawkEye.commands.TpEntityCommand;
-import uk.co.oliwali.HawkEye.commands.TptoCommand;
-import uk.co.oliwali.HawkEye.commands.UndoCommand;
-import uk.co.oliwali.HawkEye.commands.WriteLogCommand;
+import uk.co.oliwali.HawkEye.commands.*;
 import uk.co.oliwali.HawkEye.database.ConnectionManager;
 import uk.co.oliwali.HawkEye.database.DataManager;
 import uk.co.oliwali.HawkEye.entry.ContainerEntry;
 import uk.co.oliwali.HawkEye.entry.DataEntry;
-import uk.co.oliwali.HawkEye.listeners.MonitorBlockListener;
-import uk.co.oliwali.HawkEye.listeners.MonitorEntityListener;
-import uk.co.oliwali.HawkEye.listeners.MonitorFallingBlockListener;
-import uk.co.oliwali.HawkEye.listeners.MonitorHeroChatListener;
-import uk.co.oliwali.HawkEye.listeners.MonitorLiquidFlow;
-import uk.co.oliwali.HawkEye.listeners.MonitorMinecartListener;
-import uk.co.oliwali.HawkEye.listeners.MonitorPlayerListener;
-import uk.co.oliwali.HawkEye.listeners.MonitorWorldEditListener;
-import uk.co.oliwali.HawkEye.listeners.MonitorWorldListener;
-import uk.co.oliwali.HawkEye.listeners.ToolListener;
+import uk.co.oliwali.HawkEye.listeners.*;
 import uk.co.oliwali.HawkEye.util.Config;
 import uk.co.oliwali.HawkEye.util.HawkEyeAPI;
 import uk.co.oliwali.HawkEye.util.InventoryUtil;
 import uk.co.oliwali.HawkEye.util.Util;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 public class HawkEye extends JavaPlugin {
+
     public String name;
     public String version;
     public Config config;
     public static Server server;
     public static HawkEye instance;
-    
-    //Variable temporraire pour save qui place les minecarts
-    public HashMap<String, Location> minecartLocation = new HashMap<>();
-    
     public MonitorBlockListener monitorBlockListener = new MonitorBlockListener(this);
     public MonitorEntityListener monitorEntityListener = new MonitorEntityListener(this);
     public MonitorPlayerListener monitorPlayerListener = new MonitorPlayerListener(this);
@@ -78,7 +45,6 @@ public class HawkEye extends JavaPlugin {
     public MonitorFallingBlockListener monitorFBListerner = new MonitorFallingBlockListener(this);
     public MonitorWorldEditListener monitorWorldEditListener = new MonitorWorldEditListener();
     public MonitorLiquidFlow monitorLiquidFlow;
-    public MonitorMinecartListener monitoMinecartListener = new MonitorMinecartListener(this);
     public ToolListener toolListener = new ToolListener();
     private DataManager dbmanager;
     public MonitorHeroChatListener monitorHeroChatListener = new MonitorHeroChatListener(this);
@@ -167,7 +133,6 @@ public class HawkEye extends JavaPlugin {
         this.monitorFBListerner.registerEvents();
         this.monitorLiquidFlow.registerEvents();
         this.monitorLiquidFlow.startCacheCleaner();
-        this.monitoMinecartListener.registerEvents();
         pm.registerEvents(this.toolListener, this);
         if (herochat != null) {
             this.monitorHeroChatListener.registerEvents();
@@ -204,7 +169,6 @@ public class HawkEye extends JavaPlugin {
         commands.add(new InfoCommand());
         commands.add(new WriteLogCommand());
         commands.add(new ReloadCommand());
-        commands.add(new TpEntityCommand());
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {

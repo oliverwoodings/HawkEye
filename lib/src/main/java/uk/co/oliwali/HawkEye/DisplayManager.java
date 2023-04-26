@@ -23,19 +23,8 @@ public class DisplayManager {
 
             for(int i = (page - 1) * maxLines; i < (page - 1) * maxLines + maxLines && i != results.size(); ++i) {
                DataEntry entry = (DataEntry)results.get(i);
-               
                String time = Util.getTime(entry.getTimestamp());
-               String entity = "";
-               
-               if(entry.getClass().getSimpleName().equalsIgnoreCase("MinecartEntry")) {
-            	   String ide = "None";
-            	   if(entry.getEntityId() > 0) {
-            		   ide = Integer.toHexString(entry.getEntityId());
-            	   }
-            	   entity = " &cEID:" + ide; 
-               }
-               
-               sendLine(session.getSender(), "&cID:" + entry.getDataId() + " &7" + time + "&c" + entry.getPlayer() + " &7" + entry.getType().getConfigName() + entity);
+               sendLine(session.getSender(), "&cID:" + entry.getDataId() + " &7" + time + "&c" + entry.getPlayer() + " &7" + entry.getType().getConfigName());
                sendLine(session.getSender(), "&cLoc: &7" + entry.getWorld() + "-" + entry.getX() + "," + entry.getY() + "," + entry.getZ() + " &cData: &7" + entry.getStringData());
             }
 
