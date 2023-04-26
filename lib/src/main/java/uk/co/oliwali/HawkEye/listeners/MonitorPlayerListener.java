@@ -105,8 +105,7 @@ public class MonitorPlayerListener extends HawkEyeListener {
 
     }
 
-    @SuppressWarnings("deprecation")
-	@HawkEvent(
+    @HawkEvent(
             dataType = {DataType.OPEN_CONTAINER, DataType.DOOR_INTERACT, DataType.LEVER, DataType.STONE_BUTTON, DataType.SPAWNMOB_EGG, DataType.CROP_TRAMPLE}
     )
     public void onPlayerInteract(PlayerInteractEvent event) {
@@ -114,7 +113,6 @@ public class MonitorPlayerListener extends HawkEyeListener {
         Block block = event.getClickedBlock();
         if (block != null) {
             Location loc = block.getLocation();
-            boolean rail = false;
             switch (block.getType()) {
                 case SOIL:
                     if (event.getAction() == Action.PHYSICAL) {
@@ -149,51 +147,40 @@ public class MonitorPlayerListener extends HawkEyeListener {
                     break;
                 case RAILS:
                 	if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                		rail = true;
+                		String minecartType = "";
+                		switch(player.getItemInHand().getType()) {
+            				case MINECART:
+            					minecartType = "MINECART";
+                				break;
+            				case POWERED_MINECART:
+            					minecartType = "MINECART_FURNACE";
+                				break;
+            				case EXPLOSIVE_MINECART:
+            					minecartType = "MINECART_TNT";
+                				break;
+            				case HOPPER_MINECART:
+            					minecartType = "MINECART_HOPPER";
+                				break;
+            				case STORAGE_MINECART:
+            					minecartType = "MINECART_CHEST";
+                				break;
+                			default:
+                				break;
+                		}
+                		
+                		if(minecartType.length() > 0) {
+                			this.plugin.minecartLocation.put(minecartType + ":" + player.getName(), loc);
+                		}
                 	}
                 	break;
                 default:
-                	int id = block.getType().getId();
-                	if(id == 2125 | id == 2080) {
-                		rail = true;
-                	}
-                	else {
-                		return;
-                	}
-                	break;
+                    return;
             }
 
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 Location locs1 = block.getLocation();
                 if (player.getItemInHand().getType().equals(Material.MONSTER_EGG)) {
                     DataManager.addEntry(new DataEntry(player, DataType.SPAWNMOB_EGG, locs1, ""));
-                }
-                
-                if(rail) {
-                	String minecartType = "";
-            		switch(player.getItemInHand().getType()) {
-        				case MINECART:
-        					minecartType = "MINECART";
-            				break;
-        				case POWERED_MINECART:
-        					minecartType = "MINECART_FURNACE";
-            				break;
-        				case EXPLOSIVE_MINECART:
-        					minecartType = "MINECART_TNT";
-            				break;
-        				case HOPPER_MINECART:
-        					minecartType = "MINECART_HOPPER";
-            				break;
-        				case STORAGE_MINECART:
-        					minecartType = "MINECART_CHEST";
-            				break;
-            			default:
-            				break;
-            		}
-            		
-            		if(minecartType.length() > 0) {
-            			this.plugin.minecartLocation.put(minecartType + ":" + player.getName(), loc);
-            		}
                 }
             }
         }
