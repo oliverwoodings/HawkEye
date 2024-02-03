@@ -35,5 +35,6 @@ dependencies {
     implementation files('libs/Herochat.jar')
     implementation files('libs/NationsTool.jar')
     implementation files('libs/worldedit.jar')
+    implementation files('libs/nationsgui-1.8.0-bukkit.jar')
 
 }

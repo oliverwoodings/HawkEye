@@ -166,6 +166,7 @@ public class HawkEye extends JavaPlugin {
         commands.add(new UndoCommand());
         commands.add(new RebuildCommand());
         commands.add(new DeleteCommand());
+        commands.add(new GiveCommand());
         commands.add(new InfoCommand());
         commands.add(new WriteLogCommand());
         commands.add(new ReloadCommand());
